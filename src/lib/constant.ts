@@ -6,6 +6,7 @@ import Dashboard from '@/app/(main)/navigation/sideNavigation/icons/dashboard'
 import { CloudCog } from 'lucide-react'
 import Billing from '@/app/(main)/navigation/sideNavigation/icons/billing'
 import Accounts from '@/app/(main)/navigation/sideNavigation/icons/account'
+import Xlogo from '@/app/(main)/navigation/sideNavigation/icons/xlogo'
 // import { Connection } from './types'
 
 
@@ -19,8 +20,8 @@ export const clients = [...new Array(10)].map((client, index) => ({
     // { name: 'Practice', Component: Practice, href: '/practice' },
     { name: 'Progress', Component: Progress, href: '/progress' }, 
     { name: 'Billing', Component: Billing, href: '/billing' }, 
-    { name: 'Settings', Component: Settings, href: '/settings' },
     { name: 'Accounts', Component: Accounts, href: '/accounts' },
+    { name: 'Settings', Component: Settings, href: '/settings' },
     
   ]
 

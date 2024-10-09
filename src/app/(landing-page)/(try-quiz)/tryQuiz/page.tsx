@@ -511,7 +511,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/global/ui/button';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { questions } from '@/app/(main)/(pages)/modules/training/training-data/questions';
 import { ChevronLeft, ChevronRight } from 'lucide-react';

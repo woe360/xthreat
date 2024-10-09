@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const componentStyle = {
-  background: 'radial-gradient(125% 125% at 50% 25%, #222 5%, #223 70%)',
-};
+// const componentStyle = {
+//   background: 'radial-gradient(125% 125% at 50% 25%, #222 5%, #223 70%)',
+// };
+
+// const componentStyle = {
+//   background: 'rgba(17, 24, 39, 0.5)', // This is equivalent to bg-gray-900/50 (with 50% opacity)
+//   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow from your example
+// };
 
 const AnalyticsComponent = () => {
   const [timeFrame, setTimeFrame] = useState('day');
@@ -60,7 +65,7 @@ const AnalyticsComponent = () => {
   };
 
   return (
-    <div className="rounded-lg p-4 w-full mx-auto" style={componentStyle}>
+    <div className="rounded-lg p-4 w-full bg-transparent mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-neutral-200">Analytics</h2>
         <div className="flex space-x-2">

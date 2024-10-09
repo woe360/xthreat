@@ -479,20 +479,20 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Bug, Book, User, Settings, UserCircle, LogOut, Upload, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { Input } from '@/components/global/ui/input'
+import { Input } from '@/components/ui/input'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/global/ui/tooltip'
+} from '@/components/ui/tooltip'
 import Link from 'next/link'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/global/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/global/ui/select"
-import { Textarea } from '@/components/global/ui/textarea'
-import { Button } from '@/components/global/ui/button'
-import { Label } from '@/components/global/ui/label'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 import { Accordion, AccordionItem, AccordionTrigger } from '@radix-ui/react-accordion';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 

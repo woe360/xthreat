@@ -8,10 +8,10 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/global/ui/tooltip';
+} from '@/components/ui/tooltip';
 import { menuOptions } from '@/lib/constant';
 import clsx from 'clsx';
-import { Separator } from '@/components/global/ui/separator';
+import { Separator } from '@/components/ui/separator';
 import Signout from '../icons/signout';
 import { ModeToggle } from '../../../../../components/unused/mode-toggle';
 

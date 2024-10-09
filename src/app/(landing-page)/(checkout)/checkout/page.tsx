@@ -152,10 +152,10 @@
 
 
 import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/global/ui/card';
-import { Input } from '@/components/global/ui/input';
-import { Label } from '@/components/global/ui/label';
-import { Button } from '@/components/global/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation'
 

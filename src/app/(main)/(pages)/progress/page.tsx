@@ -385,7 +385,7 @@ import {
   Line
 } from 'recharts';
 import { Shield, AlertTriangle, Trophy, Target, Brain, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/global/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProgressSpiderWeb from './components/progressSpiderWeb';
 // import ProgressSpiderWeb from '@/app/(main)/(pages)/progress/progressSpiderWeb';
 

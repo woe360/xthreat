@@ -12,10 +12,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/global/ui/form'
-import { Input } from '@/components/global/ui/input'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
-import { Button } from '@/components/global/ui/button'
+import { Button } from '@/components/ui/button'
 
 type Props = {
   user: any

@@ -39,7 +39,7 @@ const RecentLessons = () => {
       {lessons.map((lesson, index) => (
         <div
           key={index}
-          className="bg-gray-800 border border-neutral-700 p-4 rounded-lg flex flex-col justify-between transition-all hover:bg-neutral-750 hover:border-neutral-600"
+          className="bg-transparent border border-gray-700 p-4 rounded-lg flex flex-col justify-between transition-all hover:bg-neutral-750 hover:border-gray-600"
         >
           <div className="flex flex-col space-y-2">
             <div className="flex items-start justify-between">
@@ -73,7 +73,7 @@ const RecentLessons = () => {
       ))}
 
       {/* Completed Lessons Card */}
-      <div className="bg-gray-800 border border-neutral-700 p-4 rounded-lg flex flex-col justify-between transition-all hover:bg-neutral-750 hover:border-neutral-600">
+      <div className="bg-transparent border border-gray-700 p-4 rounded-lg flex flex-col justify-between transition-all hover:bg-neutral-750 hover:border-gray-600">
         <div className="flex items-start justify-between">
           <div className="flex items-start">
             <CheckCircle className="w-5 h-5 mt-1 mr-3 text-emerald-500 flex-shrink-0" />

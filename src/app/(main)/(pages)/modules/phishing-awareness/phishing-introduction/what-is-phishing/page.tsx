@@ -207,10 +207,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-// import { Button } from '@/components/ui/button';
 import { phishingQuestions } from '@/app/(main)/(pages)/modules/training/training-data/phishing'; 
 import { ChevronLeft, GripVertical } from 'lucide-react';
-import { Button } from '@/components/global/ui/button';
+import { Button } from '@/components/ui/ui/button';
 
 const PhishingSimulationTraining: React.FC = () => {
     const [quizStarted, setQuizStarted] = useState(false);

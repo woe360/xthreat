@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/global/ui/dialog"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/global/ui/accordion"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { ScrollArea } from '@radix-ui/react-scroll-area'
-import { Button } from "@/components/global/ui/button"
+import { Button } from "@/components/ui/button"
 import { X } from 'lucide-react'
 
 const UserGuideModal = ({ isOpen, onClose }) => {

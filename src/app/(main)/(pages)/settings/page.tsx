@@ -137,10 +137,10 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Users, Settings, BarChart, Shield, ChevronLeft, Bell } from 'lucide-react'
-import { Switch } from "@/components/global/ui/switch"
-import { Label } from "@/components/global/ui/label"
-import { CardContent } from "@/components/global/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/global/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { CardContent } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const componentStyle = {
   background: 'radial-gradient(125% 125% at 50% 25%, #222 5%, #223 70%)',

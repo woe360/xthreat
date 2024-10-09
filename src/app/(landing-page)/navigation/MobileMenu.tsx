@@ -77,157 +77,101 @@
 
 // export default MobileMenu;
 
-'use client';
-
-import React from 'react';
-import Link from 'next/link';
-
-const MobileMenu = () => {
-  return (
-    <div className="fixed top-0 left-0 w-full h-full bg-black z-50 lg:hidden mt-[5rem] overflow-hidden">
-      <div className="flex flex-col w-full h-full p-6 overflow-y-auto">
-        {/* Products */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-white mb-2">Products</h3>
-          <Link href="/training-platform" className="block text-gray-400 hover:text-white py-2">
-            Training platform
-          </Link>
-          <Link href="/simulations" className="block text-gray-400 hover:text-white py-2">
-            Simulations
-          </Link>
-          <Link href="/weak-points" className="block text-gray-400 hover:text-white py-2">
-            Weak points
-          </Link>
-          <Link href="/escape-rooms" className="block text-gray-400 hover:text-white py-2">
-            Escape Rooms
-          </Link>
-        </div>
-
-        {/* Pricing */}
-        <Link href="/pricing" className="text-lg font-semibold text-white mb-4 block">
-          Pricing
-        </Link>
-
-        {/* Resources */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-white mb-2">Resources</h3>
-          <Link href="/blog" className="block text-gray-400 hover:text-white py-2">
-            Blog
-          </Link>
-          <Link href="/case-studies" className="block text-gray-400 hover:text-white py-2">
-            Case Studies
-          </Link>
-          <Link href="/changelog" className="block text-gray-400 hover:text-white py-2">
-            Changelog
-          </Link>
-        </div>
-
-        {/* Company */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-white mb-2">Company</h3>
-          <Link href="/about" className="block text-gray-400 hover:text-white py-2">
-            About XThreat
-          </Link>
-          <Link href="/careers" className="block text-gray-400 hover:text-white py-2">
-            Careers
-          </Link>
-          <Link href="/customers" className="block text-gray-400 hover:text-white py-2">
-            Customers
-          </Link>
-        </div>
-
-        {/* Contact */}
-        <Link href="/contact" className="text-lg font-semibold text-white mb-4 block">
-          Contact
-        </Link>
-
-        {/* Sign In and Request Demo */}
-        <Link href="/dashboard" className="text-base h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-transparent text-white hover:bg-white/10 inline-flex items-center justify-center select-none transition ease-in-out duration-200 mb-4 w-full">
-          Sign In
-        </Link>
-        <Link href="https://cal.com/xthreat/30min" target="_blank" rel="noopener noreferrer" className="text-base h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-[#ffffff] hover:bg-white/90 inline-flex items-center justify-center select-none transition ease-in-out duration-200 w-full">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-500 to-neutral-700 group-hover:from-black group-hover:to-black">
-            Request Demo
-          </span>
-        </Link>
-      </div>
-    </div>
-  );
-};
-
-export default MobileMenu;
 
 
 
 // 'use client';
 
-// import React from 'react';
+// import React, { useState } from 'react';
 // import Link from 'next/link';
+// import { ChevronDown, ChevronUp } from 'lucide-react';
 
 // const MobileMenu = () => {
+//   const [solutionsOpen, setSolutionsOpen] = useState(false);
+
+//   const toggleSolutions = () => {
+//     setSolutionsOpen((prevState) => !prevState);
+//   };
+
 //   return (
-//     <div className="fixed min-w-min top-[-12px] left-0 w-full h-full bg-black z-50 lg:hidden mt-[5rem]">
-//       <div className="flex flex-col w-full h-full p-6 overflow-y-auto">
-//         {/* Products */}
-//         <div className="mb-4">
-//           <h3 className="text-lg font-semibold text-white mb-2">Products</h3>
-//           <Link href="/training-platform" className="block text-gray-400 hover:text-white py-2">
-//             Training platform
-//           </Link>
-//           <Link href="/simulations" className="block text-gray-400 hover:text-white py-2">
-//             Simulations
-//           </Link>
-//           <Link href="/weak-points" className="block text-gray-400 hover:text-white py-2">
-//             Weak points
-//           </Link>
-//           <Link href="/escape-rooms" className="block text-gray-400 hover:text-white py-2">
-//             Escape Rooms
-//           </Link>
+//     <div className="fixed top-0 right-0 w-3/4 h-full bg-black z-50 lg:hidden mt-[4rem] overflow-hidden">
+//       <div className="flex flex-col w-full h-full p-6 overflow-y-auto items-center justify-start">
+        
+//         {/* Company */}
+//         <Link href="/about" className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-4 block text-right">
+//           Company
+//         </Link>
+
+//         {/* Solutions */}
+//         <div className="mb-4 text-center">
+//           <div
+//             className="flex ml-5 justify-center items-center text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-2 cursor-pointer"
+//             onClick={toggleSolutions}
+//           >
+//             Solutions
+//             {solutionsOpen ? (
+//               <ChevronUp className="ml-2 h-6 w-6 text-neutral-300" />
+//             ) : (
+//               <ChevronDown className="ml-2 h-6 w-6 text-neutral-300" />
+//             )}
+//           </div>
+
+//           {solutionsOpen && (
+//             <div className="text-center">
+//               <ul className="mt-3 text-xl text-center space-y-3">
+//                 <li>
+//                   <Link href="/phishing-awareness" className="text-gray-300 hover:text-white">
+//                     Phishing Awareness
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link href="/security-awareness" className="text-gray-300 hover:text-white">
+//                     Security Awareness
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link href="/role-based-training" className="text-gray-300 hover:text-white">
+//                     Role-Based Training
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link href="/weak-points" className="text-gray-300 hover:text-white">
+//                     Weak Points
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link href="/custom-trainings" className="text-gray-300 hover:text-white">
+//                     Custom Trainings
+//                   </Link>
+//                 </li>
+//               </ul>
+//             </div>
+//           )}
 //         </div>
 
-//         {/* Pricing */}
-//         <Link href="/pricing" className="text-lg font-semibold text-white mb-4 block">
+//                 {/* Pricing */}
+//                 <Link href="/pricing" className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-4 block text-right">
 //           Pricing
 //         </Link>
 
-//         {/* Resources */}
-//         <div className="mb-4">
-//           <h3 className="text-lg font-semibold text-white mb-2">Resources</h3>
-//           <Link href="/blog" className="block text-gray-400 hover:text-white py-2">
-//             Blog
-//           </Link>
-//           <Link href="/case-studies" className="block text-gray-400 hover:text-white py-2">
-//             Case Studies
-//           </Link>
-//           <Link href="/changelog" className="block text-gray-400 hover:text-white py-2">
-//             Changelog
-//           </Link>
-//         </div>
-
-//         {/* Company */}
-//         <div className="mb-4">
-//           <h3 className="text-lg font-semibold text-white mb-2">Company</h3>
-//           <Link href="/about" className="block text-gray-400 hover:text-white py-2">
-//             About XThreat
-//           </Link>
-//           <Link href="/careers" className="block text-gray-400 hover:text-white py-2">
-//             Careers
-//           </Link>
-//           <Link href="/customers" className="block text-gray-400 hover:text-white py-2">
-//             Customers
-//           </Link>
-//         </div>
-
 //         {/* Contact */}
-//         <Link href="/contact" className="text-lg font-semibold text-white mb-4 block">
+//         <Link href="/contact" className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-4 block text-right">
 //           Contact
 //         </Link>
 
 //         {/* Sign In and Request Demo */}
-//         <Link href="/dashboard" className="text-base h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-transparent text-white hover:bg-white/10 inline-flex items-center justify-center select-none transition ease-in-out duration-200 mb-4 w-full">
+//         <Link
+//           href="/sign-in"
+//           className="text-xl h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-transparent text-white hover:bg-white/10 inline-flex items-center justify-center select-none transition ease-in-out duration-200 mb-4 w-full"
+//         >
 //           Sign In
 //         </Link>
-//         <Link href="https://cal.com/xthreat/30min" target="_blank" rel="noopener noreferrer" className="text-base h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-[#ffffff] hover:bg-white/90 inline-flex items-center justify-center select-none transition ease-in-out duration-200 w-full">
+//         <Link
+//           href="https://cal.com/xthreat/30min"
+//           target="_blank"
+//           rel="noopener noreferrer"
+//           className="text-xl h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-[#ffffff] hover:bg-white/90 inline-flex items-center justify-center select-none transition ease-in-out duration-200 w-full"
+//         >
 //           <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-500 to-neutral-700 group-hover:from-black group-hover:to-black">
 //             Request Demo
 //           </span>
@@ -238,3 +182,211 @@ export default MobileMenu;
 // };
 
 // export default MobileMenu;
+
+
+// 'use client';
+
+// import React, { useState } from 'react';
+// import Link from 'next/link';
+// import { ChevronDown, ChevronUp } from 'lucide-react';
+
+// const MobileMenu = () => {
+//   const [solutionsOpen, setSolutionsOpen] = useState(false);
+
+//   const toggleSolutions = () => {
+//     setSolutionsOpen((prevState) => !prevState);
+//   };
+
+//   return (
+//     <div className="fixed top-0 right-0 w-3/4 h-full bg-black/40 backdrop-blur-lg z-50 lg:hidden mt-[4rem] overflow-hidden">
+//       <div className="flex flex-col w-full h-full p-6 overflow-y-auto items-center justify-between">
+        
+//         {/* Main Content */}
+//         <div className="flex flex-col items-center border-b border-gray-600 w-full">
+//           {/* Company */}
+//           <Link href="/about" className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-4 block text-right">
+//             Company
+//           </Link>
+
+//           {/* Solutions */}
+//           <div className="mb-4 border-b border-gray-600 w-full text-center">
+//             <div
+//               className="flex ml-5 justify-center items-center text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-2 cursor-pointer"
+//               onClick={toggleSolutions}
+//             >
+//               Solutions
+//               {solutionsOpen ? (
+//                 <ChevronUp className="ml-2 h-6 w-6 text-neutral-300" />
+//               ) : (
+//                 <ChevronDown className="ml-2 h-6 w-6 text-neutral-300" />
+//               )}
+//             </div>
+
+//             {solutionsOpen && (
+//               <div className="text-center ">
+//                 <ul className="mt-3 text-xl text-center   space-y-3">
+//                   <li>
+//                     <Link href="/phishing-awareness" className="text-gray-300 hover:text-white">
+//                       Phishing Awareness
+//                     </Link>
+//                   </li>
+//                   <li>
+//                     <Link href="/security-awareness" className="text-gray-300 hover:text-white">
+//                       Security Awareness
+//                     </Link>
+//                   </li>
+//                   <li>
+//                     <Link href="/role-based-training" className="text-gray-300 hover:text-white">
+//                       Role-Based Training
+//                     </Link>
+//                   </li>
+//                   <li>
+//                     <Link href="/weak-points" className="text-gray-300 hover:text-white">
+//                       Weak Points
+//                     </Link>
+//                   </li>
+//                   <li>
+//                     <Link href="/custom-trainings" className="text-gray-300 hover:text-white">
+//                       Custom Trainings
+//                     </Link>
+//                   </li>
+//                 </ul>
+//               </div>
+//             )}
+//           </div>
+
+//           {/* Pricing */}
+//           <Link href="/pricing" className="text-2xl  font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-4 block text-right">
+//             Pricing
+//           </Link>
+
+//           {/* Contact */}
+//           <Link href="/contact" className="text-2xl  font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-4 block text-right">
+//             Contact
+//           </Link>
+//         </div>
+
+//         {/* Sign In and Request Demo at the bottom */}
+//         <div className="mt-auto w-full mb-20">
+//           <Link
+//             href="/sign-in"
+//             className="text-xl h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-transparent text-white hover:bg-white/10 inline-flex items-center justify-center select-none transition ease-in-out duration-200 mb-4 w-full"
+//           >
+//             Sign In
+//           </Link>
+//           <Link
+//             href="https://cal.com/xthreat/30min"
+//             target="_blank"
+//             rel="noopener noreferrer"
+//             className="text-xl h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-[#ffffff] hover:bg-white/90 inline-flex items-center justify-center select-none transition ease-in-out duration-200 w-full"
+//           >
+//             <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-500 to-neutral-700 group-hover:from-black group-hover:to-black">
+//               Request Demo
+//             </span>
+//           </Link>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default MobileMenu;
+
+
+
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+
+const MobileMenu = () => {
+  const [solutionsOpen, setSolutionsOpen] = useState(false);
+
+  const toggleSolutions = () => {
+    setSolutionsOpen((prevState) => !prevState);
+  };
+
+  return (
+    <div className="fixed top-0 right-0 w-3/4 h-full bg-black/40 backdrop-blur-lg z-50 lg:hidden mt-[4rem] overflow-hidden">
+      <div className="flex flex-col w-full h-full p-6 overflow-y-auto items-center justify-between">
+        
+        {/* Main Content */}
+        <div className="flex flex-col items-center w-full">
+
+          {/* Solutions */}
+          <div className="mb-4 w-full text-center border-b border-gray-600">
+            <div
+              className="flex ml-8 justify-center items-center text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-2 cursor-pointer"
+              onClick={toggleSolutions}
+            >
+              Solutions
+              {solutionsOpen ? (
+                <ChevronUp className="mt-1 ml-1 h-6 w-6 text-neutral-300" />
+              ) : (
+                <ChevronDown className="mt-1 ml-1 h-6 w-6 text-neutral-300" />
+              )}
+            </div>
+
+            {solutionsOpen && (
+              <div className="text-center">
+                <ul className="mt-3 text-xl text-center space-y-3">
+                  {['Phishing Awareness', 'Security Awareness', 'Role-Based Training', 'Weak Points', 'Custom Trainings'].map((item, index) => (
+                    <li key={index} className="w-full border-b border-gray-600">
+                      <Link href={`/${item.toLowerCase().replace(/ /g, '-')}`} className="text-gray-300 hover:text-white block py-2">
+                        {item}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Pricing */}
+          <div className="w-full border-b border-gray-600 mb-4">
+            <Link href="/pricing" className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 block text-center py-2">
+              Pricing
+            </Link>
+          </div>
+
+          {/* Company */}
+          <div className="w-full border-b border-gray-600 mb-4">
+            <Link href="/about" className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 block text-center py-2">
+              Company
+            </Link>
+          </div>
+
+          {/* Contact */}
+          <div className="w-full border-b border-gray-600 mb-4">
+            <Link href="/contact" className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 block text-center py-2">
+              Contact
+            </Link>
+          </div>
+        </div>
+
+        {/* Sign In and Request Demo at the bottom */}
+        <div className="mt-auto w-full mb-20">
+          <Link
+            href="/sign-in"
+            className="text-xl h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-transparent text-white hover:bg-white/10 inline-flex items-center justify-center select-none transition ease-in-out duration-200 mb-4 w-full"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="https://cal.com/xthreat/30min"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xl h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-[#ffffff] hover:bg-white/90 inline-flex items-center justify-center select-none transition ease-in-out duration-200 w-full"
+          >
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-500 to-neutral-700 group-hover:from-black group-hover:to-black">
+              Request Demo
+            </span>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MobileMenu;

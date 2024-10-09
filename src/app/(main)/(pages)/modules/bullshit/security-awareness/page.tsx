@@ -205,7 +205,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/global/ui/button';
+import { Button } from '@/components/ui/ui/button';
 import { securityAwareness } from '@/app/(main)/(pages)/modules/training/training-data/securityAwareness'; 
 import { ChevronLeft } from 'lucide-react';
 
