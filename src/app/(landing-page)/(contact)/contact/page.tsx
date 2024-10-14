@@ -270,7 +270,7 @@ const ContactPage = () => {
                     type="text"
                     id="firstName"
                     placeholder="First name"
-                    className="w-full px-4 py-3 rounded-lg bg-gray-900 text-gray-300 focus:outline-none border border-gray-800"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-900/50 text-gray-300 focus:outline-none border border-gray-800"
                   />
                 </motion.div>
                 <motion.div {...fadeInUp} transition={{ delay: 0.2 }}>
@@ -278,7 +278,7 @@ const ContactPage = () => {
                     type="email"
                     id="email"
                     placeholder="Work email*"
-                    className="w-full px-4 py-3 rounded-lg bg-gray-900 text-gray-300 focus:outline-none border border-gray-800"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-900/50 text-gray-300 focus:outline-none border border-gray-800"
                     required
                   />
                 </motion.div>
@@ -288,31 +288,31 @@ const ContactPage = () => {
                   type="text"
                   id="companyName"
                   placeholder="Company name*"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-900 text-gray-300 focus:outline-none border border-gray-800"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 text-gray-300 focus:outline-none border border-gray-800"
                   required
                 />
               </motion.div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <motion.div {...fadeInUp} transition={{ delay: 0.4 }}>
                   <Select required>
-                    <SelectTrigger className="w-full px-5 py-6 rounded-lg bg-gray-900 text-gray-300 border border-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <SelectTrigger className="w-full px-5 py-6 rounded-lg bg-gray-900/50 text-gray-300 border border-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                       <SelectValue placeholder="Select number of employees*" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border border-gray-800 text-gray-300">
-                      <SelectItem value="1-50" className="hover:bg-gray-800">1-50</SelectItem>
-                      <SelectItem value="51-250" className="hover:bg-gray-800">51-250</SelectItem>
-                      <SelectItem value="251-500" className="hover:bg-gray-800">251-500</SelectItem>
-                      <SelectItem value="501-1000" className="hover:bg-gray-800">501-1000</SelectItem>
-                      <SelectItem value="1000+" className="hover:bg-gray-800">1000+</SelectItem>
+                    <SelectContent className="bg-black border border-gray-800 text-gray-300">
+                      <SelectItem value="1-50" className="hover:bg-neutral-900">1-50</SelectItem>
+                      <SelectItem value="51-250" className="hover:bg-neutral-800">51-250</SelectItem>
+                      <SelectItem value="251-500" className="hover:bg-neutral-800">251-500</SelectItem>
+                      <SelectItem value="501-1000" className="hover:bg-neutral-800">501-1000</SelectItem>
+                      <SelectItem value="1000+" className="hover:bg-neutral-800">1000+</SelectItem>
                     </SelectContent>
                   </Select>
                 </motion.div>
                 <motion.div {...fadeInUp} transition={{ delay: 0.5 }}>
                   <Select required>
-                    <SelectTrigger className="w-full px-4 py-6 rounded-lg bg-gray-900 text-gray-300 border border-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <SelectTrigger className="w-full px-4 py-6 rounded-lg bg-gray-900/50 text-gray-300 border border-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                       <SelectValue placeholder="Select your reason*" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border border-gray-800 text-gray-300">
+                    <SelectContent className="bg-black border border-gray-800 text-gray-300">
                       <SelectItem value="Get a Quote" className="hover:bg-gray-800">Get a custom quote</SelectItem>
                       <SelectItem value="More information about the products" className="hover:bg-gray-800">To know more about products</SelectItem>
                       <SelectItem value="General Inquiry" className="hover:bg-gray-800">General inquiry</SelectItem>
@@ -324,7 +324,7 @@ const ContactPage = () => {
                 <textarea
                   id="additional"
                   placeholder="Any additional details you'd like to share"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-900 text-gray-300 focus:outline-none border border-gray-800 h-24"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-900/50 text-gray-300 focus:outline-none border border-gray-800 h-24"
                 />
                 <p className="text-xs text-gray-400 mt-2 text-center">
                   By submitting this form, you agree to our <a href="/privacy" className="text-gray-200 hover:underline">Privacy Policy</a>.

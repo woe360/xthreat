@@ -1228,7 +1228,7 @@ const Navbar = () => {
           // <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black/90 backdrop-blur-3xl border border-gray-700 p-6 rounded-md shadow-lg`}>
           //   {content}
           // </div>
-        <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black/95 backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
+        <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
           {content}
         </div>
 
@@ -1251,7 +1251,7 @@ const Navbar = () => {
       </div>
       <div className="pr-4">
         <h3 className="text-white font-semibold mb-2">Featured</h3>
-        <div className="bg-gray-900/20 border border-gray-800 p-4 rounded-md">
+        <div className="bg-gray-900/50 border border-gray-800 p-4 rounded-md">
           <h4 className="text-white font-semibold mb-2">New: AI-Powered Training</h4>
           <p className="text-gray-400 text-sm mb-2">Enhance your security with our latest AI-driven training modules.</p>
           <Link href="/ai-training" className="text-gray-400 hover:text-gray-300 flex flex-row text-base">Learn more <ChevronRight className="h-4 w-4 mt-[5px]"/></Link>
@@ -1312,8 +1312,8 @@ const Navbar = () => {
 
           {isDesktop && (
             <div className="flex items-center gap-8 ml-auto">
-              <Link href="/sign-in" className="text-gray-400 hover:text-white">
-                Sign In
+              <Link href="/log-in" className="text-gray-400 hover:text-white">
+                Log in
               </Link>
               <Link
                 href="https://cal.com/xthreat/30min"
@@ -1322,7 +1322,7 @@ const Navbar = () => {
                 className="p-4 h-9 text-base w-full sm:w-fit rounded-xl border-[#4D4D4D] bg-[#ffffff] hover:bg-white group transition-all flex items-center justify-center gap-4"
               >
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-500 to-neutral-700 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
-                  Book a Demo
+                  Book a demo
                 </span>
               </Link>
             </div>

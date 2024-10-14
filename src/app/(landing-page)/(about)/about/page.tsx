@@ -1101,7 +1101,7 @@
 
 'use client'
 import React, { useState } from 'react';
-import { Brain, Zap, Target, ShieldAlert, Settings, Shield, Dot, Lock, UserCheck, TrendingUp, ChevronRight } from 'lucide-react';
+import { Brain, Zap, Target, ShieldAlert, Settings, Shield, Dot, Lock, UserCheck, TrendingUp, ChevronRight, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from '@/app/(landing-page)/navigation/navbar';
 import Footer from '@/app/(landing-page)/navigation/footer';
@@ -1135,14 +1135,9 @@ const AboutXThreat = () => {
   const [activeChallenge, setActiveChallenge] = useState(null);
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div className="min-h-min bg-black text-white relative overflow-hidden">
       <Navbar />
-      
-      {/* Left gradient */}
-      <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-gray-800 to-transparent opacity-20" />
-      {/* Right gradient */}
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-gray-800 to-transparent opacity-20" />
-      
+  
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-56 mb-21 relative z-10">
         {/* Hero Section */}
         <motion.div
@@ -1200,6 +1195,7 @@ const AboutXThreat = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
+                    
                     <div
                       className={`flex items-center cursor-pointer p-3 rounded-lg transition-all duration-300 ${
                         activeChallenge === index ? 'bg-gray-800' : 'hover:bg-gray-900'
@@ -1219,6 +1215,7 @@ const AboutXThreat = () => {
                       >
                         XThreat provides tailored solutions to address this challenge, ensuring your team stays ahead of potential threats.
                       </motion.div>
+                      
                     )}
                   </motion.div>
                 ))}
@@ -1227,7 +1224,7 @@ const AboutXThreat = () => {
           </div>
         </section>
 
-        {/* Our Approach Section */}
+        {/* Our Approach Section
         <section className="mb-20">
           <motion.h2 
             {...fadeInUp}
@@ -1262,7 +1259,7 @@ const AboutXThreat = () => {
               </svg>
             </motion.div>
           </div>
-        </section>
+        </section> */}
 
         {/* Our Impact Section */}
         <section className="mb-20">

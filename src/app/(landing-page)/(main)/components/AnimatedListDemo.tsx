@@ -901,17 +901,62 @@ let notifications: Item[] = [
 
 notifications = Array.from({ length: 10 }, () => notifications).flat();
 
+// const Notification = ({ name, description, icon, time, iconSize = 40, whiteBackground = false, className = "" }: Item) => {
+//   return (
+//     <figure
+//       className={cn(
+//         "relative mx-auto min-h-fit w-full max-w-[400px] cursor-pointer overflow-hidden rounded-2xl p-4",
+//         "transition-all duration-200 ease-in-out hover:scale-[103%]",
+//         "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
+//         "transform-gpu dark:bg-transparent dark:backdrop-blur-md dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+//       )}
+//     >
+//       <div className="flex flex-row items-center gap-3">
+//         <div 
+//           className={cn("flex-shrink-0 flex items-center justify-center rounded-xl", className)}
+//           style={{ 
+//             width: `${iconSize}px`, 
+//             height: `${iconSize}px`,
+//             backgroundColor: whiteBackground ? 'white' : 'transparent',
+//             overflow: 'hidden'
+//           }}
+//         >
+//           <div className="flex items-center justify-center w-full h-full">
+//             <Image 
+//               src={icon} 
+//               alt={name} 
+//               width={iconSize * 0.8} 
+//               height={iconSize * 0.8}
+//               className="object-contain"
+//             />
+//           </div>
+//         </div>
+//         <div className="flex-grow min-w-0 flex flex-col">
+//           <div className="flex justify-between items-center">
+//             <span className="text-sm font-medium dark:text-white leading-tight mr-2">{name}</span>
+//             <span className="text-xs text-gray-500 flex-shrink-0">{time}</span>
+//           </div>
+//           <p className="text-sm font-normal dark:text-white/60 line-clamp-2">
+//             {description}
+//           </p>
+//         </div>
+//       </div>
+//     </figure>
+//   );
+// };
+
 const Notification = ({ name, description, icon, time, iconSize = 40, whiteBackground = false, className = "" }: Item) => {
   return (
     <figure
       className={cn(
-        "relative mx-auto min-h-fit w-full max-w-[400px] cursor-pointer overflow-hidden rounded-2xl p-4",
+        "relative mx-auto min-h-fit w-full max-w-[400px] cursor-pointer overflow-hidden rounded-2xl p-3",
         "transition-all duration-200 ease-in-out hover:scale-[103%]",
-        "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
-        "transform-gpu dark:bg-transparent dark:backdrop-blur-md dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+        "bg-gray-900/10 [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
+        "transform-gpu backdrop-blur-md [border:1px_solid_rgba(255,255,255,.1)] [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
       )}
     >
-      <div className="flex flex-row items-center gap-3">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-gray-900/60 backdrop-blur-sm to-transparent"></div>
+      <div className="relative z-10 flex flex-row items-center gap-3">
         <div 
           className={cn("flex-shrink-0 flex items-center justify-center rounded-xl", className)}
           style={{ 
@@ -933,10 +978,10 @@ const Notification = ({ name, description, icon, time, iconSize = 40, whiteBackg
         </div>
         <div className="flex-grow min-w-0 flex flex-col">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium dark:text-white leading-tight mr-2">{name}</span>
-            <span className="text-xs text-gray-500 flex-shrink-0">{time}</span>
+            <span className="text-sm font-medium text-white leading-tight mr-2">{name}</span>
+            <span className="text-xs text-gray-300 flex-shrink-0">{time}</span>
           </div>
-          <p className="text-sm font-normal dark:text-white/60 line-clamp-2">
+          <p className="text-sm font-normal text-white/80 line-clamp-2">
             {description}
           </p>
         </div>
@@ -953,7 +998,7 @@ export function AnimatedListDemo({
   return (
     <div
       className={cn(
-        "relative flex h-[500px] w-full flex-col p-6 overflow-hidden rounded-lg border border-gray-800 bg-gray-900/10 md:shadow-xl",
+        "relative flex h-[500px] w-full flex-col p-6 overflow-hidden rounded-lg md:shadow-xl",
         className,
       )}
     >
@@ -962,6 +1007,9 @@ export function AnimatedListDemo({
           <Notification {...item} key={idx} />
         ))}
       </AnimatedList>
+      {/* <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/6 bg-gradient-to-t from-gray-900/60 backdrop-blur-sm to-transparent"></div> */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-gray-900/20 backdrop-blur-sm to-transparent"></div>
+
     </div>
   );
 }

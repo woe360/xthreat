@@ -109,15 +109,15 @@ import React from 'react';
 import OrbitingCircles from "@/components/ui/orbiting-circles";
 
 const TextBubble = ({ children }) => (
-  <div className="flex items-center cursor-cell justify-center rounded-full bg-gradient-to-b from-[#B8B8D1] via-[#4B5563] to-[#1F2937] text-white text-[13px] p-1 w-14 h-14 leading-tight text-center">
+  <div className="flex items-center cursor-cell justify-center rounded-full bg-gradient-to-b from-[#bb3737] via-[#977c21] to-[#b87121] text-white text-[13px] p-1 w-14 h-14 leading-tight text-center">
     {children}
   </div>
 );
 
 export function OrbitingCirclesDemo() {
   return (
-    <div className="relative flex h-[300px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border border-gray-800 bg-gray-900/20 md:shadow-xl">
-      <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-white to-gray-500 bg-clip-text text-center text-5xl font-semibold leading-none text-transparent">
+    <div className="relative flex h-[300px] w-full flex-col items-center justify-center overflow-hidden rounded-lg md:shadow-xl">
+      <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-white to-gray-500 bg-clip-text text-center text-6xl font-semibold leading-none text-transparent">
         Enterprise
       </span>
 
@@ -126,9 +126,9 @@ export function OrbitingCirclesDemo() {
         className="size-[64px] border border-black bg-transparent"
         duration={20}
         delay={23}
-        radius={80}
+        radius={75}
       >
-        <TextBubble>Data Breach</TextBubble>
+        <TextBubble>Data breach</TextBubble>
       </OrbitingCircles>
       <OrbitingCircles
         className="size-[64px] border border-black  bg-transparent"
@@ -142,7 +142,7 @@ export function OrbitingCirclesDemo() {
       {/* Outer Circles */}
       <OrbitingCircles
         className="size-[64px] border border-black bg-transparent"
-        radius={110}
+        radius={100}
         duration={20}
         delay={28}
       >
@@ -150,11 +150,11 @@ export function OrbitingCirclesDemo() {
       </OrbitingCircles>
       <OrbitingCircles
         className="size-[64px] border border-black  bg-transparent"
-        radius={130}
+        radius={117}
         duration={20}
         delay={18}
       >
-        <TextBubble>Insider Threat</TextBubble>
+        <TextBubble>Insider threat</TextBubble>
       </OrbitingCircles>
     </div>
   );

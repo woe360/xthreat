@@ -544,7 +544,7 @@ const JobFunctionCard = ({
 
 export function MarqueeDemo() {
   return (
-    <div className="relative flex h-[300px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border border-gray-800 bg-gray-900/10 md:shadow-xl">
+    <div className="relative flex h-[300px] w-full flex-col items-center justify-center overflow-hidden rounded-lg  md:shadow-xl">
       <Marquee pauseOnHover className="[--duration:45s]">
         {jobFunctions.map((job) => (
           <JobFunctionCard key={job.role} {...job} />

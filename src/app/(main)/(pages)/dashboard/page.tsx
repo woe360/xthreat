@@ -362,16 +362,16 @@ import Leaderboard from './components/leaderboard';
 import RecentLessons from './components/recentLessons';
 import AnalyticsComponent from './components/AnalyticsPhishDasboard';
 
-// const componentStyle = {
-//   background: 'radial-gradient(125% 125% at 50% 25%, #222 5%, #223 70%)',
-//   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-// };
-
-
 const componentStyle = {
-  background: 'rgba(17, 24, 39, 0.5)', // This is equivalent to bg-gray-900/50 (with 50% opacity)
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow from your example
+  background: 'radial-gradient(125% 125% at 50% 25%, #222 5%, #223 70%)',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
 };
+
+
+// const componentStyle = {
+//   background: 'rgba(17, 24, 39, 0.5)', // This is equivalent to bg-gray-900/50 (with 50% opacity)
+//   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow from your example
+// };
 
 
 

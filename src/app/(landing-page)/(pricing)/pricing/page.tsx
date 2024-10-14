@@ -3020,7 +3020,7 @@ const PricingPage = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: index * 0.1 }}
-        className={`flex flex-col rounded-lg shadow-lg overflow-hidden bg-black ${
+        className={`flex flex-col rounded-lg overflow-hidden bg-gray-900/20 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.06)_inset] ${
           plan.highlighted ? 'border-2 border-gray-800 lg:scale-105' : 'border border-gray-800 lg:scale-95'
         }`}
       >
@@ -3064,7 +3064,7 @@ const PricingPage = () => {
               onClick={() => handleCTAClick(plan.link)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full flex items-center justify-center px-5 py-3 border border-gray-800 text-base font-medium rounded-md text-black bg-gray-200/80 hover:bg-gray-200"
+              className="w-full flex items-center justify-center px-5 py-3 border border-gray-800  text-base font-medium rounded-md text-black bg-gray-200/80 hover:bg-gray-200"
             >
               {plan.cta}
             </motion.button>
@@ -3076,11 +3076,6 @@ const PricingPage = () => {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-                    {/* Left gradient */}
-                    <div className="absolute top-0 left-0 w-1/5 h-full bg-gradient-to-r from-gray-800 to-transparent opacity-20" />
-        {/* Right gradient */}
-        <div className="absolute top-0 right-0 w-1/5 h-full bg-gradient-to-l from-gray-800 to-transparent opacity-20" />
-        
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-56">
@@ -3107,7 +3102,7 @@ const PricingPage = () => {
           >
             <button
               onClick={togglePricing}
-              className="bg-black border border-gray-700 rounded-xl p-1 flex items-center relative"
+              className="bg-gray-900/20 border border-gray-700 rounded-xl p-1 flex items-center relative"
             >
             <motion.span
               animate={{ x: isYearly ? '100%' : '0%' }}
@@ -3137,80 +3132,85 @@ const PricingPage = () => {
         </motion.div>
 
         {/* Calculator */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-20 border border-gray-800 bg-black rounded-lg p-8 shadow-lg"
-        >
-          <h3 className="text-3xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 mb-6 text-center">Pricing Calculator</h3>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-stretch space-y-6 md:space-y-0">
-            <div className="w-full md:w-1/2 space-y-6">
-              <div className="flex flex-col space-y-2 w-full">
-                <div className="flex justify-between items-center">
-                  <label className="text-gray-300 text-base">Number of Users</label>
-                  <Input
-                    type="number"
-                    min="1"
-                    max="3000"
-                    value={userCount}
-                    onChange={(e) => setUserCount(Math.min(3000, Math.max(1, parseInt(e.target.value) || 1)))}
-                    className="w-20 bg-black text-white px-2 py-1 rounded-md text-center"
+        <div className="max-w-7xl mx-auto px-4 sm:px-0 lg:px-0 mt-28">
+        <h3 className="text-3xl font-semibold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 text-center">Pricing Calculator</h3>
+        <p className="mt-4 text-xl text-center font-serif italic text-gray-400">
+            Calculate exact price you need to pay.
+          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="mt-14 border border-gray-800 bg-black rounded-lg p-8 shadow-lg"
+          >
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-stretch space-y-6 md:space-y-0">
+              <div className="w-full md:w-1/2 space-y-6">
+                <div className="flex flex-col space-y-2 w-full">
+                  <div className="flex justify-between items-center">
+                    <label className="text-gray-300 text-base">Number of Users</label>
+                    <Input
+                      type="number"
+                      min="1"
+                      max="3000"
+                      value={userCount}
+                      onChange={(e) => setUserCount(Math.min(3000, Math.max(1, parseInt(e.target.value) || 1)))}
+                      className="w-20 bg-gray-900/20 text-white px-2 py-1 rounded-md text-center"
+                    />
+                  </div>
+                  <Slider
+                    value={[userCount]}
+                    onValueChange={(value) => setUserCount(value[0])}
+                    max={3000}
+                    step={1}
+                    className={cn("w-full", "[&_[role=slider]]:bg-gray-200", "[&_.swui-slider-track]:bg-gray-400")}
                   />
                 </div>
-                <Slider
-                  value={[userCount]}
-                  onValueChange={(value) => setUserCount(value[0])}
-                  max={3000}
-                  step={1}
-                  className={cn("w-full", "[&_[role=slider]]:bg-gray-200", "[&_.swui-slider-track]:bg-gray-400")}
-                />
-              </div>
-              <div className="flex space-x-4">
-                <div className="flex flex-col space-y-2 w-1/2">
-                  <Label htmlFor="plan-select" className="text-gray-300 text-base">Select Plan</Label>
-                  <Select value={selectedPlan} onValueChange={(value) => setSelectedPlan(value)}>
-                    <SelectTrigger id="plan-select" className="bg-black text-white">
-                      <SelectValue placeholder="Select plan" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {pricingPlans.map(plan => (
-                        <SelectItem key={plan.name} value={plan.name}>{plan.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex flex-col space-y-2 w-1/2">
-                  <Label htmlFor="billing-cycle" className="text-gray-300 text-base">Billing Cycle</Label>
-                  <Select value={isYearly ? 'yearly' : 'monthly'} onValueChange={(value) => setIsYearly(value === 'yearly')}>
-                    <SelectTrigger id="billing-cycle" className="bg-black text-white">
-                      <SelectValue placeholder="Select billing cycle" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="yearly">Yearly</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="flex space-x-4">
+                  <div className="flex flex-col space-y-2 w-1/2">
+                    <Label htmlFor="plan-select" className="text-gray-300 text-base">Select Plan</Label>
+                    <Select value={selectedPlan} onValueChange={(value) => setSelectedPlan(value)}>
+                      <SelectTrigger id="plan-select" className="bg-gray-900/20 text-white">
+                        <SelectValue placeholder="Select plan" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {pricingPlans.map(plan => (
+                          <SelectItem key={plan.name} value={plan.name}>{plan.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex flex-col space-y-2 w-1/2">
+                    <Label htmlFor="billing-cycle" className="text-gray-300 text-base">Billing Cycle</Label>
+                    <Select value={isYearly ? 'yearly' : 'monthly'} onValueChange={(value) => setIsYearly(value === 'yearly')}>
+                      <SelectTrigger id="billing-cycle" className="bg-gray-900/20 text-white">
+                        <SelectValue placeholder="Select billing cycle" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                        <SelectItem value="yearly">Yearly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
+              <div className="w-full border border-gray-800 md:w-1/2 md:ml-10 flex flex-col items-center justify-center bg-gray-900/20 rounded-lg p-6">
+                <p className="text-xl text-gray-300 mb-2">Estimated {isYearly ? 'Yearly' : 'Monthly'} Cost:</p>
+                <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
+                  €{calculatePrice()}
+                </p>
+                <p className="text-sm text-gray-400 mt-2">
+                  {isYearly ? 'per year' : 'per month'} for {userCount} user{userCount > 1 ? 's' : ''}
+                </p>
+                <p className="text-sm text-gray-400 mt-2">
+                  (€{getPricePerUser()} per user {isYearly ? 'per year' : 'per month'})
+                </p>
+              </div>
             </div>
-            <div className="w-full border border-gray-800 md:w-1/2 md:ml-10 flex flex-col items-center justify-center bg-black rounded-lg p-6">
-              <p className="text-xl text-gray-300 mb-2">Estimated {isYearly ? 'Yearly' : 'Monthly'} Cost:</p>
-              <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
-                €{calculatePrice()}
-              </p>
-              <p className="text-sm text-gray-400 mt-2">
-                {isYearly ? 'per year' : 'per month'} for {userCount} user{userCount > 1 ? 's' : ''}
-              </p>
-              <p className="text-sm text-gray-400 mt-2">
-                (€{getPricePerUser()} per user {isYearly ? 'per year' : 'per month'})
-              </p>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>  
 
         {/* FAQ and CTA Section */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-28 ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-0 lg:px-0 mt-28 ">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -3239,7 +3239,7 @@ const PricingPage = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className="bg-black border border-gray-700 rounded-lg overflow-hidden"
+                    className="bg-gray-900/20 border border-gray-800 rounded-lg overflow-hidden"
                   >
                     <button
                       className="flex justify-between items-center w-full p-4 text-left"
@@ -3286,7 +3286,7 @@ const PricingPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}
-              className="lg:w-1/2 bg-black border border-gray-700 rounded-lg shadow-lg overflow-hidden flex flex-col justify-center"
+              className="lg:w-1/2 bg-gray-900/20 border border-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col justify-center"
             >
               <div className="px-6 py-8 sm:p-10">
                 <h3 className="text-2xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold pb-1  mb-4">
