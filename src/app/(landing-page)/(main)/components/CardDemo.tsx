@@ -187,28 +187,51 @@ export const CardDescription = ({
   );
 };
 
+// export const CardSkeletonContainer = ({
+//   className,
+//   children,
+//   showGradient = true,
+// }: {
+//   className?: string;
+//   children: React.ReactNode;
+//   showGradient?: boolean;
+// }) => {
+//   return (
+//     <div
+//       className={cn(
+//         "h-[15rem] md:h-[20rem] rounded-xl z-40 relative",
+//         className,
+//         showGradient &&
+//           "bg-neutral-300 dark:bg-[rgba(40,40,40,0.70)] [mask-image:radial-gradient(55%_55%_at_50%_50%,white_0%,transparent_100%)]"
+//       )}
+//     >
+//       {children}
+//     </div>
+//   );
+// };
+
 export const CardSkeletonContainer = ({
-  className,
-  children,
-  showGradient = true,
-}: {
-  className?: string;
-  children: React.ReactNode;
-  showGradient?: boolean;
-}) => {
-  return (
-    <div
-      className={cn(
-        "h-[15rem] md:h-[20rem] rounded-xl z-40 relative",
-        className,
-        showGradient &&
-          "bg-neutral-300 dark:bg-[rgba(40,40,40,0.70)] [mask-image:radial-gradient(55%_55%_at_50%_50%,white_0%,transparent_100%)]"
-      )}
-    >
-      {children}
-    </div>
-  );
-};
+    className,
+    children,
+    showGradient = true,
+  }: {
+    className?: string;
+    children: React.ReactNode;
+    showGradient?: boolean;
+  }) => {
+    return (
+      <div
+        className={cn(
+          "h-[15rem] md:h-[20rem] rounded-xl z-40",
+          className,
+          showGradient &&
+            "bg-neutral-300 dark:bg-[rgba(40,40,40,0.70)] [mask-image:radial-gradient(55%_50%_at_50%_40%,white_0%,transparent_100%)]"
+        )}
+      >
+        {children}
+      </div>
+    );
+  };
 
 const Container = ({
   className,

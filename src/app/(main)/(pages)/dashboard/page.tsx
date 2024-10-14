@@ -351,13 +351,10 @@
 'use client'
 import React from 'react';
 import { Shield, Lock, Award, Target, Zap, CheckCircle, Timer, Bell, Eye, Brain, Cpu, TrendingUp, AlertTriangle, Star } from 'lucide-react';
-// import Leaderboard from '@/app/(main)/(pages)/dashboard/leaderboard';
-// import RecentLessons from '@/app/(main)/(pages)/dashboard/recentLessons';
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Card } from '@/components/ui/card';
 import { Progress } from "@/components/ui/progress";
 import Link from 'next/link';
-// import AnalyticsComponent from '@/components/global/charts/AnalyticsPhishDasboard';
 import Leaderboard from './components/leaderboard';
 import RecentLessons from './components/recentLessons';
 import AnalyticsComponent from './components/AnalyticsPhishDasboard';
@@ -372,10 +369,6 @@ const componentStyle = {
 //   background: 'rgba(17, 24, 39, 0.5)', // This is equivalent to bg-gray-900/50 (with 50% opacity)
 //   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow from your example
 // };
-
-
-
-
 
 
 const certifications = [
