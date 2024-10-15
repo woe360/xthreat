@@ -2992,9 +2992,9 @@ const PricingPage = () => {
   ];
 
   const faqs = [
-    { question: "Is there a free trial available?", answer: "No, but if you do not see any improvement in the first month with our products, you can get your money back - no questions asked." },
+    { question: "Is there a free trial available?", answer: "No, but we offer a satisfaction guarantee. If you fully engage with our training for the first month and don’t see measurable improvement, we’ll work with you to address any concerns or offer a refund." },
     { question: "Is it possible to change the plan later?", answer: "Yes, you can upgrade or downgrade your plan at any time." },
-    { question: "What is your cancellation policy?", answer: "You only have to inform us 14 days prior cancelation. We do not lock businesses in long-term contracts unless they are happy with our products." },
+    { question: "What is your cancellation policy?", answer: "You only have to inform us 14 days prior cancelation. We do not lock businesses in long-term contracts unless they are happy with our solutions." },
     { question: "How does billing work?", answer: "We bill monthly or yearly, depending on your chosen plan." },
   ];
 

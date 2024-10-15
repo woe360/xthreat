@@ -998,7 +998,7 @@ export function AnimatedListDemo({
   return (
     <div
       className={cn(
-        "relative flex h-[500px] w-full flex-col p-6 overflow-hidden rounded-lg md:shadow-xl",
+        "relative flex h-[500px] w-full flex-col p-10 overflow-hidden rounded-lg md:shadow-xl",
         className,
       )}
     >
@@ -1008,7 +1008,7 @@ export function AnimatedListDemo({
         ))}
       </AnimatedList>
       {/* <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/6 bg-gradient-to-t from-gray-900/60 backdrop-blur-sm to-transparent"></div> */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-gray-900/20 backdrop-blur-sm to-transparent"></div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-gray-900/20 to-transparent"></div>
 
     </div>
   );

@@ -850,7 +850,7 @@ const UserGuideModal = ({ isOpen, onClose }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="sm:max-w-[900px] max-w-full h-[80vh] [&>button]:hidden md:h-[85vh] lg:h-[70vh] text-white"
+        className="sm:max-w-[800px] max-w-full h-[80vh] [&>button]:hidden md:h-[85vh] lg:h-[70vh] text-white"
         style={{
           background: 'radial-gradient(125% 125% at 50% 25%, #222 5%, #223 70%)',
         }}
@@ -1329,26 +1329,6 @@ const InfoBar = () => {
         </Tooltip>
       </TooltipProvider>
 
-      <TooltipProvider>
-        <Tooltip delayDuration={0}>
-          <TooltipTrigger>
-            <div ref={dropdownRef}>
-              <User 
-                className="cursor-pointer w-6 h-6"
-                onClick={handleDropdownToggle}
-              />
-              <UserDropdown 
-                isOpen={isDropdownOpen}
-                onClose={handleDropdownClose}
-              />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>User</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
       <BugReportModal
         isOpen={isBugReportOpen}
         onClose={() => setIsBugReportOpen(false)}
@@ -1363,6 +1343,10 @@ const InfoBar = () => {
 }
 
 export default InfoBar
+
+
+
+
 
 
 

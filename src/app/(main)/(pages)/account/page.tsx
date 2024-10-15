@@ -72,24 +72,7 @@ const AccountPage = () => {
 
   return (
     <div className="min-h-min font-sans bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] text-white relative">
-      <div className="max-w-3xl mx-auto p-3">
-     
-      <button 
-      onClick={() => router.back()} 
-      className="absolute mt-4 left-5 text-gray-400 hover:text-white transition flex items-center"
-    >
-      <ChevronLeft className="mr-1"/> Back
-    </button>
-      
-      {/* <div className="max-w-3xl mx-auto p-6"> */}
-        {/* <div className="flex justify-between items-center mb-6 sm:mb-8">
-          <button onClick={() => router.back()} className="text-gray-400  hover:text-white transition flex items-left">
-            <ChevronLeft className="mr-1"/> Back
-          </button>
-          
-        </div> */}
-        
-        
+      <div className="max-w-3xl mx-auto p-3">   
         <h1 className="text-3xl mt-5 font-bold mb-8">Account Settings</h1>
 
         <div className="p-6 rounded-lg" style={componentStyle}>

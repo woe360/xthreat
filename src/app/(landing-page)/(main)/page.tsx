@@ -9,12 +9,13 @@ import Image from "next/image";
 import React, { useState, createContext, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import WhatsNewCta from "@/components/ui/whatsNewCta";
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { ContainerScroll } from "./components/container-scroll-animation";
 import { Products } from "./components/Products";
 import { BentoGridThirdDemo } from "./components/bentosas";
 import StatisticsHack from "./components/statistics";
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from 'lucide-react';
 
 import { Shield, CheckCircle, Users, Brain, Trophy, Briefcase, Target, Mail, Lock } from 'lucide-react';
 import { AnimatedList } from "@/components/ui/animated-list";
@@ -25,6 +26,108 @@ import { OrbitingCirclesDemo } from "./components/OrbitingCirclesDemo";
 import { GlobeDemo } from "./components/GlobeDemo";
 import { CardDemo } from "./components/CardDemo";
 import { FeaturesSectionDemo } from "./components/FeaturesSectionDemo";
+
+const FAQSection = () => {
+  const [openFAQ, setOpenFAQ] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setOpenFAQ(openFAQ === index ? null : index);
+  };
+
+  const faqs = [
+    {
+      question: "How is the training content updated to reflect the latest cybersecurity threats?",
+      answer: "We continuously monitor the cybersecurity landscape and update our training modules regularly to ensure your team is learning the latest techniques to prevent emerging threats."
+    },
+    {
+      question: "Can we track the progress of our employees?",
+      answer: "Yes, our platform provides detailed reporting and analytics that allow you to track employee progress, assess learning outcomes, and identify areas for improvement."
+    },
+    {
+      question: "Is the platform customizable for different roles within our company?",
+      answer: "Absolutely! Our training can be customized to fit different roles and departments, ensuring each employee receives relevant training based on their responsibilities."
+    },
+    {
+      question: "How secure is your platform?",
+      answer: "Security is our top priority. We follow industry best practices, including encryption and regular security audits, to protect your data and ensure the platform is secure."
+    },
+    {
+      question: "Do you provide support during the implementation process?",
+      answer: "Yes, we offer full support during implementation, including onboarding assistance and ongoing technical support to ensure a smooth transition and high engagement."
+    }
+  ];
+
+  return (
+    <section className="py-16 md:py-24 bg-transparent">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl md:text-5xl lg:text-5xl mb-2 text-center font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
+          Frequently Asked Questions
+        </h2>
+        <h3 className="text-lg md:text-2xl mb-12 mx-7 font-serif italic text-gray-400 text-center font-light">
+          Get answers to common questions about our cybersecurity training solutions
+        </h3>
+        <div className="flex justify-center">
+          <div className="max-w-5xl lg:w-4/5">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="space-y-5"
+            >
+              {faqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  className="bg-gray-900/20 border border-gray-800 rounded-lg overflow-hidden"
+                >
+                  <button
+                    className="flex justify-between items-center w-full p-4 text-left"
+                    onClick={() => toggleFAQ(index)}
+                  >
+                    <span className="text-white">{faq.question}</span>
+                    <motion.div
+                      animate={{ rotate: openFAQ === index ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ChevronDown className="h-5 w-5 text-white" />
+                    </motion.div>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {openFAQ === index && (
+                      <motion.div
+                        key="content"
+                        initial="collapsed"
+                        animate="open"
+                        exit="collapsed"
+                        variants={{
+                          open: { opacity: 1, height: "auto" },
+                          collapsed: { opacity: 0, height: 0 }
+                        }}
+                        transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                      >
+                        <motion.div
+                          variants={{ collapsed: { y: -10 }, open: { y: 0 } }}
+                          transition={{ duration: 0.2 }}
+                          className="p-4 pt-0 text-gray-400"
+                        >
+                          {faq.answer}
+                        </motion.div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+  );
+};
+
 
 const FeatureSection = ({ icon, title, description }) => (
   <div className="flex flex-col items-center text-center p-6 bg-gray-900 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -243,18 +346,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* <section className="flex flex-col border max-w-6xl rounded-xl border-gray-800 relative z-20 mt-[100px] m-auto flex-wrap items-center justify-center">
-        <div>
-        <h2 className="text-4xl md:text-5xl mb-4 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-semibold">
-        Why we exist
-      </h2>
-      <p className="text-xl mb-8 mx-10 font-serif italic text-gray-400">
-        Human error is the leading cause of cyber attacks, and malicious actors exploit this vulnerability
-      </p>
-          <StatisticsHack />
-        </div>
-      </section> */}
-
         <section className="flex flex-col max-w-6xl relative z-20 md:mt-[30px] lg:mt-[32px] mb-10 mx-auto">
           <div>
             <h2 className="text-4xl md:text-5xl mb-2 pb-1 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-semibold">
@@ -301,7 +392,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex flex-col relative z-20 mt-[100px] sm:mt-[150px] m-auto flex-wrap items-center justify-center">
+      {/* <section className="flex flex-col relative z-20 mt-[100px] sm:mt-[150px] m-auto flex-wrap items-center justify-center">
         <h2 className="text-3xl sm:text-4xl md:text-5xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-semibold">
           Features
         </h2>
@@ -311,10 +402,12 @@ export default function Home() {
         <div className="w-full px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
           <BentoGridThirdDemo />
         </div>
-      </section>        
+      </section>      */}
+
+      <FAQSection/>  
 
 
-      <section className="py-16 md:py-24 bg-transparent">
+      <section className="py-16 md:py-24 mb-10 bg-transparent">
             <div className="container mx-auto px-4">
               <h2 className="text-3xl md:text-5xl lg:text-5xl mb-2 text-center font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
                 Prepare for Tomorrow
