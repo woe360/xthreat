@@ -1105,6 +1105,7 @@ import { Brain, Zap, Target, ShieldAlert, Settings, Shield, Dot, Lock, UserCheck
 import { motion } from 'framer-motion';
 import Navbar from '@/app/(landing-page)/navigation/navbar';
 import Footer from '@/app/(landing-page)/navigation/footer';
+import Link from 'next/link';
 
 const AboutXThreat = () => {
   const fadeInUp = {
@@ -1299,11 +1300,13 @@ const AboutXThreat = () => {
             whileTap={{ scale: 0.95 }}
             className="inline-flex items-center px-6 py-3 border border-gray-600 text-base font-medium rounded-xl shadow-sm text-black bg-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           >
-            Contact Us
+            <Link
+              href="/pricing">
+              See Our Plans
+            </Link>
           </motion.button>
         </motion.section>
       </main>
-      
       <Footer />
     </div>
   );

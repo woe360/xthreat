@@ -800,7 +800,7 @@ const Footer = () => {
           {/* Newsletter Signup */}
           <div className="lg:w-1/7 sm:w-1/1 flex flex-col items-center">
             <h3 className="text-base text-center mb-4">Newsletter & Offers</h3>
-            <form onSubmit={handleSubmit} className="flex flex-col items-center w-2/3 gap-2">
+            <form onSubmit={handleSubmit} className="flex flex-col items-center w-30 gap-2">
               <input
                 type="email"
                 placeholder="Enter email"

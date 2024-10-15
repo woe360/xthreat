@@ -24,6 +24,7 @@ import { MarqueeDemo } from "./components/MarqueeDemo";
 import { OrbitingCirclesDemo } from "./components/OrbitingCirclesDemo";
 import { GlobeDemo } from "./components/GlobeDemo";
 import { CardDemo } from "./components/CardDemo";
+import { FeaturesSectionDemo } from "./components/FeaturesSectionDemo";
 
 const FeatureSection = ({ icon, title, description }) => (
   <div className="flex flex-col items-center text-center p-6 bg-gray-900 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -190,13 +191,17 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-sm font-sans font-normal leading-6 text-white inline-block"
-                >
-                  {/* <span className="absolute inset-0 overflow-hidden rounded-full">
-                    <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                  </span> */}
-                  
-                  <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-30" />
+                  className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6  text-white inline-block">
+                    <span className="absolute inset-0 overflow-hidden rounded-full">
+                      <span className="absolute inset-0 rounded-full bg-gradient-to-r from-red-400/0 via-red-500/90 to-red-400/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                    </span>
+                    <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
+                        <Link className="flex flex-row"
+                          href="/ai-training">
+                          AI enhanced training <ChevronRight className="mt-[7px] ml-1" size={12}/>
+                        </Link>
+                    </div>
+                    <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-red-400/0 via-orange-400/90 to-red-400/0 transition-opacity duration-500 group-hover:opacity-40" />
                 </motion.button>
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
@@ -262,6 +267,19 @@ export default function Home() {
             
           </div>
         </section>
+
+        <section className="flex flex-col relative z-20 mt-[100px] sm:mt-[150px] m-auto flex-wrap items-center justify-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-semibold">
+          Features
+        </h2>
+        <h3 className="text-lg sm:text-xl md:text-2xl mb-14 font-serif italic mx-7 text-gray-400 text-center">
+          Core Features and Advantages of Our Security Training Solutions
+        </h3>
+        <div className="w-full px-4 h-2/3 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+          <FeaturesSectionDemo />
+        </div>
+      </section>        
+
 
       <section className="pt-28 overflow-hidden">
         <div className="container mx-auto px-8 max-w-6xl">
