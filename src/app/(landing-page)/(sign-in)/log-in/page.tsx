@@ -205,7 +205,7 @@ export default function SignIn() {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-700 placeholder-gray-500 text-white bg-gray-900/30 focus:outline-none focus:ring-indigo-500 focus:border-indigo-600 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-700 placeholder-gray-500 text-white bg-gray-900/30 focus:outline-none focus:ring-[#b87121] focus:border-[#b87121] focus:z-10 sm:text-sm"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -227,7 +227,7 @@ export default function SignIn() {
                   autoComplete="current-password"
                   placeholder="Password"
                   required
-                  className="appearance-none block w-full px-3 py-3 border border-gray-700 rounded-md shadow-sm placeholder-gray-500 bg-gray-900/30 focus:outline-none focus:ring-indigo-500 focus:border-indigo-600 sm:text-sm"
+                  className="appearance-none block w-full px-3 py-3 border border-gray-700 rounded-md shadow-sm placeholder-gray-500 bg-gray-900/30 focus:outline-none focus:ring-[#b87121] focus:border-[#b87121] sm:text-sm"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />              <BottomGradient />
@@ -288,7 +288,7 @@ export default function SignIn() {
               <div className="mt-6 space-y-4">
                 <button
                   onClick={handleSSOSignIn}
-                  className="w-full flex items-center justify-center px-4 py-1 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-900/30 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="w-full flex items-center justify-center px-4 py-1 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-900/30 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b87121]"
                 >
                   <div className="mb-2">
                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0,0,300,150" className="mr-2">
@@ -300,7 +300,7 @@ export default function SignIn() {
 
                 <button
                   onClick={handleGoogleSignIn}
-                  className="w-full flex items-center justify-center px-4 py-2 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-900/30 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="w-full flex items-center justify-center px-4 py-2 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-900/30 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b87121]"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0,0,256,256" className="mr-2">
                     <g fill="#ffffff" fillRule="nonzero" stroke="none" strokeWidth="1" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" strokeDasharray="" strokeDashoffset="0" fontFamily="none" fontWeight="none" fontSize="none" textAnchor="none"><g transform="scale(8,8)"><path d="M16.00391,14.0625v4.20313h5.98828c-0.78125,2.54688 -2.91016,4.37109 -5.98828,4.37109c-3.66406,0 -6.63672,-2.97266 -6.63672,-6.63672c0,-3.66406 2.96875,-6.63672 6.63672,-6.63672c1.64844,0 3.15234,0.60547 4.3125,1.60156l3.09375,-3.09766c-1.95312,-1.78125 -4.55469,-2.86719 -7.40625,-2.86719c-6.07812,0 -11.00391,4.92578 -11.00391,11c0,6.07422 4.92578,11 11.00391,11c9.23438,0 11.27344,-8.63672 10.36719,-12.92187z"></path></g></g>

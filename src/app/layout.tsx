@@ -6,10 +6,21 @@ import MobileMenu from "./(landing-page)/navigation/MobileMenu";
 
 const font = DM_Sans({ subsets: ["latin"] });
 
+// export const metadata: Metadata = {
+//   title: "XThreat",
+//   description: "Cyber security awareness training",
+// };
+
 export const metadata: Metadata = {
   title: "XThreat",
-  description: "Cyber security awareness training",
+  description: "Cyber security training",
+  icons: {
+    icon: [
+      { url: '/XThreat-white.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
+
 
 export default function RootLayout({
   children,

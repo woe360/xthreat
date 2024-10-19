@@ -738,7 +738,7 @@ const Footer = () => {
             className="w-9 h-4 md:w-[18px] md:h-[18px] sm:h-[16px] sm:w-[16px]"
             
           />
-          <p className="text-xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold">
+          <p className="text-xl bg-clip-text font-sans text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold">
             <Link href="/">Threat</Link>
           </p>
         </div>
@@ -764,7 +764,7 @@ const Footer = () => {
           </div>
           
           {/* Footer Links */}
-          <div className="lg:w-1/2 flex justify-center">
+          <div className="lg:w-1/2 flex font-sans justify-center">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-16 text-center">
               <div>
                 <h3 className="text-base font-semibold mb-4">Company</h3>
@@ -798,7 +798,7 @@ const Footer = () => {
           </div>
           
           {/* Newsletter Signup */}
-          <div className="lg:w-1/7 sm:w-1/1 flex flex-col items-center">
+          <div className="lg:w-1/7 sm:w-1/1 flex font-sans flex-col items-center">
             <h3 className="text-base text-center mb-4">Newsletter & Offers</h3>
             <form onSubmit={handleSubmit} className="flex flex-col items-center w-30 gap-2">
               <input
@@ -806,7 +806,7 @@ const Footer = () => {
                 placeholder="Enter email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-black border border-gray-700 text-center text-white px-1 py-2 w-full max-w-xs rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-black border border-gray-700 text-center text-white px-1 py-2 w-full max-w-xs rounded-md focus:outline-none focus:ring-1 focus:ring-gray-500"
                 required
               />
               <button

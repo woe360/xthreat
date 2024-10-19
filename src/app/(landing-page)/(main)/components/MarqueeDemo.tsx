@@ -515,7 +515,7 @@ const JobFunctionCard = ({
     <div
       className={cn(
         "relative w-64 h-28 flex items-center cursor-pointer overflow-hidden rounded-lg border m-2 p-4",
-        "border-gray-700 bg-gray-900/20 hover:bg-black",
+        "border-gray-700 bg-black",
         "transition-colors duration-300"
       )}
     >

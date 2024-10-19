@@ -61,7 +61,7 @@ const AIEnhancedTraining: React.FC = () => {
               {...fadeInUp}
               className="text-5xl pb-1 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold mt-32 mb-6"
             >
-              AI-Enhanced Cybersecurity Training
+              AI Enhanced Training
             </motion.h1>
             <motion.p 
               {...fadeInUp}

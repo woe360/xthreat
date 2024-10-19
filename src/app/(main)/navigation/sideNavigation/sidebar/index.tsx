@@ -872,20 +872,320 @@
 // export default MenuOptions;
 
 
+
+
+// 'use client';
+
+// import Link from 'next/link';
+// import Image from 'next/image';
+// import { usePathname } from 'next/navigation';
+// import React, { useState, useEffect } from 'react';
+// import { menuOptions } from '@/lib/constant';
+// import clsx from 'clsx';
+// import { Separator } from '@/components/ui/separator';
+// import Signout from '../icons/signout';
+// import { ArrowLeftToLine, ArrowRightToLine, ChevronFirst, ChevronLast, PanelLeft } from 'lucide-react';
+
+
+// type Props = {};
+
+// const MenuOptions = (props: Props) => {
+//   const pathName = usePathname();
+//   const [isCollapsed, setIsCollapsed] = useState(false);
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setIsCollapsed(window.innerWidth <= 768);
+//     };
+
+//     window.addEventListener('resize', handleResize);
+//     handleResize(); // Check on initial load
+
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
+
+//   const toggleSidebar = () => {
+//     setIsCollapsed(!isCollapsed);
+//   };
+
+//   return (
+//     <>
+      
+
+//       {/* Navigation sidebar */}
+//       <nav className={clsx(
+//         "dark:bg-black h-screen flex flex-col sticky mt-10 justify-between py-6 transition-all duration-200 ease-in-out",
+//         isCollapsed ? "w-16" : "w-48"
+//       )}>
+
+//         {/* Main menu in the center */}
+//         <div className="flex flex-col z-1000 items-start justify-start flex-grow gap-2 px-2">
+//           {menuOptions.map((menuItem) => (
+//             <Link
+//               key={menuItem.name}
+//               href={menuItem.href}
+//               className={clsx(
+//                 'group h-10 flex items-center rounded-lg py-2 px-3 cursor-pointer transition-colors duration-200 w-full',
+//                 {
+//                   'dark:bg-neutral-800 text-white':
+//                     pathName === menuItem.href,
+//                   'hover:bg-neutral-800': pathName !== menuItem.href,
+//                 }
+//               )}
+//             >
+//               <div className="w-7 h-7 flex items-center justify-center">
+//                 <menuItem.Component
+//                   selected={pathName === menuItem.href}
+//                 />
+//               </div>
+//               {!isCollapsed && (
+//                 <span className="ml-3 whitespace-nowrap overflow-hidden text-ellipsis">
+//                   {menuItem.name}
+//                 </span>
+//               )}
+//             </Link>
+//           ))}
+//         </div>
+
+//         {/* Bottom items */}
+//         <div className="flex flex-col items-start mb-10 gap-4 w-full px-2">
+//           <div>
+//             {/* Toggle button */}
+//             <button
+//               className={clsx(
+//                 "fixed top-4 left-4 z-[60] p-2 bg-black/50 rounded-md transition-all duration-300",
+//                 isCollapsed ? "translate-x-0" : "translate-x-48"
+//               )}
+//               onClick={toggleSidebar}
+//             >
+//               {isCollapsed ? (
+//                 <PanelLeft className="text-white" />
+//               ) : (
+//                 <PanelLeft className="text-gray-300" />
+//               )}
+//             </button>
+//           </div>
+//           <Separator />
+//           <Link
+//             className={clsx(
+//               "flex font-bold w-full items-center rounded-lg py-2 px-3 cursor-pointer hover:bg-neutral-900 transition-colors duration-100"
+//             )}
+//             href="/"
+//           >
+//             <div className="w-7 h-3 flex items-center justify-center">
+//               <Signout selected={false} />
+//             </div>
+//             {!isCollapsed && <span className="font-light ml-3">Log out</span>}
+//           </Link>
+//         </div>
+//       </nav>
+//     </>
+//   );
+// };
+
+// export default MenuOptions;
+
+
+
+
+// 'use client';
+
+// import Link from 'next/link';
+// import { usePathname } from 'next/navigation';
+// import React, { useState, useEffect } from 'react';
+// import { menuOptions } from '@/lib/constant';
+// import clsx from 'clsx';
+// import { Separator } from '@/components/ui/separator';
+// import Signout from '../icons/signout';
+// import { PanelLeft } from 'lucide-react';
+
+// type Props = {};
+
+// const MenuOptions = (props: Props) => {
+//   const pathName = usePathname();
+//   const [isCollapsed, setIsCollapsed] = useState(false);
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setIsCollapsed(window.innerWidth <= 768);
+//     };
+
+//     window.addEventListener('resize', handleResize);
+//     handleResize(); // Check on initial load
+
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
+
+//   const toggleSidebar = () => {
+//     setIsCollapsed(!isCollapsed);
+//   };
+
+//   return (
+//     <nav className={clsx(
+//       "dark:bg-black h-screen flex flex-col sticky mt-10 justify-between py-6 transition-all duration-200 ease-in-out",
+//       isCollapsed ? "w-16" : "w-48"
+//     )}>
+//       {/* Main menu in the center */}
+//       <div className="flex flex-col z-1000 items-start justify-start flex-grow gap-2 px-2">
+//         {menuOptions.map((menuItem) => (
+//           <Link
+//             key={menuItem.name}
+//             href={menuItem.href}
+//             className={clsx(
+//               'group h-10 flex items-center rounded-lg py-2 px-3 cursor-pointer transition-colors duration-200 w-full',
+//               {
+//                 'dark:bg-neutral-800 text-white': pathName === menuItem.href,
+//                 'hover:bg-neutral-800': pathName !== menuItem.href,
+//               }
+//             )}
+//           >
+//             <div className="w-7 h-7 flex items-center justify-center">
+//               <menuItem.Component selected={pathName === menuItem.href} />
+//             </div>
+//             {!isCollapsed && (
+//               <span className="ml-3 whitespace-nowrap overflow-hidden text-ellipsis">
+//                 {menuItem.name}
+//               </span>
+//             )}
+//           </Link>
+//         ))}
+//       </div>
+
+//       {/* Bottom items */}
+//       <div className="flex flex-col items-start mt-auto gap-4 w-full px-2 mb-10">
+//         <Separator />
+//         {/* Toggle button */}
+//         <button
+//           className="flex items-center justify-center w-full p-2 px-3 rounded-lg hover:bg-neutral-800 transition-colors duration-200"
+//           onClick={toggleSidebar}
+//         >
+//           <PanelLeft className={isCollapsed ? "text-white" : "text-gray-300"} />
+//           {!isCollapsed && <span className="font-light ml-3">Sidebar</span>}
+//         </button>
+//         <Link
+//           className={clsx(
+//             "flex font-bold w-full items-center rounded-lg py-2 px-3 cursor-pointer hover:bg-neutral-900 transition-colors duration-100"
+//           )}
+//           href="/"
+//         >
+//           <div className="w-7 h-3 flex items-center justify-center">
+//             <Signout selected={false} />
+//           </div>
+//           {!isCollapsed && <span className="font-light ml-3">Log out</span>}
+//         </Link>
+//       </div>
+//     </nav>
+//   );
+// };
+
+// export default MenuOptions;
+
+
+// dar pajuda sidebar 2px i desine puse
+
+// 'use client';
+
+// import Link from 'next/link';
+// import { usePathname } from 'next/navigation';
+// import React, { useState, useEffect } from 'react';
+// import { menuOptions } from '@/lib/constant';
+// import clsx from 'clsx';
+// import { Separator } from '@/components/ui/separator';
+// import Signout from '../icons/signout';
+// import { PanelLeft } from 'lucide-react';
+
+// type Props = {};
+
+// const MenuOptions = (props: Props) => {
+//   const pathName = usePathname();
+//   const [isCollapsed, setIsCollapsed] = useState(false);
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setIsCollapsed(window.innerWidth <= 768);
+//     };
+
+//     window.addEventListener('resize', handleResize);
+//     handleResize(); // Check on initial load
+
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
+
+//   const toggleSidebar = () => {
+//     setIsCollapsed(!isCollapsed);
+//   };
+
+//   return (
+//     <nav className={clsx(
+//       "dark:bg-black h-screen flex flex-col sticky mt-10 justify-between py-6 transition-all duration-200 ease-in-out",
+//       isCollapsed ? "w-16" : "w-48"
+//     )}>
+//       {/* Main menu in the center */}
+//       <div className="flex flex-col z-1000 items-start justify-start flex-grow gap-2 px-2">
+//         {menuOptions.map((menuItem) => (
+//           <Link
+//             key={menuItem.name}
+//             href={menuItem.href}
+//             className={clsx(
+//               'group h-10 flex items-center rounded-lg py-2 px-3 cursor-pointer transition-colors duration-200 w-full',
+//               {
+//                 'dark:bg-neutral-900 text-white': pathName === menuItem.href,
+//                 'hover:bg-neutral-900': pathName !== menuItem.href,
+//               }
+//             )}
+//           >
+//             <div className="w-7 h-7 flex items-center justify-center">
+//               <menuItem.Component selected={pathName === menuItem.href} />
+//             </div>
+//             {!isCollapsed && (
+//               <span className="ml-3 whitespace-nowrap overflow-hidden text-ellipsis">
+//                 {menuItem.name}
+//               </span>
+//             )}
+//           </Link>
+//         ))}
+//       </div>
+
+//       {/* Bottom items */}
+//       <div className="flex flex-col items-start mt-auto gap-4 w-full px-2 mb-10">
+//         {/* Toggle button */}
+//         <button
+//           className="flex items-center w-full rounded-lg py-2 px-3 cursor-pointer hover:bg-neutral-900 transition-colors duration-200"
+//           onClick={toggleSidebar}
+//         >
+//           <div className="w-7 h-7 flex items-center justify-center">
+//             <PanelLeft className="text-gray-500" />
+//           </div>
+//           {!isCollapsed && <span className="font-light ml-3">Sidebar</span>}
+//         </button>
+//         <Separator />
+//         <Link
+//           className="flex items-center w-full rounded-lg py-2 px-3 cursor-pointer hover:bg-neutral-900 transition-colors duration-100"
+//           href="/"
+//         >
+//           <div className="w-7 h-7 flex items-center justify-center">
+//             <Signout selected={false} />
+//           </div>
+//           {!isCollapsed && <span className="font-light ml-3">Logout</span>}
+//         </Link>
+//       </div>
+//     </nav>
+//   );
+// };
+
+// export default MenuOptions;
+
+
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { menuOptions } from '@/lib/constant';
 import clsx from 'clsx';
 import { Separator } from '@/components/ui/separator';
 import Signout from '../icons/signout';
-import { ArrowLeftToLine, ArrowRightToLine } from 'lucide-react';
-import Logo from '@/app/(landing-page)/assets/XThreat_icon_primary_white_to_gradient.svg'
-import Xlogo from '../icons/xlogo';
-
+import { PanelLeft } from 'lucide-react';
 
 type Props = {};
 
@@ -909,78 +1209,65 @@ const MenuOptions = (props: Props) => {
   };
 
   return (
-    <>
-      {/* Toggle button */}
-      <button
-        className={clsx(
-          "fixed top-4 left-4 z-[60] p-2 bg-black/50 rounded-md transition-all duration-300",
-          isCollapsed ? "translate-x-0" : "translate-x-48"
-        )}
-        onClick={toggleSidebar}
-      >
-        {isCollapsed ? (
-          <ArrowRightToLine className="text-white" />
-        ) : (
-          <ArrowLeftToLine className="text-white" />
-        )}
-      </button>
-
-      {/* Navigation sidebar */}
-      <nav className={clsx(
-        "dark:bg-black h-screen flex flex-col sticky justify-between py-6 transition-all duration-200 ease-in-out",
-        isCollapsed ? "w-16" : "w-48"
-      )}>
-        {/* Logo */}
-        <div className="px-2 mb-6 h-19">
-          <Xlogo width={30} height={30} className="mx-auto"/>
-        </div>
-
-        {/* Main menu in the center */}
-        <div className="flex flex-col z-1000 items-start justify-start flex-grow gap-2 px-2">
-          {menuOptions.map((menuItem) => (
-            <Link
-              key={menuItem.name}
-              href={menuItem.href}
-              className={clsx(
-                'group h-10 flex items-center rounded-lg py-2 px-3 cursor-pointer transition-colors duration-200 w-full',
-                {
-                  'dark:bg-[#e2e2e2] text-black':
-                    pathName === menuItem.href,
-                  'hover:bg-neutral-900': pathName !== menuItem.href,
-                }
-              )}
-            >
-              <div className="w-7 h-7 flex items-center justify-center">
-                <menuItem.Component
-                  selected={pathName === menuItem.href}
-                />
-              </div>
-              {!isCollapsed && (
-                <span className="ml-3 whitespace-nowrap overflow-hidden text-ellipsis">
-                  {menuItem.name}
-                </span>
-              )}
-            </Link>
-          ))}
-        </div>
-
-        {/* Bottom items */}
-        <div className="flex flex-col items-start gap-4 w-full px-2">
-          <Separator />
+    <nav className={clsx(
+      "dark:bg-black h-screen flex flex-col sticky mt-10 justify-between py-6 transition-all duration-200 ease-in-out",
+      isCollapsed ? "w-16" : "w-48"
+    )}>
+      {/* Main menu in the center */}
+      <div className="flex flex-col z-1000 items-start justify-start flex-grow gap-2 px-2">
+        {menuOptions.map((menuItem) => (
           <Link
+            key={menuItem.name}
+            href={menuItem.href}
             className={clsx(
-              "flex font-bold w-full items-center rounded-lg py-2 px-3 cursor-pointer hover:bg-neutral-900 transition-colors duration-200"
+              'group h-10 flex items-center rounded-lg py-2 px-3 cursor-pointer transition-colors duration-200 w-full',
+              {
+                'dark:bg-gray-900/70 text-white': pathName === menuItem.href,
+                'hover:bg-gray-900/70': pathName !== menuItem.href,
+              }
             )}
-            href="/"
           >
-            <div className="w-7 h-3 flex items-center justify-center">
-              <Signout selected={false} />
+            <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+              <menuItem.Component selected={pathName === menuItem.href} />
             </div>
-            {!isCollapsed && <span className="font-light ml-3">Sign out</span>}
+            <span className={clsx("ml-3 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-200", 
+              isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
+              {menuItem.name}
+            </span>
           </Link>
-        </div>
-      </nav>
-    </>
+        ))}
+      </div>
+
+      {/* Bottom items */}
+      <div className="flex flex-col items-start mt-auto gap-4 w-full px-2 mb-10">
+        {/* Toggle button */}
+        <button
+          className="flex items-center w-full rounded-lg py-2 px-3 cursor-pointer hover:bg-neutral-900 transition-colors duration-200"
+          onClick={toggleSidebar}
+        >
+          <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+            <PanelLeft className="text-gray-500" />
+          </div>
+          <span className={clsx("font-light ml-3 whitespace-nowrap overflow-hidden transition-all duration-200", 
+            isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
+            Sidebar
+          </span>
+        </button>
+        <Separator />
+        <Link
+          className="flex items-center w-full rounded-lg py-2 px-3 cursor-pointer hover:bg-neutral-900 transition-colors duration-100"
+          href="/"
+        >
+          <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+            <Signout selected={false} />
+          </div>
+          <span className={clsx("font-light ml-3 whitespace-nowrap overflow-hidden transition-all duration-200", 
+            isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
+            Log out
+          </span>
+        </Link>
+      </div>
+    </nav>
   );
 };
 

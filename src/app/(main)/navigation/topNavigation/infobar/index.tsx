@@ -1339,10 +1339,12 @@ const InfoBar = () => {
         onClose={() => setIsUserGuideOpen(false)}
       />
     </div>
+  
   )
 }
 
 export default InfoBar
+
 
 
 

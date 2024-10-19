@@ -58,12 +58,12 @@ const FAQSection = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-transparent">
+    <section className="py-16 md:py-24 font-sans bg-transparent">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-5xl lg:text-5xl mb-2 text-center font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl mb-2 text-center font-semibold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
           Frequently Asked Questions
         </h2>
-        <h3 className="text-lg md:text-2xl mb-12 mx-7 font-serif italic text-gray-400 text-center font-light">
+        <h3 className="text-lg sm:text-xl md:text-xl mb-12 mx-7 font-serif italic text-gray-400 text-center font-light">
           Get answers to common questions about our cybersecurity training solutions
         </h3>
         <div className="flex justify-center">
@@ -80,7 +80,7 @@ const FAQSection = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="bg-gray-900/20 border border-gray-800 rounded-lg overflow-hidden"
+                  className="bg-gray-900/30 [box-shadow:0_-20px_70px_-20px_#ffffff1f_inset] border border-gray-800 rounded-lg overflow-hidden"
                 >
                   <button
                     className="flex justify-between items-center w-full p-4 text-left"
@@ -153,7 +153,7 @@ const AnimatedSolutionSection = ({ title, description, icon, imagePosition, link
   const renderVisual = (title, icon) => {
     if (title === "Phishing Awareness") {
       return (
-        <div className="w-full h-[300px] md:h-[310px] overflow-hidden">
+        <div className="w-full h-[300px]  md:h-[310px] overflow-hidden">
           <AnimatedListDemo className="w-full h-full" />
         </div>
       );
@@ -201,12 +201,12 @@ const AnimatedSolutionSection = ({ title, description, icon, imagePosition, link
         opacity: useSpring(opacity, { stiffness: 300, damping: 30 }),
         scale: useSpring(scale, { stiffness: 300, damping: 30 }),
       }}
-      className={`flex flex-col md:flex-row items-center bg-black border border-gray-800 rounded-xl p-4 md:p-8 w-full max-w-6xl mx-auto mb-8`}
+      className={`flex flex-col md:flex-row items-center bg-gray-900/30 [box-shadow:0_-20px_70px_-20px_#ffffff1f_inset] bg-black border border-gray-800 rounded-xl p-4 md:p-8 w-full max-w-6xl mx-auto mb-8`}
     >
       {isEven ? (
         <>
           <div className="w-full md:w-1/2 p-4 md:p-8 order-2 md:order-1">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">{title}</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">{title}</h2>
             <p className="text-lg md:text-lg text-gray-400 mb-6">{description}</p>
             <Link href={link} className="inline-block bg-gray-300 hover:bg-gray-200 font-bold py-2 px-4 rounded transition duration-300">
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-600 to-neutral-800">
@@ -224,7 +224,7 @@ const AnimatedSolutionSection = ({ title, description, icon, imagePosition, link
             {renderVisual(title, icon)}
           </div>
           <div className="w-full md:w-1/2 p-4 md:p-8 order-2">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">{title}</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">{title}</h2>
             <p className="text-lg md:text-lg text-gray-400 mb-6">{description}</p>
             <Link href={link} className="inline-block bg-gray-300 hover:bg-gray-200 font-bold py-2 px-4 rounded transition duration-300">
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-600 to-neutral-800">
@@ -334,7 +334,7 @@ export default function Home() {
                       whileTap={{ scale: 0.95 }}
                       className="px-4 py-2 mb-8 md:mb-10 text-xl sm:text-2xl w-full sm:w-fit border-t-2 rounded-xl border-[#4D4D4D] bg-[#dad9d9] hover:bg-white group transition-all flex items-center justify-center gap-4 hover:shadow-xl hover:shadow-neutral-500 duration-500"
                     >
-                      <span className="bg-clip-text ml-[4px] font-serif italic inline-flex text-transparent bg-gradient-to-r from-gray-600 to-gray-900 md:text-center group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
+                      <span className="bg-clip-text ml-[4px] font-sans inline-flex text-transparent bg-gradient-to-r from-gray-600 to-gray-900 md:text-center group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
                         Try quiz <ChevronRight className="mt-[6px]" color="black"/>
                       </span>
                     </motion.button>
@@ -346,7 +346,7 @@ export default function Home() {
         </div>
       </section>
 
-        <section className="flex flex-col max-w-6xl relative z-20 md:mt-[30px] lg:mt-[32px] mb-10 mx-auto">
+        <section className="flex flex-col font-sans max-w-6xl relative z-20 md:mt-[30px] lg:mt-[32px] mb-10 mx-auto">
           <div>
             <h2 className="text-4xl md:text-5xl mb-2 pb-1 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-semibold">
               Why we exist
@@ -354,12 +354,12 @@ export default function Home() {
             <p className="text-xl mb-14 mx-10 text-center font-serif italic text-gray-400">
               Human error is the leading cause of cyber attacks, and malicious actors exploit this vulnerability
             </p>
-            <div className="border bg-gray-900/30 [border:1px_solid_rgba(255,255,255,.1)] [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] rounded-xl mx-8 border-gray-800 p-9"><StatisticsHack /></div>
+            <div className="border bg-gray-900/30 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] rounded-xl mx-8 border-gray-800 p-9"><StatisticsHack /></div>
             
           </div>
         </section>
 
-        <section className="flex flex-col relative z-20 mt-[100px] sm:mt-[150px] m-auto flex-wrap items-center justify-center">
+        <section className="flex font-sans flex-col relative z-20 mt-[100px] sm:mt-[150px] m-auto flex-wrap items-center justify-center">
         <h2 className="text-3xl sm:text-4xl md:text-5xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-semibold">
           Features
         </h2>
@@ -372,8 +372,8 @@ export default function Home() {
       </section>        
 
 
-      <section className="pt-28 overflow-hidden">
-        <div className="container mx-auto px-8 max-w-6xl">
+      <section className="pt-28 font-sans overflow-hidden">
+        <div className="container mx-auto px-8  max-w-6xl">
           <h2 className="text-3xl sm:text-4xl md:text-5xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold">
             Solutions
           </h2>
@@ -407,12 +407,12 @@ export default function Home() {
       <FAQSection/>  
 
 
-      <section className="py-16 md:py-24 mb-10 bg-transparent">
+      <section className="py-16 md:py-24 font-sans mb-10 bg-transparent">
             <div className="container mx-auto px-4">
-              <h2 className="text-3xl md:text-5xl lg:text-5xl mb-2 text-center font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl mb-2 text-center font-semibold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
                 Prepare for Tomorrow
               </h2>
-              <h3 className="text-lg md:text-2xl mb-8 mx-7 font-serif italic text-gray-400 text-center font-light">
+              <h3 className="text-lg sm:text-xl md:text-xl mb-8 mx-7 font-serif italic text-gray-400 text-center font-light">
               Every 39 seconds, a business is attacked.
               </h3>
               <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-10">

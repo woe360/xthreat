@@ -1254,7 +1254,7 @@ const Navbar = () => {
         <div className="bg-gray-900/50 border border-gray-800 p-4 rounded-md">
           <h4 className="text-white font-semibold mb-2">New: AI-Powered Training</h4>
           <p className="text-gray-400 text-sm mb-2">Enhance your security with our latest AI-driven training modules.</p>
-          <Link href="/ai-training" className="text-gray-400 hover:text-gray-300 flex flex-row text-base">Learn more <ChevronRight className="h-4 w-4 mt-[5px]"/></Link>
+          <Link href="/ai-training" className="text-gray-300 hover:text-gray-100 flex flex-row text-base">Learn more <ChevronRight className="h-4 w-4 mt-[5px]"/></Link>
         </div>
       </div>
     </div>
@@ -1319,9 +1319,9 @@ const Navbar = () => {
                 href="https://cal.com/xthreat/30min"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 h-9 text-base w-full sm:w-fit rounded-xl border-[#4D4D4D] bg-[#ffffff] hover:bg-white group transition-all flex items-center justify-center gap-4"
+                className="p-4 h-9 text-base w-full sm:w-fit rounded-xl border-[#4D4D4D] bg-gray-300 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4"
               >
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-500 to-neutral-700 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-800 to-neutral-900 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
                   Book a demo
                 </span>
               </Link>

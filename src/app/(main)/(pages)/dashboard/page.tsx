@@ -359,16 +359,16 @@ import Leaderboard from './components/leaderboard';
 import RecentLessons from './components/recentLessons';
 import AnalyticsComponent from './components/AnalyticsPhishDasboard';
 
-const componentStyle = {
-  background: 'radial-gradient(125% 125% at 50% 25%, #222 5%, #223 70%)',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-};
-
-
 // const componentStyle = {
-//   background: 'rgba(17, 24, 39, 0.5)', // This is equivalent to bg-gray-900/50 (with 50% opacity)
-//   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow from your example
+//   background: 'radial-gradient(125% 125% at 50% 25%, #222 5%, #223 70%)',
+//   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
 // };
+
+
+const componentStyle = {
+  background: 'rgba(11, 34, 39, 0.5)', // This is equivalent to bg-gray-900/50 (with 50% opacity)
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow from your example
+};
 
 
 const certifications = [
@@ -377,11 +377,6 @@ const certifications = [
   { name: "CompTIA Security+", progress: 85 },
 ];
 
-
-// const componentStyle = {
-//   background: 'radial-gradient(125% 125% at 50% 25%, #1a1a2e 5%, #16213e 70%, #0f3460 100%)', // Deep blues and teals
-//   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-// };
 
 
 
