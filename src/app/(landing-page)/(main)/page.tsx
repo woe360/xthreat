@@ -299,7 +299,7 @@ export default function Home() {
                       <span className="absolute inset-0 rounded-full bg-gradient-to-r from-red-400/0 via-red-500/90 to-red-400/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                     </span>
                     <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
-                        <Link className="flex flex-row"
+                        <Link className="flex font-sans font-normal flex-row"
                           href="/ai-training">
                           AI enhanced training <ChevronRight className="mt-[7px] ml-1" size={12}/>
                         </Link>
