@@ -1220,7 +1220,7 @@ const MenuOptions = (props: Props) => {
             key={menuItem.name}
             href={menuItem.href}
             className={clsx(
-              'group h-10 flex items-center rounded-lg py-2 px-3 cursor-pointer transition-colors duration-200 w-full',
+              'group h-10 flex items-center rounded-lg py-2 px-[10px] cursor-pointer transition-colors duration-200 w-full',
               {
                 'dark:bg-gray-900/70 text-gray-200': pathName === menuItem.href,
                 'hover:bg-gray-900/70 text-gray-200': pathName !== menuItem.href,
@@ -1242,7 +1242,7 @@ const MenuOptions = (props: Props) => {
       <div className="flex flex-col items-start mt-auto gap-4 w-full px-2 mb-10">
         {/* Toggle button */}
         <button
-          className="flex items-center w-full rounded-lg py-2 px-3 cursor-pointer hover:bg-neutral-900 transition-colors duration-200"
+          className="flex items-center w-full rounded-lg py-2 px-[10px] cursor-pointer hover:bg-neutral-900 transition-colors duration-200"
           onClick={toggleSidebar}
         >
           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
@@ -1253,9 +1253,11 @@ const MenuOptions = (props: Props) => {
             Sidebar
           </span>
         </button>
+
         <Separator />
+
         <Link
-          className="flex items-center w-full rounded-lg py-2 px-3 cursor-pointer hover:bg-neutral-900 transition-colors duration-100"
+          className="flex items-center w-full rounded-lg py-2 px-[10px] cursor-pointer hover:bg-neutral-900 transition-colors duration-100"
           href="/"
         >
           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
