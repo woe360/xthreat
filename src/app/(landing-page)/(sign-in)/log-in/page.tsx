@@ -454,20 +454,23 @@ export default function SignIn() {
               <span>Google</span>
             </button>
           </div>
-
           <div className="relative">
-            <div className="relative flex flex-row items-center justify-center text-sm mt-5">
-              <span className="text-gray-400">support@xthreat.eu</span>
-              <button
-                onClick={copyToClipboard}
-                className="ml-2 text-gray-400 hover:text-gray-300 focus:outline-none"
-                aria-label="Copy email"
-              >
-                <Copy size={16} />
-              </button>
-              {copied && (
-                <span className="ml-2 text-green-500 text-xs">Copied!</span>
-              )}
+            <div className="relative flex flex-col items-center justify-center text-sm mt-6 h-[28px]">
+              <div className="flex flex-row items-center">
+                <span className="text-gray-400">support@xthreat.eu</span>
+                <button
+                  onClick={copyToClipboard}
+                  className="ml-2 mt-[2px] text-gray-400 hover:text-gray-300 focus:outline-none"
+                  aria-label="Copy email"
+                >
+                  <Copy size={14} />
+                </button>
+              </div>
+              <div className="h-2">
+                {copied && (
+                  <span className="text-green-500 text-xs">Copied!</span>
+                )}
+              </div>
             </div>
           </div>
         </div>

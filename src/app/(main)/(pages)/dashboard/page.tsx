@@ -371,11 +371,16 @@ import AnalyticsComponent from './components/AnalyticsPhishDasboard';
 // };
 
 const componentStyle = {
-  background: 'black', // Set background to black
+  background: 'black-900 bg-opacity-50', // Set background to black
   border: '1px solid rgba(31, 41, 55)', // This is equivalent to gray-800 in Tailwind (rgb(31, 41, 55))
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow
 };
 
+// const componentStyle = {
+//   backgroundColor: 'rgba(0, 0, 0, 0.5)', // 50% opaque black
+//   border: '1px solid rgba(31, 41, 55)', // This is equivalent to gray-800 in Tailwind (rgb(31, 41, 55))
+//   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow
+// };
 
 
 const certifications = [

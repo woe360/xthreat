@@ -1185,7 +1185,7 @@ import { menuOptions } from '@/lib/constant';
 import clsx from 'clsx';
 import { Separator } from '@/components/ui/separator';
 import Signout from '../icons/signout';
-import { PanelLeft } from 'lucide-react';
+import { LogOut, PanelLeft } from 'lucide-react';
 
 type Props = {};
 
@@ -1214,23 +1214,23 @@ const MenuOptions = (props: Props) => {
       isCollapsed ? "w-16" : "w-48"
     )}>
       {/* Main menu in the center */}
-      <div className="flex flex-col z-1000 items-start justify-start flex-grow gap-2 px-2">
+      <div className="flex flex-col z-1000 items-start justify-start flex-grow gap-1 px-2">
         {menuOptions.map((menuItem) => (
           <Link
             key={menuItem.name}
             href={menuItem.href}
             className={clsx(
-              'group h-10 flex items-center rounded-lg py-2 px-[10px] cursor-pointer transition-colors duration-200 w-full',
+              'group h-10 flex text-[15px] items-center rounded-lg py-2 px-[10px] cursor-pointer transition-colors duration-200 w-full',
               {
                 'dark:bg-gray-900/70 text-gray-200': pathName === menuItem.href,
-                'hover:bg-gray-900/70 text-gray-200': pathName !== menuItem.href,
+                'hover:bg-gray-900/70 text-gray-400': pathName !== menuItem.href,
               }
             )}
           >
             <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
               <menuItem.Component selected={pathName === menuItem.href} />
             </div>
-            <span className={clsx("ml-3 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-200", 
+            <span className={clsx("ml-1 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-200", 
               isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
               {menuItem.name}
             </span>
@@ -1242,13 +1242,13 @@ const MenuOptions = (props: Props) => {
       <div className="flex flex-col items-start mt-auto gap-4 w-full px-2 mb-10">
         {/* Toggle button */}
         <button
-          className="flex items-center w-full rounded-lg py-2 px-[10px] cursor-pointer hover:bg-neutral-900 transition-colors duration-200"
+          className="flex items-center w-full rounded-lg py-2 px-[10px] text-gray-400 hover:text-gray-200 cursor-pointer hover:bg-gray-900/50 transition-colors duration-200"
           onClick={toggleSidebar}
         >
           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-            <PanelLeft className="text-gray-500" />
+            <PanelLeft className="text-gray-500" size={20} />
           </div>
-          <span className={clsx("font-light ml-3 whitespace-nowrap overflow-hidden transition-all duration-200", 
+          <span className={clsx("font-light text-[15px] ml-3 whitespace-nowrap overflow-hidden transition-all duration-200", 
             isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
             Sidebar
           </span>
@@ -1257,13 +1257,14 @@ const MenuOptions = (props: Props) => {
         <Separator />
 
         <Link
-          className="flex items-center w-full rounded-lg py-2 px-[10px] cursor-pointer hover:bg-neutral-900 transition-colors duration-100"
+          className="flex items-center w-full text-gray-400 hover:text-gray-200 rounded-lg py-2 px-[10px] cursor-pointer hover:bg-gray-900/50 transition-colors duration-100"
           href="/"
         >
           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-            <Signout selected={false} />
+            {/* <Signout selected={false} /> */}
+            <LogOut className="text-gray-500" size={20} />
           </div>
-          <span className={clsx("font-light ml-3 whitespace-nowrap overflow-hidden transition-all duration-200", 
+          <span className={clsx("font-light  text-[15px] ml-3 whitespace-nowrap overflow-hidden transition-all duration-200", 
             isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
             Log out
           </span>
