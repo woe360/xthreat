@@ -257,7 +257,7 @@ export default function SignIn() {
                 <div className="w-full border-t border-gray-700" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-black text-gray-400">OR</span>
+                <span className="px-2 bg-black font-serif italic text-gray-400">OR</span>
               </div>
             </div>
 

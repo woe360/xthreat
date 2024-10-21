@@ -365,10 +365,17 @@ import AnalyticsComponent from './components/AnalyticsPhishDasboard';
 // };
 
 
+// const componentStyle = {
+//   background: 'rgba(11, 34, 39, 0.5)', // This is equivalent to bg-gray-900/50 (with 50% opacity)
+//   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow from your example
+// };
+
 const componentStyle = {
-  background: 'rgba(11, 34, 39, 0.5)', // This is equivalent to bg-gray-900/50 (with 50% opacity)
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow from your example
+  background: 'black', // Set background to black
+  border: '1px solid rgba(31, 41, 55)', // This is equivalent to gray-800 in Tailwind (rgb(31, 41, 55))
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)' // Keeping the same boxShadow
 };
+
 
 
 const certifications = [
@@ -484,7 +491,7 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen font-sans p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-r from-gray-900/20 via-transparent to-gray-900/20 text-neutral-300">
-      <h1 className="text-xl sm:text-2xl font-light mb-4 sm:mb-8 text-neutral-200">Dashboard</h1>
+      <h1 className="text-xl font-light text-neutral-200">Dashboard</h1>
       
       {/* Summary */}
       <div className="rounded-lg border border-gray-700 p-4 sm:p-6" style={componentStyle}>

@@ -1222,8 +1222,8 @@ const MenuOptions = (props: Props) => {
             className={clsx(
               'group h-10 flex items-center rounded-lg py-2 px-3 cursor-pointer transition-colors duration-200 w-full',
               {
-                'dark:bg-gray-900/70 text-white': pathName === menuItem.href,
-                'hover:bg-gray-900/70': pathName !== menuItem.href,
+                'dark:bg-gray-900/70 text-gray-200': pathName === menuItem.href,
+                'hover:bg-gray-900/70 text-gray-200': pathName !== menuItem.href,
               }
             )}
           >

@@ -47,7 +47,7 @@ const Lessons = () => {
 
   return (
     <div className="min-h-min flex flex-col gap-4 p-6 font-sans bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] text-white">
-      <h1 className="text-3xl top-0 font-light p-1 z-10 bg-transparent flex items-center">
+      <h1 className="text-xl top-0 font-light z-10 bg-transparent flex items-center">
         Modules
       </h1>
       {/* <div className="flex gap-4 mt-4">
@@ -63,12 +63,12 @@ const Lessons = () => {
           </button>
         ))}
       </div> */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
         {filteredModules.map((module, index) => (
           <Link href={`/modules/${module.slug}`} key={index} > 
             <div className="p-4 rounded-lg bg-black border border-neutral-700 hover:background: linear-gradient(180deg, #1F2429 0%, #000000 100%);] cursor-pointer flex flex-col justify-between h-full" style={componentStyle}>
               <div className="flex flex-col flex-grow">
-                <h2 className="text-2xl font-bold">{module.title}</h2>
+                <h2 className="text-2xl font-base">{module.title}</h2>
                 <p className="mt-2 text-gray-400 flex-grow">{module.description}</p>
               </div>
               <div className="mt-2 flex flex-wrap gap-2 justify-end">
