@@ -684,18 +684,6 @@ const DashboardPage = () => {
           <AnalyticsComponent/>
         </div>
       </div>
-
-      {/* Leaderboard */}
-      <div className="grid grid-cols-1 gap-4 sm:gap-6 mt-4 sm:mt-6">
-        <div className="rounded-lg p-4 sm:p-6 border border-gray-700" style={componentStyle}>
-          <h2 className="text-xl sm:text-2xl mb-4 text-neutral-200">Leaderboard</h2>
-          <div className="flex flex-wrap gap-2 mb-4">
-            <button className="px-3 py-1 bg-neutral-700 text-neutral-300 rounded-lg hover:bg-neutral-600 text-xs sm:text-sm">Filter by Org</button>
-            <button className="px-3 py-1 bg-neutral-600 text-neutral-200 rounded-lg hover:bg-neutral-500 text-xs sm:text-sm">Filter by Team</button>
-          </div>
-          <Leaderboard />
-        </div>
-      </div>
     </div>
   );
 };

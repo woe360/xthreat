@@ -3384,7 +3384,7 @@ const PricingPage = () => {
     {
       name: "Essential",
       monthlyPrice: 1.8,
-      yearlyPrice: 21.6,
+      yearlyPrice: 18,
       description: "Ideal for small teams looking to protect their business with essential cybersecurity training.",
       features: [
         "Access to essential cybersecurity awareness training modules",
@@ -3399,7 +3399,7 @@ const PricingPage = () => {
     {
       name: "Advanced",
       monthlyPrice: 3.5,
-      yearlyPrice: 42,
+      yearlyPrice: 35,
       description: "Comprehensive cybersecurity awareness training designed for medium sized or growing businesses.",
       features: [
         "Everything in the Essential plan",
@@ -3481,7 +3481,7 @@ const PricingPage = () => {
           </div>
           <div className="h-5">
             {isYearly && savings && (
-              <p className="text-sm text-green-400">
+              <p className="text-sm text-orange-400/80">
                 Save €{savings.amount}/user/year ({savings.percentage}% off)
               </p>
             )}
@@ -3493,7 +3493,7 @@ const PricingPage = () => {
             {plan.features.map((feature, index) => (
               <li key={index} className="flex items-start">
                 <div className="flex-shrink-0">
-                  <Check className="h-6 w-6 text-green-500" />
+                  <Check className="h-6 w-6 text-orange-500/80" />
                 </div>
                 <p className="ml-3 text-base text-gray-300">{feature}</p>
               </li>

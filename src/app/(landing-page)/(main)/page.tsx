@@ -318,7 +318,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
-                  className="text-lg sm:text-xl md:text-2xl text-center text-neutral-400 mt-4 mx-3"
+                  className="text-lg sm:text-xl md:text-2xl text-center text-neutral-400 mt-4 mx-3 max-w-3xl"
                 >
                   Interactive cybersecurity awareness training platform, designed to ensure real world application & retention
                 </motion.p>
@@ -404,7 +404,13 @@ export default function Home() {
         </div>
       </section>      */}
 
-      <FAQSection/>  
+     
+
+      <section className="pt-28 font-sans overflow-hidden">
+        <div className="container mx-auto px-4  max-w-6xl">
+          <FAQSection/> 
+        </div>
+      </section> 
 
 
       <section className="py-16 md:py-24 font-sans mb-10 bg-transparent">
