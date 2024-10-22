@@ -359,17 +359,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="flex font-sans flex-col relative z-20 mt-[100px] sm:mt-[150px] m-auto flex-wrap items-center justify-center">
+        <section className="flex flex-col relative z-20 mt-[100px] sm:mt-[150px] m-auto flex-wrap items-center justify-center">
         <h2 className="text-3xl sm:text-4xl md:text-5xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-semibold">
           Features
         </h2>
         <h3 className="text-lg sm:text-xl md:text-2xl mb-14 font-serif italic mx-7 text-gray-400 text-center">
           Core Features and Advantages of Our Security Training Solutions
         </h3>
-        <div className="w-full px-4 h-2/3 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-          <FeaturesSectionDemo />
+        <div className="w-full px-4 sm:px-6  lg:px-8 max-w-6xl mx-auto">
+          <BentoGridThirdDemo />
         </div>
-      </section>        
+      </section>    
 
 
       <section className="pt-28 font-sans overflow-hidden">
@@ -390,19 +390,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* <section className="flex flex-col relative z-20 mt-[100px] sm:mt-[150px] m-auto flex-wrap items-center justify-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-semibold">
-          Features
-        </h2>
-        <h3 className="text-lg sm:text-xl md:text-2xl mb-14 font-serif italic mx-7 text-gray-400 text-center">
-          Core Features and Advantages of Our Security Training Solutions
-        </h3>
-        <div className="w-full px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-          <BentoGridThirdDemo />
-        </div>
-      </section>      */}
+      </section> 
 
      
 
