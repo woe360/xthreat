@@ -252,7 +252,7 @@ const TryQuiz = () => {
         {!quizStarted ? (
           <>
             <h1 className="text-4xl sm:text-6xl md:text-8xl text-center pb-2 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-bold">
-              Try Our Quiz
+              Try Quiz
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-center text-neutral-400 mt-4 max-w-2xl">
               Test your cybersecurity awareness with our interactive quiz.
@@ -267,7 +267,7 @@ const TryQuiz = () => {
                   Start <ChevronRight className="mt-1 sm:mt-1 ml-0.5 sm:ml-1 w-5 h-5 sm:w-6 sm:h-6" color="black"/>
                 </span>
               </Button>
-            </div>
+            </div> 
           </>
         ) : (
           <>
