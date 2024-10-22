@@ -368,10 +368,10 @@ const MobileMenu = () => {
         {/* Sign In and Request Demo at the bottom */}
         <div className="mt-auto w-full mb-20">
           <Link
-            href="/sign-in"
+            href="/log-in"
             className="text-xl h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-transparent text-white hover:bg-white/10 inline-flex items-center justify-center select-none transition ease-in-out duration-200 mb-4 w-full"
           >
-            Sign In
+            Log In
           </Link>
           <Link
             href="https://cal.com/xthreat/30min"
