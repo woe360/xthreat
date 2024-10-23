@@ -1,9 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { User, Mail, Calendar, Bell, ChevronLeft, Globe, Users } from 'lucide-react'
-import Link from 'next/link'
+import { User, Bell, Globe } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-// import { Switch } from "@/components/global/ui/switch"
 import { Switch } from '@/components/ui/switch'
 import { Label } from "@/components/ui/label"
 import { CardContent } from "@/components/ui/card"

@@ -3325,7 +3325,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Check, CheckCircle, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 import Navbar from '@/app/(landing-page)/navigation/navbar';
 import Footer from '@/app/(landing-page)/navigation/footer';
 import { motion, AnimatePresence } from 'framer-motion';

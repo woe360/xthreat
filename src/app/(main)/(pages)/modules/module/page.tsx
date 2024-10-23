@@ -275,7 +275,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Bug, Cable, ChevronDown, ChevronUp, Circle, CheckCircle2, ChevronLeft } from "lucide-react";
+import { Cable, ChevronDown, ChevronUp, Circle, CheckCircle2, ChevronLeft } from "lucide-react";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 interface SubLesson {

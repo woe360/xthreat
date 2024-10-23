@@ -1,15 +1,7 @@
 import { cn } from '@/lib/utils'
 import React from "react";
 import { BentoGrid, BentoGridItem } from "@/app/(landing-page)/(main)/components/bento-grid";
-import { useEffect, useRef, useState} from "react";
-
-import {
-  IconBoxAlignRightFilled,
-  IconClipboardCopy,
-  IconFileBroken,
-  IconSignature,
-  IconTableColumn,
-} from "@tabler/icons-react";
+import { useEffect, useRef} from "react";
 import { motion, useScroll, useTransform, useAnimation} from "framer-motion";
 import Image from "next/image";
 

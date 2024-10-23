@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { Search, UserPlus, UserMinus, BarChart2, Mail, Phone, Calendar } from 'lucide-react';
+import { Search, UserPlus, UserMinus, BarChart2 } from 'lucide-react';
 
 const AccountsPage = () => {
   const [employees, setEmployees] = useState([

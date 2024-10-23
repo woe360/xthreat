@@ -958,7 +958,13 @@ import { Select } from '@/components/ui/select';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
 
-const FeatureItem = ({ icon, text, delay }) => (
+interface FeatureItemProps {
+  icon: React.ReactNode;
+  text: string;
+  delay: number;
+}
+
+const FeatureItem: React.FC<FeatureItemProps> = ({ icon, text, delay }) => (
   <motion.div 
     initial={{ opacity: 0, x: -20 }}
     animate={{ opacity: 1, x: 0 }}

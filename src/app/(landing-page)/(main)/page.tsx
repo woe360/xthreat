@@ -1,31 +1,21 @@
 'use client'
-import CyberSecurityGrid from "@/app/(landing-page)/(main)/components/CyberSecurityGrid";
-import { BentoGrid, BentoGridItem } from "@/app/(landing-page)/(main)/components/bento-grid";
 import Footer from "@/app/(landing-page)/navigation/footer";
 import Navbar from "@/app/(landing-page)/navigation/navbar";
-import { clients } from "@/lib/constant";
-import { CheckIcon, ChevronRight } from "lucide-react";
-import Image from "next/image";
-import React, { useState, createContext, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
-import WhatsNewCta from "@/components/ui/whatsNewCta";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { ContainerScroll } from "./components/container-scroll-animation";
-import { Products } from "./components/Products";
 import { BentoGridThirdDemo } from "./components/bentosas";
 import StatisticsHack from "./components/statistics";
-import { Button } from "@/components/ui/button";
-import { ChevronDown } from 'lucide-react';
-
-import { Shield, CheckCircle, Users, Brain, Trophy, Briefcase, Target, Mail, Lock } from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+import {  Users, Briefcase, Target } from 'lucide-react';
 import { AnimatedList } from "@/components/ui/animated-list";
 import { AnimatedListDemo } from "./components/AnimatedListDemo";
 import { AnimatedBeamDemo } from "./components/AnimatedBeamDemo";
 import { MarqueeDemo } from "./components/MarqueeDemo";
 import { OrbitingCirclesDemo } from "./components/OrbitingCirclesDemo";
-import { GlobeDemo } from "./components/GlobeDemo";
 import { CardDemo } from "./components/CardDemo";
-import { FeaturesSectionDemo } from "./components/FeaturesSectionDemo";
+
 
 const FAQSection = () => {
   const [openFAQ, setOpenFAQ] = useState(null);
@@ -129,13 +119,6 @@ const FAQSection = () => {
 };
 
 
-const FeatureSection = ({ icon, title, description }) => (
-  <div className="flex flex-col items-center text-center p-6 bg-gray-900 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-    <div className="text-gray-300 mb-4">{icon}</div>
-    <h3 className="text-xl font-bold mb-2">{title}</h3>
-    <p className="text-gray-400">{description}</p>
-  </div>
-);
 
 
 const AnimatedSolutionSection = ({ title, description, icon, imagePosition, link, index }) => {

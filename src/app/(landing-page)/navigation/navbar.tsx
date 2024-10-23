@@ -1151,12 +1151,12 @@
 
 
 'use client'
-import { MenuIcon, ChevronDown, ChevronUp, ShieldCheck, Users, BookOpen, Newspaper, FileText, Target, Brain, Crosshair, Wrench, Lightbulb, Building, GraduationCap, Rss, ChevronRight } from "lucide-react";
+import { MenuIcon, ChevronDown, ShieldCheck, Users, Target, Crosshair, Wrench, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
 import React, { useState, useEffect, useRef } from "react";
 import MobileMenu from "./MobileMenu";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import XLogo from '../assets/XThreat_icon_primary_white_to_gradient.svg'
 
 const Navbar = () => {

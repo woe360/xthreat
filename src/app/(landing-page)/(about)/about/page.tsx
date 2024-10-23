@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { Brain, Zap, Target, ShieldAlert, Settings, Shield, Dot, Lock, UserCheck, TrendingUp, ChevronRight, ChevronDown } from 'lucide-react';
+import { Shield, Lock, UserCheck, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from '@/app/(landing-page)/navigation/navbar';
 import Footer from '@/app/(landing-page)/navigation/footer';
