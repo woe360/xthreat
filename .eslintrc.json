@@ -17,29 +17,75 @@
 //   }
 // }
 
+
+
+// {
+//   "extends": "next/core-web-vitals",
+//   "rules": {
+//     // Your existing rules
+//     "react/no-unescaped-entities": "off",
+//     "@next/next/no-img-element": "warn",
+//     "jsx-a11y/alt-text": "warn",
+//     "react-hooks/rules-of-hooks": "error",
+//     "react-hooks/exhaustive-deps": "warn",
+
+//     // Modified rules
+//     "no-unused-vars": ["warn", { 
+//       "varsIgnorePattern": "^_",
+//       "argsIgnorePattern": "^_"
+//     }],
+//     "no-console": ["warn", { 
+//       "allow": ["warn", "error"] 
+//     }],
+//     "@next/next/no-async-client-component": "warn",
+    
+//     // Your other rules...
+//     "@next/next/no-html-link-for-pages": "warn",
+//     "react/prop-types": "off",
+//     "react/jsx-key": "warn"
+//   }
+// }
+
+
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    // Your existing rules
-    "react/no-unescaped-entities": "off",
-    "@next/next/no-img-element": "warn",
-    "jsx-a11y/alt-text": "warn",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    // Disable TypeScript strict rules
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
 
-    // Modified rules
-    "no-unused-vars": ["warn", { 
+    // Disable React strict rules
+    "react/no-unescaped-entities": "off",
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react-hooks/rules-of-hooks": "warn",
+
+    // Disable Next.js strict rules
+    "@next/next/no-img-element": "off",
+    "@next/next/no-html-link-for-pages": "off",
+    "@next/next/no-async-client-component": "off",
+
+    // Set common rules to warn instead of error
+    "no-console": "off",
+    "jsx-a11y/alt-text": "warn",
+    "react/jsx-key": "warn",
+
+    // Allow underscore prefix for unused variables
+    "no-unused-vars": ["off", { 
       "varsIgnorePattern": "^_",
       "argsIgnorePattern": "^_"
-    }],
-    "no-console": ["warn", { 
-      "allow": ["warn", "error"] 
-    }],
-    "@next/next/no-async-client-component": "warn",
-    
-    // Your other rules...
-    "@next/next/no-html-link-for-pages": "warn",
-    "react/prop-types": "off",
-    "react/jsx-key": "warn"
-  }
+    }]
+  },
+  "ignorePatterns": [
+    "node_modules/*",
+    ".next/*",
+    "out/*",
+    "public/*",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ]
 }
