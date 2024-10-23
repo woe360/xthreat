@@ -338,7 +338,7 @@ import React from 'react';
 import Footer from '@/app/(landing-page)/navigation/footer';
 import Navbar from '@/app/(landing-page)/navigation/navbar';
 import { Shield, Zap, Users, BarChart, Mail, Brain, LucideIcon } from 'lucide-react';
-import { motion, Variant, Variants } from 'framer-motion';
+import { motion, Variant, Variants, HTMLMotionProps } from 'framer-motion';
 import Link from 'next/link';
 
 interface FeatureCardProps {
@@ -354,14 +354,16 @@ interface StatItemProps {
   delay: number;
 }
 
-interface FadeInUpAnimationProps {
-  initial: Variant;
-  animate: Variant;
-  transition: {
-    duration: number;
-    delay?: number;
-  };
+interface MotionHeadingProps extends HTMLMotionProps<"h1"> {
+  children: React.ReactNode;
 }
+
+interface MotionParagraphProps extends HTMLMotionProps<"p"> {
+  children: React.ReactNode;
+}
+
+const MotionHeading: React.FC<MotionHeadingProps> = motion.h1;
+const MotionParagraph: React.FC<MotionParagraphProps> = motion.p;
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, delay }) => (
   <motion.div 
@@ -394,11 +396,11 @@ const StatItem: React.FC<StatItemProps> = ({ value, label, delay }) => (
 );
 
 const PhishingAwarenessPage: React.FC = () => {
-  const fadeInUp: FadeInUpAnimationProps = {
+  const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.5 }
-  };
+  } as const;
 
   const features: FeatureCardProps[] = [
     {
@@ -483,19 +485,22 @@ const PhishingAwarenessPage: React.FC = () => {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <motion.h1 
-              {...fadeInUp}
+            <MotionHeading
+              initial={fadeInUp.initial}
+              animate={fadeInUp.animate}
+              transition={fadeInUp.transition}
               className="text-5xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold mt-32 mb-6"
             >
               Phishing Awareness
-            </motion.h1>
-            <motion.p 
-              {...fadeInUp}
-              transition={{ delay: 0.2, duration: 0.5 }}
+            </MotionHeading>
+            <MotionParagraph
+              initial={fadeInUp.initial}
+              animate={fadeInUp.animate}
+              transition={{ ...fadeInUp.transition, delay: 0.2 }}
               className="text-xl font-serif italic text-gray-300 max-w-3xl mx-auto"
             >
               Empower your team with cutting-edge phishing awareness training to protect your organization from evolving cyber threats.
-            </motion.p>
+            </MotionParagraph>
           </motion.div>
 
           {/* Features Section */}
@@ -517,9 +522,14 @@ const PhishingAwarenessPage: React.FC = () => {
             transition={{ delay: 1, duration: 0.5 }}
             className="bg-black border border-gray-800 p-8 rounded-lg mb-16"
           >
-            <h2 className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold text-center mb-8">
+            <MotionHeading
+              initial={fadeInUp.initial}
+              animate={fadeInUp.animate}
+              transition={fadeInUp.transition}
+              className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold text-center mb-8"
+            >
               The XThreat Advantage
-            </h2>
+            </MotionHeading>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {stats.map((stat, index) => (
                 <StatItem key={index} {...stat} />
@@ -534,12 +544,22 @@ const PhishingAwarenessPage: React.FC = () => {
             transition={{ delay: 1.5, duration: 0.5 }}
             className="text-center mt-36 mb-10"
           >
-            <h2 className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold mb-6">
+            <MotionHeading
+              initial={fadeInUp.initial}
+              animate={fadeInUp.animate}
+              transition={fadeInUp.transition}
+              className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold mb-6"
+            >
               Ready to Strengthen Your First Line of Defense?
-            </h2>
-            <p className="text-xl font-serif italic max-w-3xl mx-auto text-gray-300 mb-8">
+            </MotionHeading>
+            <MotionParagraph
+              initial={fadeInUp.initial}
+              animate={fadeInUp.animate}
+              transition={{ ...fadeInUp.transition, delay: 0.2 }}
+              className="text-xl font-serif italic max-w-3xl mx-auto text-gray-300 mb-8"
+            >
               Don't let your organization fall victim to phishing attacks. Empower your team with XThreat's advanced phishing awareness solution today.
-            </p>
+            </MotionParagraph>
             <motion.button
               whileHover="hover"
               whileTap="tap"
