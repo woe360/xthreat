@@ -1,85 +1,32 @@
-// import OrbitingCircles from "@/components/ui/orbiting-circles";
-
-// export function OrbitingCirclesDemo() {
-//   return (
-//     <div className="relative flex h-[300px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border border-gray-800 bg-gray-900/20 md:shadow-xl">
-//       <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300 bg-clip-text text-center text-5xl font-semibold leading-none text-transparent dark:from-white dark:to-black">
-//         Enterprise
-//       </span>
-
-//       {/* Inner Circles */}
-//       <OrbitingCircles
-//         className="size-[30px] border-none bg-transparent"
-//         duration={20}
-//         delay={20}
-//         radius={80}
-//       >
-//         <p>Data Breach</p>
-//         <Icons.dataBreach />
-//       </OrbitingCircles>
-//       <OrbitingCircles
-//         className="size-[30px] border-none bg-transparent"
-//         duration={20}
-//         delay={10}
-//         radius={50}
-//       >
-//          <p>Phishing</p>
-//         <Icons.phishingAttack />
-//       </OrbitingCircles>
-
-//       {/* Outer Circles (reverse) */}
-//       <OrbitingCircles
-//         className="size-[30px] border-none bg-transparent"
-//         radius={110}
-//         duration={20}
-//         reverse
-//       >
-//          <p>Ransomware</p>
-//         <Icons.ransomware />
-//       </OrbitingCircles>
-//       <OrbitingCircles
-//         className="size-[28px] border-none bg-transparent"
-//         radius={130}
-//         duration={20}
-//         delay={20}
-//         reverse
-//       >
-//          <p>Insider threat</p>
-//         <Icons.insiderThreat />
-//       </OrbitingCircles>
-//     </div>
-//   );
-// }
-
 // import React from 'react';
 // import OrbitingCircles from "@/components/ui/orbiting-circles";
 
 // const TextBubble = ({ children }) => (
-//   <div className="flex items-center justify-center rounded-full bg-gray-400 cursor-cell hover:bg-gray-200 text-black text-[10px] font-bold p-1 w-14 h-14">
+//   <div className="flex items-center cursor-cell justify-center rounded-full bg-gradient-to-b from-[#bb3737] via-[#977c21] to-[#b87121] text-white text-[13px] p-1 w-14 h-14 leading-tight text-center">
 //     {children}
 //   </div>
 // );
 
 // export function OrbitingCirclesDemo() {
 //   return (
-//     <div className="relative flex h-[300px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border border-gray-800 bg-gray-900/20 md:shadow-xl">
-//       <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-white to-gray-500 bg-clip-text text-center text-5xl font-semibold leading-none text-transparent">
+//     <div className="relative flex h-[300px] w-full flex-col items-center justify-center overflow-hidden rounded-lg md:shadow-xl">
+//       <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-white to-gray-500 bg-clip-text text-center text-6xl font-semibold leading-none text-transparent">
 //         Enterprise
 //       </span>
 
 //       {/* Inner Circles */}
 //       <OrbitingCircles
-//         className="size-[56px] border-none bg-transparent"
+//         className="size-[64px] border border-black bg-transparent"
 //         duration={20}
-//         delay={20}
-//         radius={80}
+//         delay={23}
+//         radius={75}
 //       >
-//         <TextBubble>Data Breach</TextBubble>
+//         <TextBubble>Data breach</TextBubble>
 //       </OrbitingCircles>
 //       <OrbitingCircles
-//         className="size-[56px] border-none bg-transparent"
+//         className="size-[64px] border border-black  bg-transparent"
 //         duration={20}
-//         delay={10}
+//         delay={12}
 //         radius={50}
 //       >
 //         <TextBubble>Phishing</TextBubble>
@@ -87,19 +34,20 @@
 
 //       {/* Outer Circles */}
 //       <OrbitingCircles
-//         className="size-[56px] border-none bg-transparent"
-//         radius={110}
+//         className="size-[64px] border border-black bg-transparent"
+//         radius={100}
 //         duration={20}
+//         delay={28}
 //       >
 //         <TextBubble>Ransomware</TextBubble>
 //       </OrbitingCircles>
 //       <OrbitingCircles
-//         className="size-[56px] border-none bg-transparent"
-//         radius={130}
+//         className="size-[64px] border border-black  bg-transparent"
+//         radius={117}
 //         duration={20}
-//         delay={20}
+//         delay={18}
 //       >
-//         <TextBubble>Insider Threat</TextBubble>
+//         <TextBubble>Insider threat</TextBubble>
 //       </OrbitingCircles>
 //     </div>
 //   );
@@ -108,7 +56,27 @@
 import React from 'react';
 import OrbitingCircles from "@/components/ui/orbiting-circles";
 
-const TextBubble = ({ children }) => (
+interface TextBubbleProps {
+  children: React.ReactNode;
+}
+
+interface IconComponent {
+  (): JSX.Element;
+}
+
+interface IconsType {
+  gitHub: IconComponent;
+  notion: IconComponent;
+  openai: IconComponent;
+  googleDrive: IconComponent;
+  whatsapp: IconComponent;
+  dataBreach: IconComponent;
+  phishingAttack: IconComponent;
+  ransomware: IconComponent;
+  insiderThreat: IconComponent;
+}
+
+const TextBubble: React.FC<TextBubbleProps> = ({ children }) => (
   <div className="flex items-center cursor-cell justify-center rounded-full bg-gradient-to-b from-[#bb3737] via-[#977c21] to-[#b87121] text-white text-[13px] p-1 w-14 h-14 leading-tight text-center">
     {children}
   </div>
