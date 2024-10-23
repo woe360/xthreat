@@ -814,15 +814,15 @@ export default function SignIn() {
             </div>
           </form>
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <div className="relative flex items-center">
               <div className="flex-grow border-t border-gray-700"></div>
               <span className="flex-shrink mx-4 text-gray-400">OR</span>
               <div className="flex-grow border-t border-gray-700"></div>
             </div>
-          </div>
+          </div> */}
 
-          <div className="mt-6 space-y-4">
+          {/* <div className="mt-6 space-y-4">
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
@@ -833,7 +833,7 @@ export default function SignIn() {
               </svg>
               <span>Google</span>
             </button>
-          </div>
+          </div> */}
 
           <div className="relative">
             <div className="relative flex flex-col items-center justify-center text-sm mt-6 h-[28px]">
