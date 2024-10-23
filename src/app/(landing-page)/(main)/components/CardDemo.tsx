@@ -1,10 +1,281 @@
+// "use client";
+// import { animate, motion } from "framer-motion";
+// import React, { useEffect, useMemo } from "react";
+// import { cn } from "@/lib/utils";
+// import { GoCopilot } from "react-icons/go";
+
+// export function CardDemo() {
+//   return (
+//     <Card>
+//       <CardSkeletonContainer>
+//         <Skeleton />
+//       </CardSkeletonContainer>
+//     </Card>
+//   );
+// }
+
+// const Skeleton = () => {
+//   const sequence = useMemo(() => {
+//     const scale = [1, 1.1, 1];
+//     const transform = ["translateY(5px)", "translateY(-10px)", "translateY(0px)"];
+    
+//     return [
+//       [
+//         ".circle-1",
+//         {
+//           scale,
+//           transform,
+//         },
+//         { duration: 0.5 },
+//       ],
+//       [
+//         ".circle-2",
+//         {
+//           scale,
+//           transform,
+//         },
+//         { duration: 0.8 },
+//       ],
+//       [
+//         ".circle-3",
+//         {
+//           scale,
+//           transform,
+//         },
+//         { duration: 0.8 },
+//       ],
+//       [
+//         ".circle-4",
+//         {
+//           scale,
+//           transform,
+//         },
+//         { duration: 0.8 },
+//       ],
+//       [
+//         ".circle-5",
+//         {
+//           scale,
+//           transform,
+//         },
+//         { duration: 0.8 },
+//       ],
+//     ];
+//   }, []); // Empty dependency array since these values never change
+
+//   useEffect(() => {
+//     // @ts-ignore
+//     const animation = animate(sequence, {
+//       repeat: Infinity,
+//       repeatDelay: 1,
+//     });
+
+//     // Cleanup animation on unmount
+//     return () => animation.stop();
+//   }, [sequence]);
+
+//   return (
+//     <div className="p-8 overflow-hidden h-full relative flex items-center justify-center">
+//       <div className="flex flex-row flex-shrink-0 mb-16 justify-center items-center gap-2">
+//         <Container className="h-8 w-8 circle-1">
+//           <ClaudeLogo className="h-4 w-4" />
+//         </Container>
+//         <Container className="h-12 w-12 circle-2">
+//           <GoCopilot className="h-6 w-6 dark:text-white" />
+//         </Container>
+//         <Sparkles />
+//         <Container className="circle-3">
+//           <OpenAILogo className="h-8 w-8 dark:text-white" />
+//         </Container>
+//         <Container className="h-12 w-12 circle-4">
+//           <MetaIconOutline className="h-6 w-6" />
+//         </Container>
+//         <Sparkles />
+//         <Container className="h-8 w-8 circle-5">
+//           <GeminiLogo className="h-4 w-4" />
+//         </Container>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const Sparkles = () => {
+//   const randomMove = () => Math.random() * 2 - 1;
+//   const randomOpacity = () => Math.random();
+//   const random = () => Math.random();
+
+//   return (
+//     <div className="absolute inset-0">
+//       {[...Array(12)].map((_, i) => (
+//         <motion.span
+//           key={`star-${i}`}
+//           animate={{
+//             top: `calc(${random() * 100}% + ${randomMove()}px)`,
+//             left: `calc(${random() * 100}% + ${randomMove()}px)`,
+//             opacity: randomOpacity(),
+//             scale: [1, 1.2, 0],
+//           }}
+//           transition={{
+//             duration: random() * 2 + 4,
+//             repeat: Infinity,
+//             ease: "linear",
+//           }}
+//           style={{
+//             position: "absolute",
+//             top: `${random() * 100}%`,
+//             left: `${random() * 100}%`,
+//             width: "2px",
+//             height: "2px",
+//             borderRadius: "50%",
+//             zIndex: 1,
+//           }}
+//           className="inline-block bg-black dark:bg-white"
+//         />
+//       ))}
+//     </div>
+//   );
+// };
+
+// export const Card = ({
+//   className,
+//   children,
+// }: {
+//   className?: string;
+//   children: React.ReactNode;
+// }) => {
+//   return (
+//     <div
+//       className={cn(
+//         "max-w-sm w-full h-[300px] mx-auto p-8 rounded-xl bg-transparent",
+//         className
+//       )}
+//     >
+//       {children}
+//     </div>
+//   );
+// };
+
+// export const CardTitle = ({
+//   children,
+//   className,
+// }: {
+//   children: React.ReactNode;
+//   className?: string;
+// }) => {
+//   return (
+//     <h3
+//       className={cn(
+//         "text-lg font-semibold text-gray-800 dark:text-white py-2",
+//         className
+//       )}
+//     >
+//       {children}
+//     </h3>
+//   );
+// };
+
+// export const CardDescription = ({
+//   children,
+//   className,
+// }: {
+//   children: React.ReactNode;
+//   className?: string;
+// }) => {
+//   return (
+//     <p
+//       className={cn(
+//         "text-sm font-normal text-neutral-600 dark:text-neutral-400 max-w-sm",
+//         className
+//       )}
+//     >
+//       {children}
+//     </p>
+//   );
+// };
+
+// export const CardSkeletonContainer = ({
+//   className,
+//   children,
+//   showGradient = true,
+// }: {
+//   className?: string;
+//   children: React.ReactNode;
+//   showGradient?: boolean;
+// }) => {
+//   return (
+//     <div
+//       className={cn(
+//         "h-[15rem] md:h-[20rem] rounded-xl z-40",
+//         className,
+//         showGradient &&
+//           "bg-neutral-300 dark:bg-[rgba(40,40,40,0.70)] [mask-image:radial-gradient(40%_40%_at_50%_40%,white_0%,transparent_100%)]"
+//       )}
+//     >
+//       {children}
+//     </div>
+//   );
+// };
+
+// const Container = ({
+//   className,
+//   children,
+// }: {
+//   className?: string;
+//   children: React.ReactNode;
+// }) => {
+//   return (
+//     <div
+//       className={cn(
+//         `h-16 w-16 rounded-full flex items-center justify-center bg-[rgba(248,248,248,0.01)]
+//         shadow-[0px_0px_8px_0px_rgba(248,248,248,0.25)_inset,0px_32px_24px_-16px_rgba(0,0,0,0.40)]
+//         `,
+//         className
+//       )}
+//     >
+//       {children}
+//     </div>
+//   );
+// };
+
+
 "use client";
-import { animate, motion } from "framer-motion";
+import { animate, motion, AnimationSequence } from "framer-motion";
 import React, { useEffect, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { GoCopilot } from "react-icons/go";
 
-export function CardDemo() {
+interface CardProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+interface CardTitleProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+interface CardDescriptionProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+interface CardSkeletonContainerProps {
+  className?: string;
+  children: React.ReactNode;
+  showGradient?: boolean;
+}
+
+interface ContainerProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+type AnimationProps = {
+  scale: number[];
+  transform: string[];
+};
+
+export function CardDemo(): JSX.Element {
   return (
     <Card>
       <CardSkeletonContainer>
@@ -14,63 +285,30 @@ export function CardDemo() {
   );
 }
 
-const Skeleton = () => {
-  const sequence = useMemo(() => {
-    const scale = [1, 1.1, 1];
-    const transform = ["translateY(5px)", "translateY(-10px)", "translateY(0px)"];
+const Skeleton: React.FC = () => {
+  const sequence = useMemo<AnimationSequence>(() => {
+    const scale: number[] = [1, 1.1, 1];
+    const transform: string[] = ["translateY(5px)", "translateY(-10px)", "translateY(0px)"];
     
+    const createAnimationStep = (selector: string, props: AnimationProps, options: { duration: number }): [string, AnimationProps, { duration: number }] => {
+      return [selector, props, options];
+    };
+
     return [
-      [
-        ".circle-1",
-        {
-          scale,
-          transform,
-        },
-        { duration: 0.5 },
-      ],
-      [
-        ".circle-2",
-        {
-          scale,
-          transform,
-        },
-        { duration: 0.8 },
-      ],
-      [
-        ".circle-3",
-        {
-          scale,
-          transform,
-        },
-        { duration: 0.8 },
-      ],
-      [
-        ".circle-4",
-        {
-          scale,
-          transform,
-        },
-        { duration: 0.8 },
-      ],
-      [
-        ".circle-5",
-        {
-          scale,
-          transform,
-        },
-        { duration: 0.8 },
-      ],
+      createAnimationStep(".circle-1", { scale, transform }, { duration: 0.5 }),
+      createAnimationStep(".circle-2", { scale, transform }, { duration: 0.8 }),
+      createAnimationStep(".circle-3", { scale, transform }, { duration: 0.8 }),
+      createAnimationStep(".circle-4", { scale, transform }, { duration: 0.8 }),
+      createAnimationStep(".circle-5", { scale, transform }, { duration: 0.8 }),
     ];
-  }, []); // Empty dependency array since these values never change
+  }, []);
 
   useEffect(() => {
-    // @ts-ignore
     const animation = animate(sequence, {
       repeat: Infinity,
       repeatDelay: 1,
     });
 
-    // Cleanup animation on unmount
     return () => animation.stop();
   }, [sequence]);
 
@@ -99,10 +337,10 @@ const Skeleton = () => {
   );
 };
 
-const Sparkles = () => {
-  const randomMove = () => Math.random() * 2 - 1;
-  const randomOpacity = () => Math.random();
-  const random = () => Math.random();
+const Sparkles: React.FC = () => {
+  const randomMove = (): number => Math.random() * 2 - 1;
+  const randomOpacity = (): number => Math.random();
+  const random = (): number => Math.random();
 
   return (
     <div className="absolute inset-0">
@@ -136,13 +374,7 @@ const Sparkles = () => {
   );
 };
 
-export const Card = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => {
+export const Card: React.FC<CardProps> = ({ className, children }) => {
   return (
     <div
       className={cn(
@@ -155,13 +387,7 @@ export const Card = ({
   );
 };
 
-export const CardTitle = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
+export const CardTitle: React.FC<CardTitleProps> = ({ children, className }) => {
   return (
     <h3
       className={cn(
@@ -174,13 +400,7 @@ export const CardTitle = ({
   );
 };
 
-export const CardDescription = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
+export const CardDescription: React.FC<CardDescriptionProps> = ({ children, className }) => {
   return (
     <p
       className={cn(
@@ -193,14 +413,10 @@ export const CardDescription = ({
   );
 };
 
-export const CardSkeletonContainer = ({
+export const CardSkeletonContainer: React.FC<CardSkeletonContainerProps> = ({
   className,
   children,
   showGradient = true,
-}: {
-  className?: string;
-  children: React.ReactNode;
-  showGradient?: boolean;
 }) => {
   return (
     <div
@@ -216,13 +432,7 @@ export const CardSkeletonContainer = ({
   );
 };
 
-const Container = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => {
+const Container: React.FC<ContainerProps> = ({ className, children }) => {
   return (
     <div
       className={cn(
@@ -236,6 +446,9 @@ const Container = ({
     </div>
   );
 };
+
+
+
 
 // "use client";
 // import { animate, motion } from "framer-motion";
