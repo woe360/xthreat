@@ -60,6 +60,7 @@ interface AnimationVariants {
   };
 }
 
+
 const SkeletonOne = () => {
   const variants = {
     initial: {
@@ -158,7 +159,7 @@ const SkeletonTwo = () => {
         duration: 8,
         ease: "easeInOut",
         repeat: Infinity,
-        repeatType: "mirror",
+        repeatType: "mirror" as const,
       },
     },
   });
