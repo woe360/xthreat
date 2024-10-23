@@ -82,7 +82,7 @@ const AIEnhancedTraining: React.FC = () => {
             <FeatureCard 
               icon={<Brain className="w-8 h-8 text-white" />}
               title="Adaptive Learning Paths"
-              description="AI algorithms tailor training content to each employee's skill level and learning pace, ensuring optimal engagement and retention."
+              description="AI algorithms tailor training content to each employee&apos;s skill level and learning pace, ensuring optimal engagement and retention."
               delay={0.4}
             />
             <FeatureCard 
@@ -142,7 +142,7 @@ const AIEnhancedTraining: React.FC = () => {
           >
             <h2 className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold mb-6">Elevate Your Cybersecurity Awareness with AI</h2>
             <p className="text-xl font-serif italic max-w-3xl mx-auto text-gray-300 mb-8">
-              Stay ahead of cyber threats with XThreat's AI-enhanced training platform. Empower your team with adaptive, cutting-edge security awareness.
+              Stay ahead of cyber threats with XThreat&apos;s AI-enhanced training platform. Empower your team with adaptive, cutting-edge security awareness.
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}

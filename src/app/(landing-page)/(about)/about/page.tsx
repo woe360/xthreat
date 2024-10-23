@@ -1173,10 +1173,10 @@ const AboutXThreat = () => {
                 At XThreat, we help your employees become an active part of your cybersecurity strategy. Our innovative platform delivers engaging, interactive training that empowers your team to recognize and respond to cyber threats with confidence.
               </p>
               <p>
-                We understand the challenges businesses face in today's complex threat landscape.
+                We understand the challenges businesses face in today&apos;s complex threat landscape.
               </p>
               <p>
-                That's why we've developed a solution that cuts through the noise, delivering clear, practical training that not only educates but transforms how your organization handles cyber threats.
+                That&apos;s why we&apos;ve developed a solution that cuts through the noise, delivering clear, practical training that not only educates but transforms how your organization handles cyber threats.
               </p>
             </motion.div>
             <motion.div
