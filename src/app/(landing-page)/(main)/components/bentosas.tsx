@@ -143,7 +143,7 @@ const SkeletonTwo = () => {
     };
 
     startAnimation();
-  }, []);
+  }, [controls]);
 
   return (
     <motion.div
@@ -338,7 +338,7 @@ const SkeletonFive = () => {
         observer.unobserve(ref.current);
       }
     };
-  }, []);
+  }, [controlsFirst, controlsSecond]);
 
   return (
     <motion.div
