@@ -1,3 +1,22 @@
+// {
+//   "extends": "next/core-web-vitals",
+//   "rules": {
+//     // Your existing rules
+//     "react/no-unescaped-entities": "off",
+//     "@next/next/no-img-element": "warn",
+//     "jsx-a11y/alt-text": "warn",
+//     "react-hooks/rules-of-hooks": "error",
+//     "react-hooks/exhaustive-deps": "warn",
+
+//     // Additional useful rules
+//     "no-unused-vars": "warn",        // Warns about unused variables
+//     "no-console": "warn",            // Warns about console.log statements
+//     "@next/next/no-html-link-for-pages": "warn",  // Warns about using <a> instead of Link
+//     "react/prop-types": "off",       // Turn off prop-types since we're using TypeScript
+//     "react/jsx-key": "warn"          // Warns about missing keys in iterations
+//   }
+// }
+
 {
   "extends": "next/core-web-vitals",
   "rules": {
@@ -8,11 +27,19 @@
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
 
-    // Additional useful rules
-    "no-unused-vars": "warn",        // Warns about unused variables
-    "no-console": "warn",            // Warns about console.log statements
-    "@next/next/no-html-link-for-pages": "warn",  // Warns about using <a> instead of Link
-    "react/prop-types": "off",       // Turn off prop-types since we're using TypeScript
-    "react/jsx-key": "warn"          // Warns about missing keys in iterations
+    // Modified rules
+    "no-unused-vars": ["warn", { 
+      "varsIgnorePattern": "^_",
+      "argsIgnorePattern": "^_"
+    }],
+    "no-console": ["warn", { 
+      "allow": ["warn", "error"] 
+    }],
+    "@next/next/no-async-client-component": "warn",
+    
+    // Your other rules...
+    "@next/next/no-html-link-for-pages": "warn",
+    "react/prop-types": "off",
+    "react/jsx-key": "warn"
   }
 }
