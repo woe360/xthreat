@@ -95,7 +95,30 @@ const SkeletonTwo = () => {
   const controls = useAnimation();
   const ref = useRef(null);
 
-  const createVariants = () => ({
+  // const createVariants = () => ({
+  //   initial: {
+  //     width: "10%",
+  //   },
+  //   animate: {
+  //     width: [
+  //       `${Math.random() * (80 - 20) + 20}%`,
+  //       `${Math.random() * (80 - 20) + 20}%`,
+  //       `${Math.random() * (80 - 20) + 20}%`,
+  //     ],
+  //     transition: {
+  //       duration: 8,
+  //       ease: "easeInOut",
+  //       repeat: Infinity,
+  //       repeatType: "mirror",
+  //     },
+  //   },
+  // });
+
+  // useEffect(() => {
+  //   controls.start("animate");
+  // }, [controls]);
+
+  const createVariants = (index: number) => ({
     initial: {
       width: "10%",
     },
@@ -115,8 +138,12 @@ const SkeletonTwo = () => {
   });
 
   useEffect(() => {
-    controls.start("animate");
-  }, [controls]);
+    const startAnimation = () => {
+      controls.start("animate");
+    };
+
+    startAnimation();
+  }, []);
 
   return (
     <motion.div
@@ -126,10 +153,10 @@ const SkeletonTwo = () => {
       className="flex flex-1 w-full h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-col space-y-2 overflow-hidden"
     >
       {words.map((word, i) => {
-        const wordVariants = createVariants();
+        const wordVariants = createVariants(i);
         return (
           <div
-            key={"skeleton-two" + i}
+            key={`skeleton-two-${i}`}
             className="relative flex flex-row rounded-lg border border-gray-800 p-2 items-center bg-neutral-100 dark:bg-black w-full h-8 overflow-hidden"
           >
             <span className="absolute left-2 text-black dark:text-white text-s z-10">{word}</span>
@@ -311,7 +338,7 @@ const SkeletonFive = () => {
         observer.unobserve(ref.current);
       }
     };
-  }, [controlsFirst, controlsSecond]);
+  }, []);
 
   return (
     <motion.div
