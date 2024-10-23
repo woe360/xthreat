@@ -323,12 +323,173 @@
 //   );
 // }
 
+
+// 'use client'
+// import { useState } from 'react';
+// import Image from 'next/image';
+// import XLogo from '../../assets/XThreat_icon_primary_white_to_gradient.svg'
+// import Link from 'next/link';
+// import { Copy } from 'lucide-react';
+
+// const BottomGradient = () => {
+//   return (
+//     <>
+//       <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+//       <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
+//     </>
+//   );
+// };
+
+// export default function SignIn() {
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [copied, setCopied] = useState(false);
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     console.log('Sign in attempted with:', email);
+//   };
+
+//   const handleGoogleSignIn = () => {
+//     console.log('Google Sign-In attempted');
+//   };
+
+//   const handleSSOSignIn = () => {
+//     console.log('SSO Sign-In attempted');
+//   };
+
+//   const copyToClipboard = () => {
+//     navigator.clipboard.writeText('support@xthreat.eu').then(() => {
+//       setCopied(true);
+//       setTimeout(() => setCopied(false), 2000);
+//     });
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-gradient-to-r bg-black flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
+//       <div className="max-w-md w-full space-y-8">
+//         <div className="mt-8 bg-gray-900/30 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] border border-gray-800 py-8 px-4 shadow rounded-xl sm:px-10">
+//           <div className="bg-transparent py-4 mb-4 px-4 shadow rounded-xl sm:px-10">
+//             <Link href="/">
+//               <Image
+//                 src={XLogo}
+//                 alt="X Logo"
+//                 width={16}
+//                 height={16}
+//                 className="w-8 h-8 mx-auto md:w-[30px] md:h-[30px]"
+//               />
+//             </Link>
+//           </div>
+//           <form className="space-y-6" onSubmit={handleSubmit}>
+//             <div>
+//               <label htmlFor="email" className="sr-only">
+//                 Email address
+//               </label>
+//               <BottomGradient />
+//               <input
+//                 id="email"
+//                 name="email"
+//                 type="email"
+//                 autoComplete="email"
+//                 required
+//                 className="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-700 placeholder-gray-500 text-white bg-gray-900/30 focus:outline-none focus:ring-[#b87121] focus:border-[#b87121] focus:z-10 sm:text-sm"
+//                 placeholder="Email address"
+//                 value={email}
+//                 onChange={(e) => setEmail(e.target.value)}
+//               />
+//               <BottomGradient />
+//             </div>
+
+//             <div>
+//               <label htmlFor="password" className="block text-sm sr-only font-medium text-gray-700">
+//                 Password
+//               </label>
+//               <BottomGradient />
+//               <div className="mt-1">
+//                 <input
+//                   id="password"
+//                   name="password"
+//                   type="password"
+//                   autoComplete="current-password"
+//                   placeholder="Password"
+//                   required
+//                   className="appearance-none block w-full px-3 py-3 border border-gray-700 rounded-md shadow-sm placeholder-gray-500 bg-gray-900/30 focus:outline-none focus:ring-[#b87121] focus:border-[#b87121] sm:text-sm"
+//                   value={password}
+//                   onChange={(e) => setPassword(e.target.value)}
+//                 />
+//               </div>
+//               <BottomGradient />
+//             </div>
+
+//             <div>
+//               <button
+//                 type="submit"
+//                 onClick={(e) => {
+//                   e.preventDefault();
+//                   window.location.href = '/dashboard';
+//                 }}
+//                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2"
+//               >
+//                 Continue
+//               </button>
+//             </div>
+//           </form>
+
+//           <div className="mt-6">
+//             <div className="relative flex items-center">
+//               <div className="flex-grow border-t border-gray-700"></div>
+//               <span className="flex-shrink mx-4 text-gray-400">OR</span>
+//               <div className="flex-grow border-t border-gray-700"></div>
+//             </div>
+//           </div>
+
+//           <div className="mt-6 space-y-4">
+
+//             <button
+//               onClick={handleGoogleSignIn}
+//               className="w-full flex items-center justify-center px-4 py-2 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-900/30 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b87121]"
+//             >
+//               <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0,0,256,256" className="mr-2">
+//                 <g fill="#ffffff" fillRule="nonzero" stroke="none" strokeWidth="1" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" strokeDasharray="" strokeDashoffset="0" fontFamily="none" fontWeight="none" fontSize="none" textAnchor="none"><g transform="scale(8,8)"><path d="M16.00391,14.0625v4.20313h5.98828c-0.78125,2.54688 -2.91016,4.37109 -5.98828,4.37109c-3.66406,0 -6.63672,-2.97266 -6.63672,-6.63672c0,-3.66406 2.96875,-6.63672 6.63672,-6.63672c1.64844,0 3.15234,0.60547 4.3125,1.60156l3.09375,-3.09766c-1.95312,-1.78125 -4.55469,-2.86719 -7.40625,-2.86719c-6.07812,0 -11.00391,4.92578 -11.00391,11c0,6.07422 4.92578,11 11.00391,11c9.23438,0 11.27344,-8.63672 10.36719,-12.92187z"></path></g></g>
+//               </svg>
+//               <span>Google</span>
+//             </button>
+//           </div>
+//           <div className="relative">
+//             <div className="relative flex flex-col items-center justify-center text-sm mt-6 h-[28px]">
+//               <div className="flex flex-row items-center">
+//                 <span className="text-gray-400">support@xthreat.eu</span>
+//                 <button
+//                   onClick={copyToClipboard}
+//                   className="ml-2 mt-[2px] text-gray-400 hover:text-gray-300 focus:outline-none"
+//                   aria-label="Copy email"
+//                 >
+//                   <Copy size={14} />
+//                 </button>
+//               </div>
+//               <div className="h-2">
+//                 {copied && (
+//                   <span className="text-green-500 text-xs">Copied!</span>
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+//INTEGRATING SUPABASE AUTH
 'use client'
 import { useState } from 'react';
 import Image from 'next/image';
 import XLogo from '../../assets/XThreat_icon_primary_white_to_gradient.svg'
 import Link from 'next/link';
 import { Copy } from 'lucide-react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
 
 const BottomGradient = () => {
   return (
@@ -343,18 +504,47 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  
+  const router = useRouter();
+  const supabase = createClientComponentClient();
 
-  const handleSubmit = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    console.log('Sign in attempted with:', email);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      router.push('/dashboard');
+      router.refresh();
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleSignIn = () => {
-    console.log('Google Sign-In attempted');
-  };
+  const handleGoogleSignIn = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
 
-  const handleSSOSignIn = () => {
-    console.log('SSO Sign-In attempted');
+      if (error) throw error;
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const copyToClipboard = () => {
@@ -379,12 +569,18 @@ export default function SignIn() {
               />
             </Link>
           </div>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 rounded-md text-red-500 text-sm">
+              {error}
+            </div>
+          )}
+
+          <form className="space-y-6" onSubmit={handleSignIn}>
             <div>
               <label htmlFor="email" className="sr-only">
                 Email address
               </label>
-              <BottomGradient />
               <input
                 id="email"
                 name="email"
@@ -400,36 +596,30 @@ export default function SignIn() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm sr-only font-medium text-gray-700">
+              <label htmlFor="password" className="sr-only">
                 Password
               </label>
-              <BottomGradient />
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  placeholder="Password"
-                  required
-                  className="appearance-none block w-full px-3 py-3 border border-gray-700 rounded-md shadow-sm placeholder-gray-500 bg-gray-900/30 focus:outline-none focus:ring-[#b87121] focus:border-[#b87121] sm:text-sm"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                placeholder="Password"
+                required
+                className="appearance-none block w-full px-3 py-3 border border-gray-700 rounded-md shadow-sm placeholder-gray-500 bg-gray-900/30 focus:outline-none focus:ring-[#b87121] focus:border-[#b87121] sm:text-sm"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
               <BottomGradient />
             </div>
 
             <div>
               <button
                 type="submit"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href = '/dashboard';
-                }}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                disabled={loading}
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Continue
+                {loading ? 'Signing in...' : 'Continue'}
               </button>
             </div>
           </form>
@@ -443,10 +633,10 @@ export default function SignIn() {
           </div>
 
           <div className="mt-6 space-y-4">
-
             <button
               onClick={handleGoogleSignIn}
-              className="w-full flex items-center justify-center px-4 py-2 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-900/30 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b87121]"
+              disabled={loading}
+              className="w-full flex items-center justify-center px-4 py-2 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-900/30 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b87121] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0,0,256,256" className="mr-2">
                 <g fill="#ffffff" fillRule="nonzero" stroke="none" strokeWidth="1" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" strokeDasharray="" strokeDashoffset="0" fontFamily="none" fontWeight="none" fontSize="none" textAnchor="none"><g transform="scale(8,8)"><path d="M16.00391,14.0625v4.20313h5.98828c-0.78125,2.54688 -2.91016,4.37109 -5.98828,4.37109c-3.66406,0 -6.63672,-2.97266 -6.63672,-6.63672c0,-3.66406 2.96875,-6.63672 6.63672,-6.63672c1.64844,0 3.15234,0.60547 4.3125,1.60156l3.09375,-3.09766c-1.95312,-1.78125 -4.55469,-2.86719 -7.40625,-2.86719c-6.07812,0 -11.00391,4.92578 -11.00391,11c0,6.07422 4.92578,11 11.00391,11c9.23438,0 11.27344,-8.63672 10.36719,-12.92187z"></path></g></g>
@@ -454,6 +644,7 @@ export default function SignIn() {
               <span>Google</span>
             </button>
           </div>
+
           <div className="relative">
             <div className="relative flex flex-col items-center justify-center text-sm mt-6 h-[28px]">
               <div className="flex flex-row items-center">

@@ -1,107 +1,43 @@
-import { NextResponse } from 'next/server';
+// import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+// import { NextResponse } from 'next/server'
+// import type { NextRequest } from 'next/server'
 
-export function middleware(req) {
-  const auth = req.headers.get('authorization');
-  const username = 'besarmatis';
-  const password = '2tintoPrasau';
+// export async function middleware(req: NextRequest) {
+//   const res = NextResponse.next()
+//   const supabase = createMiddlewareClient({ req, res })
 
-  if (auth) {
-    const [basic, credentials] = auth.split(' ');
-    const [user, pass] = atob(credentials).split(':');
-    
-    if (user === username && pass === password) {
-      return NextResponse.next();
-    }
+//   await supabase.auth.getSession()
+
+//   return res
+// }
+
+// export const config = {
+//   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+// }
+
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next()
+  const supabase = createMiddlewareClient({ req, res })
+  const { data: { session } } = await supabase.auth.getSession()
+
+  // Check if the request is for a protected route (under (main))
+  const isProtectedRoute = req.nextUrl.pathname.startsWith('/')  // Adjust this pattern based on your route structure
+
+  if (isProtectedRoute && !session) {
+    // Redirect to login if accessing protected route without session
+    const redirectUrl = req.nextUrl.clone()
+    redirectUrl.pathname = '/auth/signin'
+    redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
+    return NextResponse.redirect(redirectUrl)
   }
 
-  return new NextResponse('Unauthorized', {
-    status: 401,
-    headers: {
-      'WWW-Authenticate': 'Basic realm="Secure Area"'
-    }
-  });
+  return res
 }
 
 export const config = {
-  matcher: '/:path*',
-};
-
-//package.json
-
-// {
-//   "name": "intacted",
-//   "version": "0.1.0",
-//   "private": true,
-//   "scripts": {
-//     "dev": "bun run next dev",
-//     "build": "bun run next build",
-//     "start": "bun run next start",
-//     "lint": "bun run next lint"
-//   },
-//   "dependencies": {
-//     "@emotion/react": "^11.13.3",
-//     "@emotion/styled": "^11.13.0",
-//     "@fortawesome/free-solid-svg-icons": "^6.6.0",
-//     "@fortawesome/react-fontawesome": "^0.2.2",
-//     "@hookform/resolvers": "^3.9.0",
-//     "@mui/material": "^6.0.1",
-//     "@mui/x-charts": "^7.15.0",
-//     "@radix-ui/react-accordion": "^1.2.0",
-//     "@radix-ui/react-alert-dialog": "^1.1.1",
-//     "@radix-ui/react-dialog": "^1.1.1",
-//     "@radix-ui/react-dropdown-menu": "^2.1.1",
-//     "@radix-ui/react-hover-card": "^1.1.2",
-//     "@radix-ui/react-icons": "^1.3.0",
-//     "@radix-ui/react-label": "^2.1.0",
-//     "@radix-ui/react-progress": "^1.1.0",
-//     "@radix-ui/react-radio-group": "^1.2.0",
-//     "@radix-ui/react-scroll-area": "^1.1.0",
-//     "@radix-ui/react-select": "^2.1.1",
-//     "@radix-ui/react-separator": "^1.1.0",
-//     "@radix-ui/react-slider": "^1.2.1",
-//     "@radix-ui/react-slot": "^1.1.0",
-//     "@radix-ui/react-switch": "^1.1.0",
-//     "@radix-ui/react-tabs": "^1.1.0",
-//     "@radix-ui/react-tooltip": "^1.0.7",
-//     "@supabase/supabase-js": "^2.45.4",
-//     "@tabler/icons-react": "^3.10.0",
-//     "apexcharts": "^3.53.0",
-//     "chart.js": "^4.4.3",
-//     "class-variance-authority": "^0.7.0",
-//     "clsx": "^2.1.1",
-//     "cobe": "^0.6.3",
-//     "cors": "^2.8.5",
-//     "dotenv": "^16.4.5",
-//     "express": "^4.19.2",
-//     "framer-motion": "^11.11.4",
-//     "lucide-react": "^0.441.0",
-//     "next": "^14.2.15",
-//     "next-themes": "^0.3.0",
-//     "pg": "^8.12.0",
-//     "react": "^18",
-//     "react-apexcharts": "^1.4.1",
-//     "react-chartjs-2": "^5.2.0",
-//     "react-dom": "^18",
-//     "react-hook-form": "^7.52.1",
-//     "react-icons": "^5.3.0",
-//     "react-intersection-observer": "^9.10.3",
-//     "react-router-dom": "^6.25.1",
-//     "react-spring": "^9.7.4",
-//     "recharts": "^2.12.7",
-//     "tailwind-merge": "^2.5.2",
-//     "tailwindcss-animate": "^1.0.7",
-//     "ui": "shadcn/ui",
-//     "zod": "^3.23.8"
-//   },
-//   "devDependencies": {
-//     "@next/swc-darwin-arm64": "^14.2.4",
-//     "@types/node": "^20",
-//     "@types/react": "^18",
-//     "@types/react-dom": "^18",
-//     "eslint": "^8",
-//     "eslint-config-next": "14.2.3",
-//     "postcss": "^8",
-//     "tailwindcss": "^3.4.1",
-//     "typescript": "^5"
-//   }
-// }
+  matcher: ['/((?!api|_next/static|_next/image|auth/signin|favicon.ico).*)'],
+}
