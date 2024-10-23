@@ -5,6 +5,15 @@ import { useEffect, useRef} from "react";
 import { motion, useScroll, useTransform, useAnimation} from "framer-motion";
 import Image from "next/image";
 
+// Define interfaces for type safety
+interface BentoItem {
+  title: string;
+  description: React.ReactNode;
+  header: React.ReactNode;
+  className: string;
+  icon?: React.ReactNode; // Make icon optional
+}
+
 export function BentoGridThirdDemo() {
   return (
     <BentoGrid className="max-w-7xl mx-auto md:auto-rows-[20rem]">
@@ -25,6 +34,31 @@ export function BentoGridThirdDemo() {
 const Skeleton = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl   dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent border-gray-800 bg-neutral-100 dark:bg-black"></div>
 );
+
+// Add TypeScript interfaces for variants
+interface AnimationVariants {
+  initial: {
+    x?: number;
+    backgroundPosition?: string;
+    width?: string;
+    opacity?: number;
+  };
+  animate: {
+    x?: number | number[];
+    rotate?: number;
+    backgroundPosition?: string[];
+    width?: string | string[];
+    opacity?: number;
+    transition?: {
+      duration: number;
+      ease?: string;
+      repeat?: number;
+      repeatType?: "loop" | "reverse" | "mirror";
+      type?: string;
+      stiffness?: number;
+    };
+  };
+}
 
 const SkeletonOne = () => {
   const variants = {
@@ -375,7 +409,7 @@ const SkeletonFive = () => {
 
 const words = ["Effectiveness", "Participation", "Weak Spots", "Retention", "Application"];
 
-const items = [
+const items: BentoItem[] = [
   {
     title: "Comprehensive Training Modules",
     description: (
