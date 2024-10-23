@@ -406,41 +406,51 @@
 
 //adding types
 'use client'
-
 import React from 'react';
 import Footer from '@/app/(landing-page)/navigation/footer';
 import Navbar from '@/app/(landing-page)/navigation/navbar';
 import { Shield, Lock, Users, Smartphone, Cloud, HardDrive } from 'lucide-react';
-import { motion, Variants } from 'framer-motion';
+import { motion, type TargetAndTransition, type AnimationProps as FramerAnimationProps } from 'framer-motion';
 import Link from 'next/link';
 
-interface TopicCardProps {
-  icon: React.ReactNode;
+// Shared Types
+interface BaseProps {
   title: string;
   description: string;
-  delay: number;
 }
 
-interface BenefitItemProps {
-  title: string;
-  description: string;
-  delay: number;
-}
-
-interface FadeInUpProps {
-  initial: {
-    opacity: number;
-    y: number;
-  };
-  animate: {
-    opacity: number;
-    y: number;
-  };
+interface AnimationProps extends FramerAnimationProps {
+  initial: TargetAndTransition;
+  animate: TargetAndTransition;
   transition: {
     duration: number;
+    delay?: number;
   };
 }
 
+interface TopicCardProps extends BaseProps {
+  icon: React.ReactNode;
+  delay: number;
+}
+
+interface BenefitItemProps extends BaseProps {
+  delay: number;
+}
+
+// Animation Constants
+const fadeInUp: AnimationProps = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
+};
+
+const buttonVariants = {
+  initial: { scale: 1 },
+  hover: { scale: 1.05 },
+  tap: { scale: 0.95 }
+};
+
+// Reusable Components
 const TopicCard: React.FC<TopicCardProps> = ({ icon, title, description, delay }) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
@@ -477,110 +487,93 @@ const BenefitItem: React.FC<BenefitItemProps> = ({ title, description, delay }) 
   </motion.div>
 );
 
-interface TrainingTopic {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  delay: number;
-}
+// Content Data
+const trainingTopicsData: TopicCardProps[] = [
+  {
+    icon: <Shield className="w-8 h-8 text-white" />,
+    title: "Phishing and Social Engineering",
+    description: "Learn to identify and defend against sophisticated phishing attacks and social engineering tactics.",
+    delay: 0.4
+  },
+  {
+    icon: <Lock className="w-8 h-8 text-white" />,
+    title: "Password Security",
+    description: "Master the art of creating strong, unique passwords and understand the importance of proper password management.",
+    delay: 0.5
+  },
+  {
+    icon: <Users className="w-8 h-8 text-white" />,
+    title: "Physical Security",
+    description: "Discover best practices for maintaining security in physical workspaces and preventing unauthorized access.",
+    delay: 0.6
+  },
+  {
+    icon: <Smartphone className="w-8 h-8 text-white" />,
+    title: "Mobile Device Security",
+    description: "Learn how to secure mobile devices and protect sensitive data on-the-go.",
+    delay: 0.7
+  },
+  {
+    icon: <Cloud className="w-8 h-8 text-white" />,
+    title: "Cloud Security",
+    description: "Understand the risks and best practices associated with cloud computing and data storage.",
+    delay: 0.8
+  },
+  {
+    icon: <HardDrive className="w-8 h-8 text-white" />,
+    title: "Data Protection and Privacy",
+    description: "Learn about data protection regulations and how to handle sensitive information responsibly.",
+    delay: 0.9
+  }
+];
 
-interface Benefit {
-  title: string;
-  description: string;
-  delay: number;
-}
+const benefitsData: BenefitItemProps[] = [
+  {
+    title: "Reduced Security Incidents",
+    description: "Significantly decrease the number of security breaches caused by human error.",
+    delay: 1.1
+  },
+  {
+    title: "Compliance Support",
+    description: "Meet regulatory requirements and industry standards for security training.",
+    delay: 1.2
+  },
+  {
+    title: "Improved Security Culture",
+    description: "Foster a culture of security awareness throughout your organization.",
+    delay: 1.3
+  },
+  {
+    title: "Customized Learning Paths",
+    description: "Tailor training content to specific roles and departments within your company.",
+    delay: 1.4
+  },
+  {
+    title: "Real-world Simulations",
+    description: "Practice defending against realistic security scenarios in a safe environment.",
+    delay: 1.5
+  },
+  {
+    title: "Continuous Improvement",
+    description: "Regular updates and assessments to keep your team's skills sharp and up-to-date.",
+    delay: 1.6
+  }
+];
 
+// Main Page Component
 const SecurityAwarenessPage: React.FC = () => {
-  const fadeInUp: FadeInUpProps = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 }
-  };
-
-  const trainingTopics: TrainingTopic[] = [
-    {
-      icon: <Shield className="w-8 h-8 text-white" />,
-      title: "Phishing and Social Engineering",
-      description: "Learn to identify and defend against sophisticated phishing attacks and social engineering tactics.",
-      delay: 0.4
-    },
-    {
-      icon: <Lock className="w-8 h-8 text-white" />,
-      title: "Password Security",
-      description: "Master the art of creating strong, unique passwords and understand the importance of proper password management.",
-      delay: 0.5
-    },
-    {
-      icon: <Users className="w-8 h-8 text-white" />,
-      title: "Physical Security",
-      description: "Discover best practices for maintaining security in physical workspaces and preventing unauthorized access.",
-      delay: 0.6
-    },
-    {
-      icon: <Smartphone className="w-8 h-8 text-white" />,
-      title: "Mobile Device Security",
-      description: "Learn how to secure mobile devices and protect sensitive data on-the-go.",
-      delay: 0.7
-    },
-    {
-      icon: <Cloud className="w-8 h-8 text-white" />,
-      title: "Cloud Security",
-      description: "Understand the risks and best practices associated with cloud computing and data storage.",
-      delay: 0.8
-    },
-    {
-      icon: <HardDrive className="w-8 h-8 text-white" />,
-      title: "Data Protection and Privacy",
-      description: "Learn about data protection regulations and how to handle sensitive information responsibly.",
-      delay: 0.9
-    }
-  ];
-
-  const benefits: Benefit[] = [
-    {
-      title: "Reduced Security Incidents",
-      description: "Significantly decrease the number of security breaches caused by human error.",
-      delay: 1.1
-    },
-    {
-      title: "Compliance Support",
-      description: "Meet regulatory requirements and industry standards for security training.",
-      delay: 1.2
-    },
-    {
-      title: "Improved Security Culture",
-      description: "Foster a culture of security awareness throughout your organization.",
-      delay: 1.3
-    },
-    {
-      title: "Customized Learning Paths",
-      description: "Tailor training content to specific roles and departments within your company.",
-      delay: 1.4
-    },
-    {
-      title: "Real-world Simulations",
-      description: "Practice defending against realistic security scenarios in a safe environment.",
-      delay: 1.5
-    },
-    {
-      title: "Continuous Improvement",
-      description: "Regular updates and assessments to keep your team's skills sharp and up-to-date.",
-      delay: 1.6
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
       <Navbar />
       <div className="flex-grow py-24 px-4 relative mt-32">
+        {/* Background Elements */}
         <div className="absolute inset-0 bg-black" />
-        {/* Left gradient */}
         <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-gray-800 to-transparent opacity-20" />
-        {/* Right gradient */}
         <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-gray-800 to-transparent opacity-20" />
+        
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Hero Section */}
-          <motion.div 
+          <motion.section 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -599,10 +592,10 @@ const SecurityAwarenessPage: React.FC = () => {
             >
               Empower your workforce with the knowledge and skills to become your strongest line of defense against cyber threats.
             </motion.p>
-          </motion.div>
+          </motion.section>
 
           {/* Training Topics Section */}
-          <motion.div 
+          <motion.section 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
@@ -612,20 +605,14 @@ const SecurityAwarenessPage: React.FC = () => {
               Comprehensive Training Topics
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {trainingTopics.map((topic, index) => (
-                <TopicCard 
-                  key={index}
-                  icon={topic.icon}
-                  title={topic.title}
-                  description={topic.description}
-                  delay={topic.delay}
-                />
+              {trainingTopicsData.map((topic, index) => (
+                <TopicCard key={index} {...topic} />
               ))}
             </div>
-          </motion.div>
+          </motion.section>
 
           {/* Benefits Section */}
-          <motion.div 
+          <motion.section 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.5 }}
@@ -635,19 +622,14 @@ const SecurityAwarenessPage: React.FC = () => {
               Benefits of XThreat Security Awareness Training
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {benefits.map((benefit, index) => (
-                <BenefitItem 
-                  key={index}
-                  title={benefit.title}
-                  description={benefit.description}
-                  delay={benefit.delay}
-                />
+              {benefitsData.map((benefit, index) => (
+                <BenefitItem key={index} {...benefit} />
               ))}
             </div>
-          </motion.div>
+          </motion.section>
 
           {/* CTA Section */}
-          <motion.div 
+          <motion.section 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.7, duration: 0.5 }}
@@ -660,15 +642,17 @@ const SecurityAwarenessPage: React.FC = () => {
               Don't leave your organization's security to chance. Invest in comprehensive security awareness training with XThreat today.
             </p>
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              variants={buttonVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
               className="bg-white hover:bg-gray-200 text-black px-8 py-3 rounded-xl font-semibold transition duration-300"
             >
               <Link href="/pricing">
                 See Our Plans
               </Link>
             </motion.button>
-          </motion.div>
+          </motion.section>
         </div>
       </div>
       <Footer />
