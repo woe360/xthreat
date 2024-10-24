@@ -233,8 +233,8 @@ const SkeletonThree = () => {
 
 const SkeletonFour = () => {
   const { scrollYProgress } = useScroll();
-  const x = useTransform(scrollYProgress, [0, 1], [120, -30]);
-  const xSecond = useTransform(scrollYProgress, [0, 1], [-120, 30]);
+  const x = useTransform(scrollYProgress, [0, 1], [120, -150]);
+  const xSecond = useTransform(scrollYProgress, [0, 1], [-120, 150]);
   const scale = useTransform(scrollYProgress, [0, 0.7], [0.9, 1.1]);
 
   return (

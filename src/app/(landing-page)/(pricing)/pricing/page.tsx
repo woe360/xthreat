@@ -1133,7 +1133,11 @@ const PricingPage: React.FC = () => {
           >
             <motion.span
               animate={{ x: isYearly ? '100%' : '0%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              transition={{
+                type: 'tween',
+                duration: 0.15,
+                ease: "easeInOut", 
+              }}
               className="absolute w-[calc(50%-4px)] h-[calc(100%-8px)] bg-gray-100 rounded-lg left-1"
             />
             <span className={`px-4 py-2 rounded-xl text-sm transition-colors duration-200 relative z-10 ${

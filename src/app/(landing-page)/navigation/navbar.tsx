@@ -1312,7 +1312,7 @@ const Navbar = () => {
 
           {isDesktop && (
             <div className="flex items-center gap-8 ml-auto">
-              <Link href="/log-in" className="text-gray-400 hover:text-white">
+              <Link href="/login" className="text-gray-400 hover:text-white">
                 Log in
               </Link>
               <Link
