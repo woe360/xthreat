@@ -419,7 +419,8 @@ interface BaseProps {
   description: string;
 }
 
-interface AnimationProps extends FramerAnimationProps {
+// Changed the animation props interface to correctly extend Framer Motion's types
+interface CustomAnimationConfig {
   initial: TargetAndTransition;
   animate: TargetAndTransition;
   transition: {
@@ -438,7 +439,7 @@ interface BenefitItemProps extends BaseProps {
 }
 
 // Animation Constants
-const fadeInUp: AnimationProps = {
+const fadeInUp: CustomAnimationConfig = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.5 }
@@ -580,13 +581,16 @@ const SecurityAwarenessPage: React.FC = () => {
             className="text-center mb-16"
           >
             <motion.h1 
-              {...fadeInUp}
+              initial={fadeInUp.initial}
+              animate={fadeInUp.animate}
+              transition={fadeInUp.transition}
               className="text-5xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold mb-6"
             >
               Security Awareness
             </motion.h1>
             <motion.p 
-              {...fadeInUp}
+              initial={fadeInUp.initial}
+              animate={fadeInUp.animate}
               transition={{ delay: 0.2, duration: 0.5 }}
               className="text-xl text-gray-300 font-serif italic max-w-3xl mx-auto"
             >
