@@ -188,7 +188,7 @@ const SkeletonTwo = () => {
           >
             <span className="absolute left-2 text-black dark:text-white text-s z-10">{word}</span>
             <motion.div
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-600 to-emerald-400/90 z-0 rounded-sm"
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-900 to-emerald-500/90 z-0 rounded-sm"
               variants={wordVariants}
               initial="initial"
               animate="animate"
