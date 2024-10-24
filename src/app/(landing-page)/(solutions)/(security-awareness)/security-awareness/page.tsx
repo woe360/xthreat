@@ -451,6 +451,16 @@ const buttonVariants = {
   tap: { scale: 0.95 }
 };
 
+const fadeInUpVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
+
+const fadeInVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 }
+};
+
 // Reusable Components
 const TopicCard: React.FC<TopicCardProps> = ({ icon, title, description, delay }) => (
   <motion.div 
@@ -574,7 +584,7 @@ const SecurityAwarenessPage: React.FC = () => {
         
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Hero Section */}
-          <motion.section 
+          {/* <motion.section 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -596,7 +606,34 @@ const SecurityAwarenessPage: React.FC = () => {
             >
               Empower your workforce with the knowledge and skills to become your strongest line of defense against cyber threats.
             </motion.p>
+          </motion.section> */}
+          <motion.section 
+            variants={fadeInVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <motion.h1 
+              variants={fadeInUpVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.5 }}
+              className="text-5xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold mb-6"
+            >
+              Security Awareness
+            </motion.h1>
+            <motion.p 
+              variants={fadeInUpVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="text-xl text-gray-300 font-serif italic max-w-3xl mx-auto"
+            >
+              Empower your workforce with the knowledge and skills to become your strongest line of defense against cyber threats.
+            </motion.p>
           </motion.section>
+
 
           {/* Training Topics Section */}
           <motion.section 
