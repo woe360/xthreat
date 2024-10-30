@@ -811,7 +811,7 @@ const Footer: React.FC = () => {
           <div className="lg:w-1/2 flex font-sans justify-center">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-16 text-center">
               <div>
-                <h3 className="text-base font-semibold text-gray-300 mb-4">Company</h3>
+                <h3 className="text-base text-gray-300 mb-4">Company</h3>
                 <ul className="space-y-2">
                   <li><Link href="/pricing" className="text-gray-400 hover:text-white">Pricing</Link></li>
                   <li><Link href="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
@@ -820,7 +820,7 @@ const Footer: React.FC = () => {
               </div>
               
               <div>
-                <h3 className="text-base font-semibold text-gray-300 mb-4">Solutions</h3>
+                <h3 className="text-base text-gray-300 mb-4">Solutions</h3>
                 <ul className="space-y-2 whitespace-nowrap">
                   <li><Link href="/phishing-awareness" className="text-gray-400 hover:text-white">Phishing Awareness</Link></li>
                   <li><Link href="/security-awareness" className="text-gray-400 hover:text-white">Security Awareness</Link></li>
@@ -831,7 +831,7 @@ const Footer: React.FC = () => {
               </div>
               
               <div>
-                <h3 className="text-base font-semibold text-gray-300 mb-4">Legal</h3>
+                <h3 className="text-base text-gray-300 mb-4">Legal</h3>
                 <ul className="space-y-2 whitespace-nowrap">
                   <li><Link href="/terms" className="text-gray-400 hover:text-white">Terms of Service</Link></li>
                   <li><Link href="/privacy" className="text-gray-400 hover:text-white">Privacy Policy</Link></li>
@@ -843,7 +843,7 @@ const Footer: React.FC = () => {
           
           {/* Newsletter Signup */}
           <div className="lg:w-1/7 sm:w-1/1 flex font-sans flex-col items-center">
-            <h3 className="font-semibold text-gray-300 text-center mb-4">Newsletter & Offers</h3>
+            <h3 className="text-gray-300 text-center mb-4">Newsletter & Offers</h3>
             <form onSubmit={handleSubmit} className="flex flex-col items-center w-30 gap-2">
               <input
                 type="email"

@@ -1150,47 +1150,687 @@
 // export default Navbar;
 
 
-'use client'
+// 'use client'
+// import { MenuIcon, ChevronDown, ShieldCheck, Users, Target, Crosshair, Wrench, ChevronRight } from "lucide-react";
+// import Link from "next/link";
+// import Image from 'next/image';
+// import React, { useState, useEffect, useRef } from "react";
+// import MobileMenu from "./MobileMenu";
+// import { motion } from 'framer-motion';
+// import XLogo from '../assets/XThreat_icon_primary_white_to_gradient.svg'
+
+// const Navbar = () => {
+//   const [menuOpen, setMenuOpen] = useState(false);
+//   const [isDesktop, setIsDesktop] = useState(false);
+//   const [active, setActive] = useState<string | null>(null);
+//   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       if (window.innerWidth >= 1024) {
+//         setIsDesktop(true);
+//         setMenuOpen(false); 
+//       } else {
+//         setIsDesktop(false);
+//       }
+//     };
+
+//     handleResize();
+
+//     window.addEventListener("resize", handleResize);
+//     return () => {
+//       window.removeEventListener("resize", handleResize);
+//     };
+//   }, []);
+
+//   const toggleMenu = () => {
+//     setMenuOpen((prev) => !prev);
+//   };
+
+//   const handleMouseEnter = (item: string) => {
+//     if (timeoutRef.current) {
+//       clearTimeout(timeoutRef.current);
+//     }
+//     setActive(item);
+//   };
+
+//   const handleMouseLeave = () => {
+//     timeoutRef.current = setTimeout(() => {
+//       setActive(null);
+//     }, 300);
+//   };
+
+//   const NavItem = ({ title, content, width }: { title: string; content: React.ReactNode; width: string }) => {
+//     const [isHovered, setIsHovered] = React.useState(false);
+  
+//     return (
+//       <li
+//         onMouseEnter={() => {
+//           handleMouseEnter(title);
+//           setIsHovered(true);
+//         }}
+//         onMouseLeave={() => {
+//           handleMouseLeave();
+//           setIsHovered(false);
+//         }}
+//         className="relative"
+//       >
+//         <div className="flex items-center text-gray-400 hover:text-white cursor-pointer">
+//           <span className="mr-1">{title}</span>
+//           <motion.div
+//             animate={{ rotate: isHovered ? 180 : 0 }}
+//             transition={{ duration: 0.3 }}
+//           >
+//             <ChevronDown className="h-4 w-4" />
+//           </motion.div>
+//         </div>
+//         {active === title && (
+//           // <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black/90 backdrop-blur-3xl border border-gray-700 p-6 rounded-md shadow-lg`}>
+//           //   {content}
+//           // </div>
+//         <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
+//           {content}
+//         </div>
+
+//         )}
+//       </li>
+//     );
+//   };
+  
+//   const SolutionsContent = () => (
+//     <div className="grid grid-cols-2 gap-4">
+//       <div className="pl-3 border-r  border-gray-600">
+//         <h3 className="text-white font-semibold text-l mb-2">Security Solutions</h3>
+//         <ul className="mt-3 space-y-4">
+//           <li><Link href="/phishing-awareness" className="text-gray-300 text-l hover:text-white flex items-center"><Target className="mr-2 h-4 w-4" />Phishing Awareness</Link></li>
+//           <li><Link href="/security-awareness" className="text-gray-300 hover:text-white flex items-center"><ShieldCheck className="mr-2 h-4 w-4" />Security Awareness</Link></li>
+//           <li><Link href="/role-based-training" className="text-gray-300 hover:text-white flex items-center"><Users className="mr-2 h-4 w-4" />Role Based Training</Link></li>
+//           <li><Link href="/weak-points" className="text-gray-300 hover:text-white flex items-center"><Crosshair className="mr-2 h-4 w-4" />Weak Points</Link></li>
+//           <li><Link href="/custom-trainings" className="text-gray-300 hover:text-white flex items-center"><Wrench className="mr-2 h-4 w-4" />Custom Trainings</Link></li>
+//         </ul>
+//       </div>
+//       <div className="pr-4">
+//         <h3 className="text-white font-semibold mb-2">Featured</h3>
+//         <div className="bg-gray-900/50 border border-gray-800 p-4 rounded-md">
+//           <h4 className="text-white font-semibold mb-2">New: AI-Powered Training</h4>
+//           <p className="text-gray-400 text-sm mb-2">Enhance your security with our latest AI-driven training modules.</p>
+//           <Link href="/ai-training" className="text-gray-300 hover:text-gray-100 flex flex-row text-base">Learn more <ChevronRight className="h-4 w-4 mt-[5px]"/></Link>
+//         </div>
+//       </div>
+//     </div>
+//   );
+
+//   return (
+//     <>
+//       <header className="fixed right-0 font-sans left-0 top-0 py-4 px-5 bg-black/40 backdrop-blur-lg z-[100]">
+//         <div className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
+//           <div className="flex items-center gap-1 md:gap-[2px]">
+//             <Link href="/">
+//               <Image
+//                 src={XLogo}
+//                 alt="X Logo"
+//                 width={16}
+//                 height={16}
+//                 className="w-[25px]  h-[25px]  md:w-[25px] md:h-[25px]"
+//               />
+//             </Link>
+//             <p className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold">
+//               <Link href="/">Threat</Link>
+//             </p>
+//           </div>
+
+//           {isDesktop ? (
+//             <nav className="flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
+//               <ul className="flex items-center gap-8 list-none">
+//                 <NavItem title="Solutions" content={<SolutionsContent />} width="w-[550px]" />
+//                 <li>
+//                   <Link href="/pricing" className="text-gray-400 hover:text-white">
+//                     Pricing
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link href="/about" className="text-gray-400 hover:text-white">
+//                     Company
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link href="/contact" className="text-gray-400 hover:text-white">
+//                     Contact
+//                   </Link>
+//                 </li>
+//               </ul>
+//             </nav>
+//           ) : (
+//             <button
+//               onClick={toggleMenu}
+//               className="ml-auto"
+//               aria-label="Open mobile menu"
+//             >
+//               <MenuIcon />
+//             </button>
+//           )}
+
+//           {isDesktop && (
+//             <div className="flex items-center gap-8 ml-auto">
+//               <Link href="/login" className="text-gray-400 hover:text-white">
+//                 Log in
+//               </Link>
+//               <Link
+//                 href="https://cal.com/xthreat/30min"
+//                 target="_blank"
+//                 rel="noopener noreferrer"
+//                 className="p-4 h-9 text-base w-full sm:w-fit rounded-xl border-[#4D4D4D] bg-gray-300 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4"
+//               >
+//                 <span className="bg-clip-text flex text-transparent bg-gradient-to-r from-neutral-800 to-neutral-900 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
+//                   Book a demo <ChevronRight className="text-black mt-1" size={16}/>
+//                 </span>
+//               </Link>
+//             </div>
+//           )}
+//         </div>
+//       </header>
+//       {!isDesktop && menuOpen && <MobileMenu />}
+//     </>
+//   );
+// };
+
+// export default Navbar;
+
+
+// 'use client';
+
+// import { MenuIcon, ChevronDown, ShieldCheck, Users, Target, Crosshair, Wrench, ChevronRight } from "lucide-react";
+// import Link from "next/link";
+// import Image from 'next/image';
+// import React, { useState, useEffect, useRef } from "react";
+// import MobileMenu from "./MobileMenu";
+// import { motion } from 'framer-motion';
+// import XLogo from '../assets/XThreat_icon_primary_white_to_gradient.svg'
+
+// const Navbar = () => {
+//   const [menuOpen, setMenuOpen] = useState(false);
+//   const [isDesktop, setIsDesktop] = useState(false);
+//   const [isDemoOpen, setIsDemoOpen] = useState(false); // Add state for the demo popup
+//   const [active, setActive] = useState<string | null>(null);
+//   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       if (window.innerWidth >= 1024) {
+//         setIsDesktop(true);
+//         setMenuOpen(false); 
+//       } else {
+//         setIsDesktop(false);
+//       }
+//     };
+
+//     handleResize();
+
+//     window.addEventListener("resize", handleResize);
+//     return () => {
+//       window.removeEventListener("resize", handleResize);
+//     };
+//   }, []);
+
+//   const toggleMenu = () => {
+//     setMenuOpen((prev) => !prev);
+//   };
+
+//   const handleMouseEnter = (item: string) => {
+//     if (timeoutRef.current) {
+//       clearTimeout(timeoutRef.current);
+//     }
+//     setActive(item);
+//   };
+
+//   const handleMouseLeave = () => {
+//     timeoutRef.current = setTimeout(() => {
+//       setActive(null);
+//     }, 300);
+//   };
+
+//   const NavItem = ({ title, content, width }: { title: string; content: React.ReactNode; width: string }) => {
+//     const [isHovered, setIsHovered] = React.useState(false);
+  
+//     return (
+//       <li
+//         onMouseEnter={() => {
+//           handleMouseEnter(title);
+//           setIsHovered(true);
+//         }}
+//         onMouseLeave={() => {
+//           handleMouseLeave();
+//           setIsHovered(false);
+//         }}
+//         className="relative"
+//       >
+//         <div className="flex items-center text-gray-400 hover:text-white cursor-pointer">
+//           <span className="mr-1">{title}</span>
+//           <motion.div
+//             animate={{ rotate: isHovered ? 180 : 0 }}
+//             transition={{ duration: 0.3 }}
+//           >
+//             <ChevronDown className="h-4 w-4" />
+//           </motion.div>
+//         </div>
+//         {active === title && (
+//           <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
+//             {content}
+//           </div>
+//         )}
+//       </li>
+//     );
+//   };
+
+//   const SolutionsContent = () => (
+//     <div className="grid grid-cols-2 gap-4">
+//       <div className="pl-3 border-r border-gray-600">
+//         <h3 className="text-white font-semibold text-l mb-2">Security Solutions</h3>
+//         <ul className="mt-3 space-y-4">
+//           <li><Link href="/phishing-awareness" className="text-gray-300 text-l hover:text-white flex items-center"><Target className="mr-2 h-4 w-4" />Phishing Awareness</Link></li>
+//           <li><Link href="/security-awareness" className="text-gray-300 hover:text-white flex items-center"><ShieldCheck className="mr-2 h-4 w-4" />Security Awareness</Link></li>
+//           <li><Link href="/role-based-training" className="text-gray-300 hover:text-white flex items-center"><Users className="mr-2 h-4 w-4" />Role Based Training</Link></li>
+//           <li><Link href="/weak-points" className="text-gray-300 hover:text-white flex items-center"><Crosshair className="mr-2 h-4 w-4" />Weak Points</Link></li>
+//           <li><Link href="/custom-trainings" className="text-gray-300 hover:text-white flex items-center"><Wrench className="mr-2 h-4 w-4" />Custom Trainings</Link></li>
+//         </ul>
+//       </div>
+//       <div className="pr-4">
+//         <h3 className="text-white font-semibold mb-2">Featured</h3>
+//         <div className="bg-gray-900/50 border border-gray-800 p-4 rounded-md">
+//           <h4 className="text-white font-semibold mb-2">New: AI-Powered Training</h4>
+//           <p className="text-gray-400 text-sm mb-2">Enhance your security with our latest AI-driven training modules.</p>
+//           <Link href="/ai-training" className="text-gray-300 hover:text-gray-100 flex flex-row text-base">Learn more <ChevronRight className="h-4 w-4 mt-[5px]"/></Link>
+//         </div>
+//       </div>
+//     </div>
+//   );
+
+//   return (
+//     <>
+//       <header className="fixed right-0 font-sans left-0 top-0 py-4 px-5 bg-black/40 backdrop-blur-lg z-[100]">
+//         <div className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
+//           <div className="flex items-center gap-1 md:gap-[2px]">
+//             <Link href="/">
+//               <Image
+//                 src={XLogo}
+//                 alt="X Logo"
+//                 width={16}
+//                 height={16}
+//                 className="w-[25px]  h-[25px]  md:w-[25px] md:h-[25px]"
+//               />
+//             </Link>
+//             <p className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold">
+//               <Link href="/">Threat</Link>
+//             </p>
+//           </div>
+
+//           {isDesktop ? (
+//             <nav className="flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
+//               <ul className="flex items-center gap-8 list-none">
+//                 <NavItem title="Solutions" content={<SolutionsContent />} width="w-[550px]" />
+//                 <li>
+//                   <Link href="/pricing" className="text-gray-400 hover:text-white">
+//                     Pricing
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link href="/about" className="text-gray-400 hover:text-white">
+//                     Company
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link href="/contact" className="text-gray-400 hover:text-white">
+//                     Contact
+//                   </Link>
+//                 </li>
+//               </ul>
+//             </nav>
+//           ) : (
+//             <button
+//               onClick={toggleMenu}
+//               className="ml-auto"
+//               aria-label="Open mobile menu"
+//             >
+//               <MenuIcon />
+//             </button>
+//           )}
+
+//           {isDesktop && (
+//             <div className="flex items-center gap-8 ml-auto">
+//               <Link href="/login" className="text-gray-400 hover:text-white">
+//                 Log in
+//               </Link>
+//               <button
+//                 onClick={() => setIsDemoOpen(true)} // Open the demo popup
+//                 className="p-4 h-9 text-base w-full sm:w-fit rounded-xl border-[#4D4D4D] bg-gray-300 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4"
+//               >
+//                 <span className="bg-clip-text flex text-transparent bg-gradient-to-r from-neutral-800 to-neutral-900 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
+//                   Book a demo <ChevronRight className="text-black mt-1" size={16}/>
+//                 </span>
+//               </button>
+//             </div>
+//           )}
+//         </div>
+//       </header>
+
+//       {/* Cal.com Popup Modal */}
+//       {/* {isDemoOpen && (
+//         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[200]">
+//           <div className="bg-neutral-800 rounded-lg shadow-lg p-10 max-w-md w-full relative">
+//             <button
+//               onClick={() => setIsDemoOpen(false)} // Close the demo popup
+//               className="absolute top-2 right-2 mr-2 mt-1 text-white hover:text-gray-600"
+//             >
+//               ✕
+//             </button>
+//             <div className="relative h-80">
+//               <iframe
+//                 src="https://cal.com/xthreat/30min"
+//                 className="absolute inset-0 w-full h-full border-none"
+//                 allow="camera; microphone; display-capture"
+//               ></iframe>
+//             </div>
+//           </div>
+//         </div>
+//       )} */}
+//       {/* Cal.com Popup Modal */}
+// {isDemoOpen && (
+//   <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[200]">
+//     <div className="bg-neutral-900 rounded-lg shadow-lg p-10 max-w-4xl w-full relative border border-gray-800">
+//       <button
+//         onClick={() => setIsDemoOpen(false)} // Close the demo popup
+//         className="absolute top-2 right-2 mr-2 mt-1 text-white hover:text-gray-500"
+//       >
+//         ✕
+//       </button>
+//       <div className="relative" style={{ height: '60vh' }}> {/* Adjust height for a larger view */}
+//         <iframe
+//           src="https://cal.com/xthreat/30min"
+//           className="absolute inset-0 w-full h-full border-none"
+//           allow="camera; microphone; display-capture"
+//           style={{
+//             backgroundColor: '#1a1a1a', // Matches Cal.com black theme
+//           }}
+//         ></iframe>
+//       </div>
+//     </div>
+//   </div>
+// )}
+
+
+//       {!isDesktop && menuOpen && <MobileMenu />}
+//     </>
+//   );
+// };
+
+// export default Navbar;
+
+
+
+// 'use client';
+
+// import { MenuIcon, ChevronDown, ShieldCheck, Users, Target, Crosshair, Wrench, ChevronRight } from "lucide-react";
+// import Link from "next/link";
+// import Image from 'next/image';
+// import React, { useState, useEffect, useRef } from "react";
+// import MobileMenu from "./MobileMenu";
+// import { motion } from 'framer-motion';
+// import XLogo from '../assets/XThreat_icon_primary_white_to_gradient.svg';
+
+// const Navbar = () => {
+//   const [menuOpen, setMenuOpen] = useState(false);
+//   const [isDesktop, setIsDesktop] = useState(false);
+//   const [isDemoOpen, setIsDemoOpen] = useState(false); // State for the demo popup
+//   const [active, setActive] = useState<string | null>(null);
+//   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+//   const modalRef = useRef(null);
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setIsDesktop(window.innerWidth >= 1024);
+//       if (window.innerWidth >= 1024) setMenuOpen(false);
+//     };
+
+//     handleResize();
+
+//     window.addEventListener("resize", handleResize);
+//     return () => {
+//       window.removeEventListener("resize", handleResize);
+//     };
+//   }, []);
+
+//   // Close modal if clicked outside
+//   useEffect(() => {
+//     function handleClickOutside(event) {
+//       if (modalRef.current && !modalRef.current.contains(event.target)) {
+//         setIsDemoOpen(false);
+//       }
+//     }
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, [modalRef]);
+
+//   const toggleMenu = () => setMenuOpen((prev) => !prev);
+
+//   const handleMouseEnter = (item: string) => {
+//     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+//     setActive(item);
+//   };
+
+//   const handleMouseLeave = () => {
+//     timeoutRef.current = setTimeout(() => {
+//       setActive(null);
+//     }, 300);
+//   };
+
+//   const NavItem = ({ title, content, width }: { title: string; content: React.ReactNode; width: string }) => {
+//     const [isHovered, setIsHovered] = useState(false);
+  
+//     return (
+//       <li
+//         onMouseEnter={() => {
+//           handleMouseEnter(title);
+//           setIsHovered(true);
+//         }}
+//         onMouseLeave={() => {
+//           handleMouseLeave();
+//           setIsHovered(false);
+//         }}
+//         className="relative"
+//       >
+//         <div className="flex items-center text-gray-400 hover:text-white cursor-pointer">
+//           <span className="mr-1">{title}</span>
+//           <motion.div animate={{ rotate: isHovered ? 180 : 0 }} transition={{ duration: 0.3 }}>
+//             <ChevronDown className="h-4 w-4" />
+//           </motion.div>
+//         </div>
+//         {active === title && (
+//           <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
+//             {content}
+//           </div>
+//         )}
+//       </li>
+//     );
+//   };
+
+//   const SolutionsContent = () => (
+//     <div className="grid grid-cols-2 gap-4">
+//       <div className="pl-3 border-r border-gray-600">
+//         <h3 className="text-white font-semibold text-l mb-2">Security Solutions</h3>
+//         <ul className="mt-3 space-y-4">
+//           <li><Link href="/phishing-awareness" className="text-gray-300 text-l hover:text-white flex items-center"><Target className="mr-2 h-4 w-4" />Phishing Awareness</Link></li>
+//           <li><Link href="/security-awareness" className="text-gray-300 hover:text-white flex items-center"><ShieldCheck className="mr-2 h-4 w-4" />Security Awareness</Link></li>
+//           <li><Link href="/role-based-training" className="text-gray-300 hover:text-white flex items-center"><Users className="mr-2 h-4 w-4" />Role Based Training</Link></li>
+//           <li><Link href="/weak-points" className="text-gray-300 hover:text-white flex items-center"><Crosshair className="mr-2 h-4 w-4" />Weak Points</Link></li>
+//           <li><Link href="/custom-trainings" className="text-gray-300 hover:text-white flex items-center"><Wrench className="mr-2 h-4 w-4" />Custom Trainings</Link></li>
+//         </ul>
+//       </div>
+//       <div className="pr-4">
+//         <h3 className="text-white font-semibold mb-2">Featured</h3>
+//         <div className="bg-gray-900/50 border border-gray-800 p-4 rounded-md">
+//           <h4 className="text-white font-semibold mb-2">New: AI-Powered Training</h4>
+//           <p className="text-gray-400 text-sm mb-2">Enhance your security with our latest AI-driven training modules.</p>
+//           <Link href="/ai-training" className="text-gray-300 hover:text-gray-100 flex flex-row text-base">Learn more <ChevronRight className="h-4 w-4 mt-[5px]"/></Link>
+//         </div>
+//       </div>
+//     </div>
+//   );
+
+//   return (
+//     <>
+//       <header className="fixed right-0 font-sans left-0 top-0 py-4 px-5 bg-black/40 backdrop-blur-lg z-[100]">
+//         <div className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
+//           <div className="flex items-center gap-1 md:gap-[2px]">
+//             <Link href="/">
+//               <Image src={XLogo} alt="X Logo" width={16} height={16} className="w-[25px] h-[25px] md:w-[25px] md:h-[25px]" />
+//             </Link>
+//             <p className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold">
+//               <Link href="/">Threat</Link>
+//             </p>
+//           </div>
+
+//           {isDesktop ? (
+//             <nav className="flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
+//               <ul className="flex items-center gap-8 list-none">
+//                 <NavItem title="Solutions" content={<SolutionsContent />} width="w-[550px]" />
+//                 <li><Link href="/pricing" className="text-gray-400 hover:text-white">Pricing</Link></li>
+//                 <li><Link href="/about" className="text-gray-400 hover:text-white">Company</Link></li>
+//                 <li><Link href="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
+//               </ul>
+//             </nav>
+//           ) : (
+//             <button onClick={toggleMenu} className="ml-auto" aria-label="Open mobile menu">
+//               <MenuIcon />
+//             </button>
+//           )}
+
+//           {isDesktop && (
+//             <div className="flex items-center gap-8 ml-auto">
+//               <Link href="/login" className="text-gray-400 hover:text-white">Log in</Link>
+//               <button onClick={() => setIsDemoOpen(true)} className="p-4 h-9 text-base w-full sm:w-fit rounded-xl border-[#4D4D4D] bg-gray-300 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4">
+//                 <span className="bg-clip-text flex text-transparent bg-gradient-to-r from-neutral-800 to-neutral-900 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
+//                   Book a demo <ChevronRight className="text-black mt-1" size={16}/>
+//                 </span>
+//               </button>
+//             </div>
+//           )}
+//         </div>
+//       </header>
+
+//       {/* Cal.com Popup Modal */}
+//           {isDemoOpen && (
+//             <div
+//               className="fixed inset-0 bg-black bg-opacity-70 flex px-10 justify-center items-center z-[200]"
+//               onClick={() => setIsDemoOpen(false)} // Close the popup on outside click
+//             >
+//               <div
+//                 className="bg-[#101010] rounded-lg shadow-lg p-10 max-w-5xl w-full relative border border-neutral-800"
+//                 onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+//               >
+//                 <div className="relative" style={{ height: '76vh' }}>
+//                   <iframe
+//                     src="https://cal.com/xthreat/30min?hide_event_type_details=true"
+//                     className="absolute inset-0 w-full h-full border-none"
+//                     allow="camera; microphone; display-capture"
+//                     style={{
+//                       backgroundColor: '#101010', // Matches Cal.com black theme
+//                       transform: 'scale(1.06)', // Slightly scale down for a compact view
+//                       transformOrigin: 'top',   // Maintain alignment from the top
+//                       height: '75vh',           // Adjusted height to fit content better
+//                     }}
+//                   ></iframe>
+//                 </div>
+//               </div>
+//             </div>
+//           )}
+
+
+//       {!isDesktop && menuOpen && <MobileMenu />}
+//     </>
+//   );
+// };
+
+// export default Navbar;
+
+
+'use client';
+
 import { MenuIcon, ChevronDown, ShieldCheck, Users, Target, Crosshair, Wrench, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
 import React, { useState, useEffect, useRef } from "react";
 import MobileMenu from "./MobileMenu";
 import { motion } from 'framer-motion';
-import XLogo from '../assets/XThreat_icon_primary_white_to_gradient.svg'
+import XLogo from '../assets/XThreat_icon_primary_white_to_gradient.svg';
+
+const CAL_URL = "https://cal.com/xthreat/30min?hide_event_type_details=true";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [active, setActive] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const modalRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const preloadIframeRef = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
+    // Add preconnect for faster initial connection
+    const preconnect = document.createElement('link');
+    preconnect.rel = 'preconnect';
+    preconnect.href = 'https://cal.com';
+    document.head.appendChild(preconnect);
+
+    // Add DNS prefetch
+    const dnsPrefetch = document.createElement('link');
+    dnsPrefetch.rel = 'dns-prefetch';
+    dnsPrefetch.href = 'https://cal.com';
+    document.head.appendChild(dnsPrefetch);
+
+    // Create hidden preload iframe
+    preloadIframeRef.current = document.createElement('iframe');
+    preloadIframeRef.current.style.display = 'none';
+    preloadIframeRef.current.src = CAL_URL;
+    document.body.appendChild(preloadIframeRef.current);
+
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        setIsDesktop(true);
-        setMenuOpen(false); 
-      } else {
-        setIsDesktop(false);
-      }
+      setIsDesktop(window.innerWidth >= 1024);
+      if (window.innerWidth >= 1024) setMenuOpen(false);
     };
 
     handleResize();
-
     window.addEventListener("resize", handleResize);
+
     return () => {
       window.removeEventListener("resize", handleResize);
+      document.head.removeChild(preconnect);
+      document.head.removeChild(dnsPrefetch);
+      if (preloadIframeRef.current) {
+        document.body.removeChild(preloadIframeRef.current);
+      }
     };
   }, []);
 
-  const toggleMenu = () => {
-    setMenuOpen((prev) => !prev);
-  };
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsDemoOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [modalRef]);
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const handleMouseEnter = (item: string) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setActive(item);
   };
 
@@ -1201,7 +1841,7 @@ const Navbar = () => {
   };
 
   const NavItem = ({ title, content, width }: { title: string; content: React.ReactNode; width: string }) => {
-    const [isHovered, setIsHovered] = React.useState(false);
+    const [isHovered, setIsHovered] = useState(false);
   
     return (
       <li
@@ -1217,29 +1857,22 @@ const Navbar = () => {
       >
         <div className="flex items-center text-gray-400 hover:text-white cursor-pointer">
           <span className="mr-1">{title}</span>
-          <motion.div
-            animate={{ rotate: isHovered ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.div animate={{ rotate: isHovered ? 180 : 0 }} transition={{ duration: 0.3 }}>
             <ChevronDown className="h-4 w-4" />
           </motion.div>
         </div>
         {active === title && (
-          // <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black/90 backdrop-blur-3xl border border-gray-700 p-6 rounded-md shadow-lg`}>
-          //   {content}
-          // </div>
-        <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
-          {content}
-        </div>
-
+          <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
+            {content}
+          </div>
         )}
       </li>
     );
   };
-  
+
   const SolutionsContent = () => (
     <div className="grid grid-cols-2 gap-4">
-      <div className="pl-3 border-r  border-gray-600">
+      <div className="pl-3 border-r border-gray-600">
         <h3 className="text-white font-semibold text-l mb-2">Security Solutions</h3>
         <ul className="mt-3 space-y-4">
           <li><Link href="/phishing-awareness" className="text-gray-300 text-l hover:text-white flex items-center"><Target className="mr-2 h-4 w-4" />Phishing Awareness</Link></li>
@@ -1266,13 +1899,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
           <div className="flex items-center gap-1 md:gap-[2px]">
             <Link href="/">
-              <Image
-                src={XLogo}
-                alt="X Logo"
-                width={16}
-                height={16}
-                className="w-[25px]  h-[25px]  md:w-[25px] md:h-[25px]"
-              />
+              <Image src={XLogo} alt="X Logo" width={16} height={16} className="w-[25px] h-[25px] md:w-[25px] md:h-[25px]" />
             </Link>
             <p className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold">
               <Link href="/">Threat</Link>
@@ -1283,58 +1910,82 @@ const Navbar = () => {
             <nav className="flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
               <ul className="flex items-center gap-8 list-none">
                 <NavItem title="Solutions" content={<SolutionsContent />} width="w-[550px]" />
-                <li>
-                  <Link href="/pricing" className="text-gray-400 hover:text-white">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="text-gray-400 hover:text-white">
-                    Company
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="text-gray-400 hover:text-white">
-                    Contact
-                  </Link>
-                </li>
+                <li><Link href="/pricing" className="text-gray-400 hover:text-white">Pricing</Link></li>
+                <li><Link href="/about" className="text-gray-400 hover:text-white">Company</Link></li>
+                <li><Link href="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
               </ul>
             </nav>
           ) : (
-            <button
-              onClick={toggleMenu}
-              className="ml-auto"
-              aria-label="Open mobile menu"
-            >
+            <button onClick={toggleMenu} className="ml-auto" aria-label="Open mobile menu">
               <MenuIcon />
             </button>
           )}
 
           {isDesktop && (
             <div className="flex items-center gap-8 ml-auto">
-              <Link href="/login" className="text-gray-400 hover:text-white">
-                Log in
-              </Link>
-              <Link
-                href="https://cal.com/xthreat/30min"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link href="/login" className="text-gray-400 hover:text-white">Log in</Link>
+              <button 
+                onClick={() => {
+                  setIsDemoOpen(true);
+                  setIsLoading(true);
+                }} 
                 className="p-4 h-9 text-base w-full sm:w-fit rounded-xl border-[#4D4D4D] bg-gray-300 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4"
               >
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-800 to-neutral-900 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
-                  Book a demo
+                <span className="bg-clip-text flex text-transparent bg-gradient-to-r from-neutral-800 to-neutral-900 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
+                  Book a demo <ChevronRight className="text-black mt-1" size={16}/>
                 </span>
-              </Link>
+              </button>
             </div>
           )}
         </div>
       </header>
+
+      {isDemoOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-70 flex px-10 justify-center items-center z-[200]"
+          onClick={() => {
+            setIsDemoOpen(false);
+            setIsLoading(true);
+          }}
+        >
+          <div 
+            className="bg-[#101010] rounded-lg shadow-lg p-10 max-w-5xl w-full relative border border-neutral-800"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-[#101010] z-10">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
+              </div>
+            )}
+            <div className="relative" style={{ height: '76vh' }}>
+              <iframe
+                ref={iframeRef}
+                src={CAL_URL}
+                className="absolute inset-0 w-full h-full border-none"
+                allow="camera; microphone; display-capture"
+                onLoad={() => setIsLoading(false)}
+                style={{
+                  backgroundColor: '#101010',
+                  transform: 'scale(1.06)',
+                  transformOrigin: 'top',
+                  height: '75vh',
+                  opacity: isLoading ? 0 : 1,
+                  transition: 'opacity 0.3s'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {!isDesktop && menuOpen && <MobileMenu />}
     </>
   );
 };
 
 export default Navbar;
+
+
 
 
 // "use client";

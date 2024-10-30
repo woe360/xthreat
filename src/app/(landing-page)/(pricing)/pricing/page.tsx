@@ -1138,17 +1138,17 @@ const PricingPage: React.FC = () => {
                 duration: 0.15,
                 ease: "easeInOut", 
               }}
-              className="absolute w-[calc(50%-4px)] h-[calc(100%-8px)] bg-gray-100 rounded-lg left-1"
+              className="absolute w-[calc(50%-4px)] h-[calc(100%-8px)] bg-gray-300 rounded-lg left-1"
             />
-            <span className={`px-4 py-2 rounded-xl text-sm transition-colors duration-200 relative z-10 ${
+            <span className={`px-4 py-2 mr-3 rounded-xl text-sm transition-colors duration-200 relative z-10 ${
               isYearly ? 'text-gray-400' : 'text-black'
             }`}>
-              Pay monthly
+              Monthly
             </span>
-            <span className={`px-4 py-2 rounded-xl text-sm transition-colors duration-200 relative z-10 ${
+            <span className={`px-4 py-2 mr-2 rounded-xl text-sm transition-colors duration-200 relative z-10 ${
               isYearly ? 'text-black' : 'text-gray-400'
             }`}>
-              Pay yearly
+              Yearly
             </span>
           </button>
         </motion.div>
