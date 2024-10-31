@@ -1957,7 +1957,7 @@ const Navbar = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
               </div>
             )}
-            <div className="relative" style={{ height: '76vh' }}>
+            <div className="relative" style={{ height: '73vh' }}>
               <iframe
                 ref={iframeRef}
                 src={CAL_URL}
@@ -1968,7 +1968,7 @@ const Navbar = () => {
                   backgroundColor: '#101010',
                   transform: 'scale(1.06)',
                   transformOrigin: 'top',
-                  height: '75vh',
+                  height: '72vh',
                   opacity: isLoading ? 0 : 1,
                   transition: 'opacity 0.3s'
                 }}

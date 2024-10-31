@@ -809,7 +809,7 @@ const Footer: React.FC = () => {
           
           {/* Footer Links */}
           <div className="lg:w-1/2 flex font-sans justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-16 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 text-center">
               <div>
                 <h3 className="text-base text-gray-300 mb-4">Company</h3>
                 <ul className="space-y-2">
@@ -830,14 +830,14 @@ const Footer: React.FC = () => {
                 </ul>
               </div>
               
-              <div>
+              {/* <div>
                 <h3 className="text-base text-gray-300 mb-4">Legal</h3>
                 <ul className="space-y-2 whitespace-nowrap">
                   <li><Link href="/terms" className="text-gray-400 hover:text-white">Terms of Service</Link></li>
                   <li><Link href="/privacy" className="text-gray-400 hover:text-white">Privacy Policy</Link></li>
                   <li><Link href="/cookies" className="text-gray-400 hover:text-white">Cookie Policy</Link></li>
                 </ul>
-              </div>
+              </div> */}
             </div>
           </div>
           
@@ -872,8 +872,13 @@ const Footer: React.FC = () => {
         </div>
         
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-gray-800 text-center w-full">
+        <div className="mt-12 pt-8 border-t flex border-gray-800 text-center w-full">
           <p className="text-gray-400 text-sm">&copy; 2024 XThreat. All rights reserved.</p>
+          <div className="text-sm ml-5">
+            <Link href="/terms" className="ml-5 text-gray-400 hover:text-white">Terms</Link>
+            <Link href="/privacy" className=" ml-5 text-gray-400 hover:text-white">Privacy</Link>
+            <Link href="/cookies" className=" ml-5 text-gray-400 hover:text-white">Cookies</Link>
+          </div>
         </div>
       </div>
     </footer>
