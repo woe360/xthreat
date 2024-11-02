@@ -781,7 +781,7 @@ const Home: React.FC = () => {
         <h2 className="text-3xl sm:text-4xl md:text-5xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-semibold">
           Features
         </h2>
-        <h3 className="text-lg sm:text-xl md:text-2xl mb-14 font-serif italic mx-7 text-gray-400 text-center">
+        <h3 className="text-lg sm:text-xl md:text-xl mb-14 font-serif italic mx-7 text-gray-400 text-center">
           Core Features and Advantages of Our Security Training Solutions
         </h3>
         <div className="w-full px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">

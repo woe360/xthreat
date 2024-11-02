@@ -245,7 +245,7 @@ const SkeletonFour = () => {
     >
       <motion.div
         style={{ x }}
-        className="h-full w-1/3 md:w-1/3 rounded-2xl bg-white p-4 dark:bg-black border-gray-800 border  flex flex-col items-center justify-center"
+        className="h-full w-1/3 md:w-1/3 rounded-2xl p-4 bg-black [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] border border-gray-800  flex flex-col items-center justify-center"
       >
         <Image
           src=""
@@ -264,7 +264,7 @@ const SkeletonFour = () => {
       
       <motion.div
         style={{ x: 0, scale }}
-        className="h-full relative z-20 w-2/4 md:w-1/3 rounded-2xl bg-white p-4 dark:bg-black border-gray-800 border flex flex-col items-center justify-center"
+        className="h-full relative z-20 w-2/4 md:w-1/3 rounded-2xl p-4 bg-black [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] border-gray-800 border flex flex-col items-center justify-center"
       >
         <Image
           src=""
@@ -283,7 +283,7 @@ const SkeletonFour = () => {
       
       <motion.div
         style={{ x: xSecond }}
-        className="h-full w-1/3 rounded-2xl bg-white p-4 dark:bg-black border-gray-800 border  flex flex-col items-center justify-center"
+        className="h-full w-1/3 rounded-2xl bg-black [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] p-4 border-gray-800 border  flex flex-col items-center justify-center"
       >
         <Image
           src=""

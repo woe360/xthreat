@@ -1062,7 +1062,7 @@ const PricingPage: React.FC = () => {
               `€${isYearly ? plan.yearlyPrice : plan.monthlyPrice}`}
             {typeof plan.monthlyPrice !== "string" && (
               <span className="ml-1 text-2xl font-medium text-gray-500">
-                /user/{isYearly ? 'year' : 'month'}
+                user/{isYearly ? 'year' : 'month'}
               </span>
             )}
           </div>
