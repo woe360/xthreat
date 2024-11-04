@@ -1068,7 +1068,7 @@ const PricingPage: React.FC = () => {
           </div>
           <div className="h-5">
             {isYearly && savings && (
-              <p className="text-sm text-orange-400/80">
+              <p className="text-sm text-green-400/80">
                 Save €{savings.amount}/user/year ({savings.percentage}% off)
               </p>
             )}
@@ -1080,7 +1080,7 @@ const PricingPage: React.FC = () => {
             {plan.features.map((feature, index) => (
               <li key={index} className="flex items-start">
                 <div className="flex-shrink-0">
-                  <Check className="h-6 w-6 text-orange-500/80" />
+                  <Check className="h-6 w-6 text-green-500/80" />
                 </div>
                 <p className="ml-3 text-base text-gray-300">{feature}</p>
               </li>

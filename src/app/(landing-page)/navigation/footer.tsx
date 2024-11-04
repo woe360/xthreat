@@ -788,7 +788,7 @@ const Footer: React.FC = () => {
               </p>
             </div>
             <p className="mt-4 text-gray-400 font-serif italic text-sm max-w-xs">
-              Cutting-edge platform providing security awareness training, role-based training, and custom solutions to enhance your organization's cybersecurity readiness.
+              Cutting-edge platform providing security awareness, role-based training and custom solutions to enhance your organization's cybersecurity readiness.
             </p>
             
             {/* Social Media Icons */}

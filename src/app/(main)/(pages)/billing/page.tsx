@@ -793,7 +793,7 @@ import { CreditCard, Download, DollarSign, Users, ChevronUp, X } from 'lucide-re
 import { downloadInvoice } from './components/InvoiceGenerator';
 
 interface BillingInfo {
-  currentPlan: 'Basic' | 'Professional' | 'Enterprise';
+  currentPlan: 'Essential' | 'Advanced' | 'Tailored';
   nextBillingDate: string;
   amount: string;
   paymentMethod: string;
@@ -825,7 +825,7 @@ const BillingPage = () => {
   });
 
   const [billingInfo, setBillingInfo] = useState<BillingInfo>({
-    currentPlan: 'Enterprise',
+    currentPlan: 'Tailored',
     nextBillingDate: 'October 1, 2024',
     amount: '$1,999.00',
     paymentMethod: '**** **** **** 1234',
@@ -932,7 +932,7 @@ const BillingPage = () => {
               className="px-4 py-2 bg-blue-500/30 text-blue-400 hover:bg-blue-500/50 hover:text-blue-200 rounded-lg transition-colors"
               onClick={handleUpgradePlan}
             >
-              Upgrade Plan
+              Upgrade
             </button>
           </div>
         </div>
@@ -962,7 +962,7 @@ const BillingPage = () => {
               <h3 className="text-gray-400 text-sm">Current Plan</h3>
               <span className="bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">Enterprise</span>
             </div>
-            <p className="text-2xl font-bold">Premium</p>
+            <p className="text-2xl font-bold">Tailored</p>
             <div className="text-sm text-gray-400 mt-2">All features included</div>
           </div>
           
@@ -1051,7 +1051,7 @@ const BillingPage = () => {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-[#050607] border border-gray-800 rounded-lg w-full max-w-md p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-semibold">Update Payment Method</h2>
+                <h2 className="text-lg font-semibold">Payment Method</h2>
                 <button 
                   onClick={() => setShowCardModal(false)}
                   className="text-gray-400 hover:text-gray-200"
@@ -1128,7 +1128,7 @@ const BillingPage = () => {
                   disabled={isUpdatingCard}
                   className="w-full bg-green-500/30 text-green-400 hover:bg-green-500/40 hover:text-green-200 rounded-lg px-4 py-2 mt-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isUpdatingCard ? 'Updating...' : 'Update Card'}
+                  {isUpdatingCard ? 'Updating...' : 'Update'}
                 </button>
               </form>
             </div>

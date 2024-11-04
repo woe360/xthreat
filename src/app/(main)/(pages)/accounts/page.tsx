@@ -1050,7 +1050,7 @@ const AccountsPage = () => {
             onClick={() => setShowAddModal(true)}
           >
             <UserPlus size={20} className="mr-2" />
-            Add Employee
+            Add
           </button>
         </div>
 

@@ -666,7 +666,7 @@ const AccountPage = () => {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-semibold text-white">Account</h1>
           <button className="px-4 py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 hover:text-green-200 rounded-lg transition-colors">
-            Save Changes
+            Save
           </button>
         </div>
 

@@ -1773,6 +1773,125 @@ import { Input } from '@/components/ui/input';
 import { Upload } from 'lucide-react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
+import { cn } from "@/lib/utils";
+
+// const BugReportModal = ({ isOpen, onClose }) => {
+//   const [issueType, setIssueType] = useState('');
+//   const [description, setDescription] = useState('');
+//   const [image, setImage] = useState(null);
+//   const [url, setUrl] = useState('');
+//   const supabase = createClientComponentClient();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+    
+//     try {
+//       const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+//       if (userError) throw userError;
+
+//       console.log({ 
+//         userId: user?.id,
+//         issueType, 
+//         description, 
+//         image, 
+//         url 
+//       });
+      
+//       onClose();
+//     } catch (error) {
+//       console.error('Error submitting bug report:', error);
+//     }
+//   };
+
+//   return (
+//     <Dialog open={isOpen} onOpenChange={onClose}>
+//       <DialogContent 
+//         className="sm:max-w-[425px] text-white [&>button]:hidden" 
+//         style={{
+//           background: '#050607',
+//           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+//         }}
+//       >
+//         <DialogHeader>
+//           <DialogTitle className="text-2xl font-sans text-center font-base">Report a Bug</DialogTitle>
+//         </DialogHeader>
+//         <form onSubmit={handleSubmit} className="space-y-4">
+//         <div>
+//   {/* <Label htmlFor="issue-type">Issue Type</Label> */}
+//             <Select value={issueType} onValueChange={setIssueType}>
+//               <SelectTrigger 
+//                 id="issue-type" 
+//                 className="w-full bg-gray-700/30 focus:outline-none border-none"
+//               >
+//                 <div className="flex items-center text-neutral-400 justify-center w-full gap-2">
+//                   <SelectValue placeholder="Select an issue type" />
+//                 </div>
+//               </SelectTrigger>
+//               <SelectContent className="bg-[#050607]">
+//                 <SelectItem value="ui" className="text-center">UI Problem</SelectItem>
+//                 <SelectItem value="functionality" className="text-center">Functionality Issue</SelectItem>
+//                 <SelectItem value="performance" className="text-center">Performance Problem</SelectItem>
+//                 <SelectItem value="other" className="text-center">Other</SelectItem>
+//               </SelectContent>
+//             </Select>
+//           </div>
+
+//           <div>
+//             {/* <Label htmlFor="image">Attach Image (optional)</Label> */}
+//             <div className="flex items-start mt-2">
+//               <input
+//                 type="file"
+//                 id="image"
+//                 accept="image/*"
+//                 onChange={(e) => setImage(e.target.files[0])}
+//                 className="hidden"
+//               />
+//               <Button
+//                 type="button"
+//                 className="w-full bg-gray-700/30 hover:bg-gray-600/30 text-neutral-400 border-none focus:outline-none"
+//                 onClick={() => document.getElementById('image').click()}
+//               >
+//                 <Upload className="mr-2 h-4 w-4 text-neutral-400"  /> Upload Image
+//               </Button>
+//             </div>
+//             {image && <span className="text-sm mt-1 block">{image.name}</span>}
+//           </div>
+
+//           <div>
+//             {/* <Label htmlFor="url">URL</Label> */}
+//             <Input
+//               id="url"
+//               type="url"
+//               placeholder="Enter the URL where the issue occurred"
+//               value={url}
+//               required
+//               onChange={(e) => setUrl(e.target.value)}
+//               className="bg-gray-700/30 text-white border-none focus:outline-none"
+//             />
+//           </div>
+
+//           <div>
+//             {/* <Label htmlFor="description">Description</Label> */}
+//             <Textarea
+//               id="description"
+//               placeholder="Describe the issue in detail"
+//               value={description}
+//               onChange={(e) => setDescription(e.target.value)}
+//               className="h-32 bg-gray-700/30 text-white border-none focus:outline-none resize-none"
+//               required
+//             />
+//           </div>
+
+//           <div className="flex justify-end space-x-2">
+//             <Button type="button" variant="ghost" className="bg-transparent hover:bg-transparent hover:border mr-1 hover:border-gray-500" onClick={onClose}>Cancel</Button>
+//             <Button type="submit" className="bg-gray-300 hover:bg-gray-100">Submit</Button>
+//           </div>
+//         </form>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// };
 
 const BugReportModal = ({ isOpen, onClose }) => {
   const [issueType, setIssueType] = useState('');
@@ -1816,28 +1935,28 @@ const BugReportModal = ({ isOpen, onClose }) => {
           <DialogTitle className="text-2xl font-sans text-center font-base">Report a Bug</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-  {/* <Label htmlFor="issue-type">Issue Type</Label> */}
+          <div>
             <Select value={issueType} onValueChange={setIssueType}>
               <SelectTrigger 
-                id="issue-type" 
-                className="w-full bg-gray-700/30 focus:outline-none border-none"
+                className={cn(
+                  "w-full px-5 py-6 rounded-lg bg-gray-700/30 text-gray-300 border border-gray-800",
+                  "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                )}
               >
                 <div className="flex items-center text-neutral-400 justify-center w-full gap-2">
                   <SelectValue placeholder="Select an issue type" />
                 </div>
               </SelectTrigger>
-              <SelectContent className="bg-[#050607]">
-                <SelectItem value="ui" className="text-center">UI Problem</SelectItem>
-                <SelectItem value="functionality" className="text-center">Functionality Issue</SelectItem>
-                <SelectItem value="performance" className="text-center">Performance Problem</SelectItem>
-                <SelectItem value="other" className="text-center">Other</SelectItem>
+              <SelectContent className="bg-neutral-900 border border-gray-800">
+                <SelectItem value="ui" className="text-center text-gray-300 focus:bg-neutral-800">UI Problem</SelectItem>
+                <SelectItem value="functionality" className="text-center text-gray-300 focus:bg-neutral-800">Functionality Issue</SelectItem>
+                <SelectItem value="performance" className="text-center text-gray-300 focus:bg-neutral-800">Performance Problem</SelectItem>
+                <SelectItem value="other" className="text-center text-gray-300 focus:bg-neutral-800">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
-            {/* <Label htmlFor="image">Attach Image (optional)</Label> */}
             <div className="flex items-start mt-2">
               <input
                 type="file"
@@ -1848,43 +1967,59 @@ const BugReportModal = ({ isOpen, onClose }) => {
               />
               <Button
                 type="button"
-                className="w-full bg-gray-700/30 hover:bg-gray-600/30 text-neutral-400 border-none focus:outline-none"
+                className="w-full bg-gray-700/30 hover:bg-gray-700/40 h-12 text-neutral-400 border border-gray-800 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                 onClick={() => document.getElementById('image').click()}
               >
-                <Upload className="mr-2 h-4 w-4 text-neutral-400"  /> Upload Image
+                <Upload className="mr-2 h-4 w-4 text-neutral-400" /> Upload Image
               </Button>
             </div>
-            {image && <span className="text-sm mt-1 block">{image.name}</span>}
+            {image && <span className="text-sm mt-1 block text-gray-400">{image.name}</span>}
           </div>
 
           <div>
-            {/* <Label htmlFor="url">URL</Label> */}
             <Input
               id="url"
               type="url"
               placeholder="Enter the URL where the issue occurred"
               value={url}
               required
+              className={cn(
+                "bg-gray-700/30 text-gray-300 border border-gray-800 px-3 py-6 rounded-lg",
+                "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              )}
               onChange={(e) => setUrl(e.target.value)}
-              className="bg-gray-700/30 text-white border-none focus:outline-none"
             />
           </div>
 
           <div>
-            {/* <Label htmlFor="description">Description</Label> */}
             <Textarea
               id="description"
               placeholder="Describe the issue in detail"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="h-32 bg-gray-700/30 text-white border-none focus:outline-none resize-none"
+              className={cn(
+                "h-32 bg-gray-700/30 text-gray-300 border border-gray-800 resize-none px-3 py-4 rounded-lg",
+                "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              )}
               required
             />
           </div>
 
           <div className="flex justify-end space-x-2">
-            <Button type="button" variant="ghost" className="bg-transparent hover:bg-transparent hover:border mr-1 hover:border-gray-500" onClick={onClose}>Cancel</Button>
-            <Button type="submit" className="bg-gray-300 hover:bg-gray-100">Submit</Button>
+          <Button 
+            type="button" 
+            variant="ghost" 
+            className="bg-transparent hover:bg-transparent border border-transparent hover:border-gray-500 text-gray-300" 
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
+            <Button 
+              type="submit" 
+              className="bg-gray-300 hover:bg-gray-100 text-gray-900"
+            >
+              Submit
+            </Button>
           </div>
         </form>
       </DialogContent>
