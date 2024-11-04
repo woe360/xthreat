@@ -254,7 +254,7 @@ const PracticePage = () => {
           <h2 className="text-lg font-base text-gray-100">Engagement</h2>
           <div className="flex space-x-3">
             <button
-              className={`px-4 py-2 rounded ${timeFrame === 'day' ? 'bg-blue-500/30 text-blue-400 ' : 'bg-[#050607] border border-gray-800 hover:border-gray-700'}`}
+              className={`px-4 py-1 rounded ${timeFrame === 'day' ? 'bg-blue-500/30 text-blue-400 ' : 'bg-[#050607] border border-gray-800 hover:border-gray-700'}`}
               onClick={() => setTimeFrame('day')}
             >
               Day

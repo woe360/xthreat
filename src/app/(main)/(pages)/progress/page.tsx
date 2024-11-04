@@ -468,14 +468,14 @@ const ProgressPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div className="bg-[#050607] border border-gray-800 rounded-lg p-6">
           <h2 className="text-lg font-semibold mb-6">Skills Overview</h2>
-          <div className="h-[400px]">
+          <div className="h-[200px]">
             {/* <ProgressSpiderWeb /> */}
           </div>
         </div>
 
         <div className="bg-[#050607] border border-gray-800 rounded-lg p-6">
           <h2 className="text-lg font-semibold mb-6">Daily Engagement</h2>
-          <div className="h-[400px]">
+          <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={dailyEngagement}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -500,7 +500,7 @@ const ProgressPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-[#050607] border border-gray-800 rounded-lg p-6">
           <h2 className="text-lg font-semibold mb-6">Simulation Progress</h2>
-          <div className="h-[400px]">
+          <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={simulationProgress}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -522,7 +522,7 @@ const ProgressPage = () => {
 
         <div className="bg-[#050607] border border-gray-800 rounded-lg p-6">
           <h2 className="text-lg font-semibold mb-6">Quiz Performance</h2>
-          <div className="h-[400px]">
+          <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={quizPerformance}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />

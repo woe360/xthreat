@@ -103,6 +103,7 @@
 
 // export default Lessons;
 
+
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -123,7 +124,7 @@ interface Module {
 }
 
 const tagColors: Record<string, TagColors> = {
-  All: { border: 'border-gray-500', bg: 'bg-gray-500/20 text-gray-400' },
+  All: { border: 'border-gray-500', bg: 'bg-gray-200/70 text-gray-900' },
   Phishing: { border: 'border-blue-500', bg: 'bg-blue-500/20 text-blue-400' },
   "Risk management": { border: 'border-green-500', bg: 'bg-green-500/20 text-green-400' },
   Compliance: { border: 'border-yellow-500', bg: 'bg-yellow-500/20 text-yellow-400' },
@@ -163,7 +164,7 @@ const Lessons: React.FC = () => {
   const tags: string[] = Object.keys(tagColors);
 
   return (
-    <div className="min-h-screen bg-[#050607] text-gray-100 p-4 px-6">
+    <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-4 px-6">
       <div className="flex justify-between items-center mb-4 mt-2">
         <h1 className="text-xl font-base text-white">Modules</h1>
         <div className="flex gap-2">

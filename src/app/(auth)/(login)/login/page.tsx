@@ -956,11 +956,6 @@
 'use client'
 import { useState, FormEvent, useRef, useEffect } from 'react';
 import Image from 'next/image';
-// import XLogo from '../../assets/XThreat_icon_primary_white_to_gradient.svg'
-// import XLogo from '@/app/(main)/navigation/sideNavigation/icons/xlogo';
-// import XLogo from '@/assets/XThreat_icon_primary_white_to_gradient.svg'
-// src/app/(landing-page)/assets/XThreat_icon_primary_white_to_gradient.svg
-// import XLogo from '../../../assets/XThreat_icon_primary_white_to_gradient.svg';
 import XLogo from '../../../(landing-page)/assets/XThreat_icon_primary_white_to_gradient.svg'
 import Link from 'next/link';
 import { Copy } from 'lucide-react';
@@ -1115,7 +1110,7 @@ export default function SignIn() {
     e.preventDefault();
     if (loading) return;
     setLoading(true);
-    setError(null);
+    // setError(null);
 
     try {
       if (otp.join('').length !== 6) {
@@ -1132,6 +1127,7 @@ export default function SignIn() {
         throw new Error('Invalid verification code. Please try again.');
       }
 
+      setError(null);
       router.push('/dashboard');
       router.refresh();
     } catch (error) {
