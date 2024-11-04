@@ -1269,7 +1269,7 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen font-sans bg-black text-white flex flex-col">
       <Navbar />
       <div className="flex-grow flex items-center justify-center py-52 px-4 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black" />
@@ -1371,7 +1371,7 @@ const ContactPage: React.FC = () => {
                     )}>
                       <SelectValue placeholder="Select number of employees*" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-950 [box-shadow:0_-20px_70px_-20px_#ffffff1f_inset] border border-gray-800 text-gray-300">
+                    <SelectContent className="bg-[#050607] border border-gray-800 text-gray-300">
                       <SelectItem value="1-50" className="hover:bg-neutral-800">1-50</SelectItem>
                       <SelectItem value="51-250" className="hover:bg-neutral-800">51-250</SelectItem>
                       <SelectItem value="251-500" className="hover:bg-neutral-800">251-500</SelectItem>
@@ -1388,7 +1388,7 @@ const ContactPage: React.FC = () => {
                     )}>
                       <SelectValue placeholder="Select your reason*" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-950 [box-shadow:0_-20px_70px_-20px_#ffffff1f_inset] border border-gray-800 text-gray-300">
+                    <SelectContent className="bg-[#050607] border border-gray-800 text-gray-300">
                       <SelectItem value="Get a Quote" className="hover:bg-neutral-800">Get a custom quote</SelectItem>
                       <SelectItem value="More information about the products" className="hover:bg-neutral-800">To know more about products</SelectItem>
                       <SelectItem value="General Inquiry" className="hover:bg-neutral-800">General inquiry</SelectItem>
