@@ -751,6 +751,7 @@ const FacebookIcon = () => (
 );
 
 
+
 const Footer: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -809,7 +810,7 @@ const Footer: React.FC = () => {
           
           {/* Footer Links */}
           <div className="lg:w-1/2 flex font-sans justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-20 text-center">
               <div>
                 <h3 className="text-base text-gray-300 mb-4">Company</h3>
                 <ul className="space-y-2">
@@ -829,15 +830,6 @@ const Footer: React.FC = () => {
                   <li><Link href="/weak-points" className="text-gray-400 hover:text-white">Weak Points</Link></li>
                 </ul>
               </div>
-              
-              {/* <div>
-                <h3 className="text-base text-gray-300 mb-4">Legal</h3>
-                <ul className="space-y-2 whitespace-nowrap">
-                  <li><Link href="/terms" className="text-gray-400 hover:text-white">Terms of Service</Link></li>
-                  <li><Link href="/privacy" className="text-gray-400 hover:text-white">Privacy Policy</Link></li>
-                  <li><Link href="/cookies" className="text-gray-400 hover:text-white">Cookie Policy</Link></li>
-                </ul>
-              </div> */}
             </div>
           </div>
           
@@ -871,7 +863,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
         
-        {/* Copyright */}
+        {/* Copyright & Legal */}
         <div className="mt-12 pt-8 border-t flex border-gray-800 text-center w-full">
           <p className="text-gray-400 text-sm">&copy; 2024 XThreat. All rights reserved.</p>
           <div className="text-sm ml-5">

@@ -956,7 +956,12 @@
 'use client'
 import { useState, FormEvent, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import XLogo from '../../assets/XThreat_icon_primary_white_to_gradient.svg'
+// import XLogo from '../../assets/XThreat_icon_primary_white_to_gradient.svg'
+// import XLogo from '@/app/(main)/navigation/sideNavigation/icons/xlogo';
+// import XLogo from '@/assets/XThreat_icon_primary_white_to_gradient.svg'
+// src/app/(landing-page)/assets/XThreat_icon_primary_white_to_gradient.svg
+// import XLogo from '../../../assets/XThreat_icon_primary_white_to_gradient.svg';
+import XLogo from '../../../(landing-page)/assets/XThreat_icon_primary_white_to_gradient.svg'
 import Link from 'next/link';
 import { Copy } from 'lucide-react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';

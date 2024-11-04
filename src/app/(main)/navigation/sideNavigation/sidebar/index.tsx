@@ -1280,6 +1280,228 @@
 // export default MenuOptions;
 
 //pridedu bugreport i sidebar. 
+// 'use client';
+
+// import Link from 'next/link';
+// import { usePathname } from 'next/navigation';
+// import React, { useState, useEffect } from 'react';
+// import { menuOptions } from '@/lib/constant';
+// import clsx from 'clsx';
+// import { Separator } from '@/components/ui/separator';
+// import { LogOut, PanelLeft, Bug } from 'lucide-react';
+// import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+// import { Textarea } from '@/components/ui/textarea';
+// import { Button } from '@/components/ui/button';
+// import { Label } from '@/components/ui/label';
+// import { Input } from '@/components/ui/input';
+// import { Upload } from 'lucide-react';
+
+// const BugReportModal = ({ isOpen, onClose }) => {
+//   const [issueType, setIssueType] = useState('');
+//   const [description, setDescription] = useState('');
+//   const [image, setImage] = useState(null);
+//   const [url, setUrl] = useState('');
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     console.log({ issueType, description, image, url });
+//     onClose();
+//   };
+
+//   return (
+//     <Dialog open={isOpen} onOpenChange={onClose}>
+//       <DialogContent 
+//         className="sm:max-w-[425px] text-white [&>button]:hidden" 
+//         style={{
+//           background: '#0D1018',
+//           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+//         }}
+//       >
+//         <DialogHeader>
+//           <DialogTitle className="text-2xl font-sans text-center font-semibold">Report a Bug</DialogTitle>
+//         </DialogHeader>
+//         <form onSubmit={handleSubmit} className="space-y-4">
+//           <div>
+//             <Label htmlFor="issue-type">Issue Type</Label>
+//             <Select value={issueType} onValueChange={setIssueType}>
+//               <SelectTrigger id="issue-type" className="w-full bg-gray-700 focus:outline-none border-none">
+//                 <SelectValue placeholder="Select an issue type" />
+//               </SelectTrigger>
+//               <SelectContent className="bg-gray-700">
+//                 <SelectItem value="ui">UI Problem</SelectItem>
+//                 <SelectItem value="functionality">Functionality Issue</SelectItem>
+//                 <SelectItem value="performance">Performance Problem</SelectItem>
+//                 <SelectItem value="other">Other</SelectItem>
+//               </SelectContent>
+//             </Select>
+//           </div>
+
+//           <div>
+//             <Label htmlFor="image">Attach Image (optional)</Label>
+//             <div className="flex items-center mt-2">
+//               <input
+//                 type="file"
+//                 id="image"
+//                 accept="image/*"
+//                 onChange={(e) => setImage(e.target.files[0])}
+//                 className="hidden"
+//               />
+//               <Button
+//                 type="button"
+//                 className="w-full bg-gray-700 hover:bg-gray-600 text-white border-none focus:outline-none"
+//                 onClick={() => document.getElementById('image').click()}
+//               >
+//                 <Upload className="mr-2 h-4 w-4" /> Upload Image
+//               </Button>
+//             </div>
+//             {image && <span className="text-sm mt-1 block">{image.name}</span>}
+//           </div>
+
+//           <div>
+//             <Label htmlFor="url">URL</Label>
+//             <Input
+//               id="url"
+//               type="url"
+//               placeholder="Enter the URL where the issue occurred"
+//               value={url}
+//               required
+//               onChange={(e) => setUrl(e.target.value)}
+//               className="bg-gray-700 text-white border-none focus:outline-none"
+//             />
+//           </div>
+
+//           <div>
+//             <Label htmlFor="description">Description</Label>
+//             <Textarea
+//               id="description"
+//               placeholder="Describe the issue in detail"
+//               value={description}
+//               onChange={(e) => setDescription(e.target.value)}
+//               className="h-32 bg-gray-700 text-white border-none focus:outline-none resize-none"
+//               required
+//             />
+//           </div>
+
+//           <div className="flex justify-end space-x-2">
+//             <Button type="button" variant="ghost" className="hover:bg-gray-600" onClick={onClose}>Cancel</Button>
+//             <Button type="submit" className="bg-gray-300 hover:bg-gray-100">Submit Report</Button>
+//           </div>
+//         </form>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// };
+
+// const MenuOptions = (props: Props) => {
+//   const pathName = usePathname();
+//   const [isCollapsed, setIsCollapsed] = useState(false);
+//   const [isBugReportOpen, setIsBugReportOpen] = useState(false);
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setIsCollapsed(window.innerWidth <= 768);
+//     };
+
+//     window.addEventListener('resize', handleResize);
+//     handleResize(); // Check on initial load
+
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
+
+//   const toggleSidebar = () => {
+//     setIsCollapsed(!isCollapsed);
+//   };
+
+//   return (
+//     <nav className={clsx(
+//       "dark:bg-black h-screen flex flex-col sticky justify-between py-6 transition-all duration-200 ease-in-out",
+//       isCollapsed ? "w-16" : "w-48"
+//     )}>
+//       {/* Main menu in the center */}
+//       <div className="flex flex-col z-1000 items-start justify-start flex-grow gap-1 px-2">
+//         {menuOptions.map((menuItem) => (
+//           <Link
+//             key={menuItem.name}
+//             href={menuItem.href}
+//             className={clsx(
+//               'group h-10 flex text-[15px] items-center rounded-lg py-2 px-[10px] cursor-pointer transition-colors duration-200 w-full',
+//               {
+//                 'dark:bg-gray-900/70 text-gray-200': pathName === menuItem.href,
+//                 'hover:bg-gray-900/70 text-gray-400': pathName !== menuItem.href,
+//               }
+//             )}
+//           >
+//             <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+//               <menuItem.Component selected={pathName === menuItem.href} />
+//             </div>
+//             <span className={clsx("ml-1 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-200", 
+//               isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
+//               {menuItem.name}
+//             </span>
+//           </Link>
+//         ))}
+//       </div>
+
+//       {/* Bottom items */}
+//       <div className="flex flex-col items-start mt-auto gap-2  w-full px-2">
+//         {/* Bug Report Button */}
+//         <button
+//           onClick={() => setIsBugReportOpen(true)}
+//           className="flex items-center w-full text-gray-400 hover:text-gray-200 rounded-lg py-2 px-[10px] cursor-pointer hover:bg-gray-900/50 transition-colors duration-100"
+//         >
+//           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+//             <Bug className="text-gray-500  " size={20} />
+//           </div>
+//           <span className={clsx("font-light text-[15px] ml-1 whitespace-nowrap overflow-hidden transition-all duration-200", 
+//             isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
+//             Report Bug
+//           </span>
+//         </button>
+
+//         {/* Toggle button */}
+//         <button
+//           className="flex items-center w-full rounded-lg py-2 px-[10px] text-gray-400 hover:text-gray-200 cursor-pointer hover:bg-gray-900/50 transition-colors duration-200"
+//           onClick={toggleSidebar}
+//         >
+//           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+//             <PanelLeft className="text-gray-500" size={20} />
+//           </div>
+//           <span className={clsx("font-light text-[15px] ml-1 whitespace-nowrap overflow-hidden transition-all duration-200", 
+//             isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
+//             Sidebar
+//           </span>
+//         </button>
+
+//         <Separator />
+
+//         <Link
+//           className="flex items-center w-full text-gray-400 hover:text-gray-200 rounded-lg py-2 px-[10px] cursor-pointer hover:bg-gray-900/50 transition-colors duration-100"
+//           href="/"
+//         >
+//           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+//             <LogOut className="text-gray-500" size={20} />
+//           </div>
+//           <span className={clsx("font-light text-[15px] ml-1 whitespace-nowrap overflow-hidden transition-all duration-200", 
+//             isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
+//             Log out
+//           </span>
+//         </Link>
+//       </div>
+
+//       <BugReportModal
+//         isOpen={isBugReportOpen}
+//         onClose={() => setIsBugReportOpen(false)}
+//       />
+//     </nav>
+//   );
+// };
+
+// export default MenuOptions;
+
+
+//taisau image upload
+
 'use client';
 
 import Link from 'next/link';
@@ -1296,17 +1518,38 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Upload } from 'lucide-react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const BugReportModal = ({ isOpen, onClose }) => {
   const [issueType, setIssueType] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [url, setUrl] = useState('');
+  const supabase = createClientComponentClient();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ issueType, description, image, url });
-    onClose();
+    
+    try {
+      // Get the authenticated user using the secure method
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) throw userError;
+
+      // Process the bug report with authenticated user
+      console.log({ 
+        userId: user?.id,
+        issueType, 
+        description, 
+        image, 
+        url 
+      });
+      
+      onClose();
+    } catch (error) {
+      console.error('Error submitting bug report:', error);
+      // Handle error appropriately - you might want to show an error message to the user
+    }
   };
 
   return (
@@ -1314,12 +1557,12 @@ const BugReportModal = ({ isOpen, onClose }) => {
       <DialogContent 
         className="sm:max-w-[425px] text-white [&>button]:hidden" 
         style={{
-          background: 'radial-gradient(125% 125% at 50% 25%, #222 5%, #223 70%)',
+          background: '#0D1018',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
         }}
       >
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Report a Bug</DialogTitle>
+          <DialogTitle className="text-2xl font-sans text-center font-semibold">Report a Bug</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -1393,10 +1636,11 @@ const BugReportModal = ({ isOpen, onClose }) => {
   );
 };
 
-const MenuOptions = (props: Props) => {
+const MenuOptions = () => {
   const pathName = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isBugReportOpen, setIsBugReportOpen] = useState(false);
+  const supabase = createClientComponentClient();
 
   useEffect(() => {
     const handleResize = () => {
@@ -1409,13 +1653,23 @@ const MenuOptions = (props: Props) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      // Handle successful logout - redirect or update UI
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
   return (
     <nav className={clsx(
-      "dark:bg-black h-screen flex flex-col sticky mt-10 justify-between py-6 transition-all duration-200 ease-in-out",
+      "dark:bg-black h-screen flex flex-col sticky justify-between py-6 transition-all duration-200 ease-in-out",
       isCollapsed ? "w-16" : "w-48"
     )}>
       {/* Main menu in the center */}
@@ -1444,14 +1698,13 @@ const MenuOptions = (props: Props) => {
       </div>
 
       {/* Bottom items */}
-      <div className="flex flex-col items-start mt-auto gap-2  w-full px-2 mb-10">
-        {/* Bug Report Button */}
+      <div className="flex flex-col items-start mt-auto gap-2 w-full px-2">
         <button
           onClick={() => setIsBugReportOpen(true)}
           className="flex items-center w-full text-gray-400 hover:text-gray-200 rounded-lg py-2 px-[10px] cursor-pointer hover:bg-gray-900/50 transition-colors duration-100"
         >
           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-            <Bug className="text-gray-500  " size={20} />
+            <Bug className="text-gray-500" size={20} />
           </div>
           <span className={clsx("font-light text-[15px] ml-1 whitespace-nowrap overflow-hidden transition-all duration-200", 
             isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
@@ -1459,7 +1712,6 @@ const MenuOptions = (props: Props) => {
           </span>
         </button>
 
-        {/* Toggle button */}
         <button
           className="flex items-center w-full rounded-lg py-2 px-[10px] text-gray-400 hover:text-gray-200 cursor-pointer hover:bg-gray-900/50 transition-colors duration-200"
           onClick={toggleSidebar}
@@ -1475,9 +1727,9 @@ const MenuOptions = (props: Props) => {
 
         <Separator />
 
-        <Link
+        <button
+          onClick={handleLogout}
           className="flex items-center w-full text-gray-400 hover:text-gray-200 rounded-lg py-2 px-[10px] cursor-pointer hover:bg-gray-900/50 transition-colors duration-100"
-          href="/"
         >
           <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
             <LogOut className="text-gray-500" size={20} />
@@ -1486,7 +1738,7 @@ const MenuOptions = (props: Props) => {
             isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100")}>
             Log out
           </span>
-        </Link>
+        </button>
       </div>
 
       <BugReportModal

@@ -72,7 +72,7 @@ export const inputsCustomizations: Components<Theme> = {
                 backgroundColor: gray[800],
               },
               ...theme.applyStyles('dark', {
-                color: 'black',
+                color: 'blac',
                 backgroundColor: gray[50],
                 backgroundImage: `linear-gradient(to bottom, ${gray[100]}, ${gray[50]})`,
                 boxShadow: 'inset 0 -1px 0  hsl(220, 30%, 80%)',

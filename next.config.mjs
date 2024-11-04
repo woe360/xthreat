@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['@mui/x-charts', 'recharts'],  // Add this line
   images: {
     domains: ['assets.aceternity.com'], 
   },
@@ -17,6 +18,6 @@ const nextConfig = {
       }
     ]
   }
- };
- 
- export default nextConfig;
+};
+
+export default nextConfig;
