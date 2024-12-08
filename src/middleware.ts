@@ -463,12 +463,411 @@
 // };
 
 
+
+// import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+// import { NextResponse } from 'next/server';
+// import type { NextRequest } from 'next/server';
+
+// const publicRoutes = [
+//   // Marketing/Public pages
+//   '/',
+//   '/phishing-awareness',
+//   '/security-awareness',
+//   '/role-based-training',
+//   '/weak-points',
+//   '/custom-trainings',
+//   '/pricing',
+//   '/about',
+//   '/contact',
+//   '/cookies',
+//   '/privacy',
+//   '/terms',
+//   '/login',  // This should be public for OTP login
+//   '/auth',   // Add this if you have auth callback routes
+//   '/api/auth' // Add this if you have auth API routes
+// ];
+
+// const protectedRoutes = [
+//   // Core app routes
+//   '/account',
+//   '/accounts',
+//   '/billing',
+//   '/dashboard',
+//   '/modules',
+//   '/practice',
+//   '/progress',
+//   '/settings',
+//   '/profile',
+//   // Admin routes
+//   '/admin',
+//   // Protected API routes
+//   '/api/user',
+//   '/api/data',
+// ];
+
+// export async function middleware(req: NextRequest) {
+//   try {
+//     const res = NextResponse.next();
+//     const supabase = createMiddlewareClient({ req, res });
+//     const { pathname } = req.nextUrl;
+
+//     // Allow all Next.js internal routes and static files
+//     if (
+//       pathname.startsWith('/_next') ||
+//       pathname.startsWith('/api/public') ||
+//       pathname === '/favicon.ico' ||
+//       pathname.startsWith('/public/')
+//     ) {
+//       return res;
+//     }
+
+//     const { data: { session } } = await supabase.auth.getSession();
+//     const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+//     const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+
+//     // Handle protected routes
+//     if (isProtectedRoute && !session) {
+//       return NextResponse.redirect(new URL('/', req.url));
+//     }
+
+//     // All other routes proceed normally
+//     return res;
+
+//   } catch (error) {
+//     console.error('Middleware error:', error);
+//     return NextResponse.redirect(new URL('/', req.url));
+//   }
+// }
+
+// export const config = {
+//   matcher: [
+//     '/((?!_next/static|_next/image|favicon.ico).*)',
+//   ],
+// };
+
+// import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+// import { NextResponse } from 'next/server';
+// import type { NextRequest } from 'next/server';
+
+// const publicRoutes = [
+//   // Marketing/Public pages
+//   '/',
+//   '/phishing-awareness',
+//   '/security-awareness',
+//   '/role-based-training',
+//   '/weak-points',
+//   '/custom-trainings',
+//   '/pricing',
+//   '/about',
+//   '/contact',
+//   '/cookies',
+//   '/privacy',
+//   '/terms',
+//   '/login',
+//   '/auth',
+//   '/api/auth'
+// ];
+
+// const protectedRoutes = [
+//   // Core app routes
+//   '/account',
+//   '/accounts',
+//   '/billing',
+//   '/dashboard',
+//   '/modules',
+//   '/practice',
+//   '/progress',
+//   '/settings',
+//   '/profile',
+//   // Admin routes
+//   '/admin',
+//   // Protected API routes
+//   '/api/user',
+//   '/api/data',
+// ];
+
+// export async function middleware(req: NextRequest) {
+//   try {
+//     // Create a response and supabase client
+//     const res = NextResponse.next();
+//     const supabase = createMiddlewareClient({ req, res });
+//     const { pathname } = req.nextUrl;
+
+//     // Allow static and public assets
+//     if (
+//       pathname.startsWith('/_next') ||
+//       pathname.startsWith('/api/public') ||
+//       pathname === '/favicon.ico' ||
+//       pathname.startsWith('/public/')
+//     ) {
+//       return res;
+//     }
+
+//     // Check authentication
+//     const {
+//       data: { user },
+//       error: sessionError
+//     } = await supabase.auth.getUser();
+
+//     if (sessionError) {
+//       console.error('Session error:', sessionError);
+//       return NextResponse.redirect(new URL('/login', req.url));
+//     }
+
+//     const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+//     const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+
+//     // Handle protected routes
+//     if (isProtectedRoute) {
+//       if (!user) {
+//         // Store the attempted URL to redirect back after login
+//         const redirectUrl = new URL('/login', req.url);
+//         redirectUrl.searchParams.set('redirect_to', pathname);
+//         return NextResponse.redirect(redirectUrl);
+//       }
+
+//       // Optional: Add role-based access control
+//       // const { data: { user }, error: userError } = await supabase.auth.getUser();
+//       // if (pathname.startsWith('/admin') && user?.role !== 'admin') {
+//       //   return NextResponse.redirect(new URL('/dashboard', req.url));
+//       // }
+//     }
+
+//     // Handle public routes when user is authenticated
+//     if (isPublicRoute && user) {
+//       // Optional: Redirect authenticated users away from public routes like login
+//       if (pathname === '/login') {
+//         return NextResponse.redirect(new URL('/dashboard', req.url));
+//       }
+//     }
+
+//     // Update response headers
+//     res.headers.set('Cache-Control', 'no-store, max-age=0');
+
+//     return res;
+
+//   } catch (error) {
+//     console.error('Middleware error:', error);
+//     // Redirect to login on error with a return URL
+//     const redirectUrl = new URL('/login', req.url);
+//     redirectUrl.searchParams.set('error', 'auth_error');
+//     return NextResponse.redirect(redirectUrl);
+//   }
+// }
+
+// export const config = {
+//   matcher: [
+//     /*
+//      * Match all request paths except:
+//      * - _next/static (static files)
+//      * - _next/image (image optimization files)
+//      * - favicon.ico (favicon file)
+//      * - public folder
+//      */
+//     '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+//   ],
+// };
+
+
+
+
+// import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+// import { NextResponse } from 'next/server';
+// import type { NextRequest } from 'next/server';
+
+// // These routes will be publicly accessible
+// const publicRoutes = [
+//   // Marketing/Public pages
+//   '/',
+//   '/phishing-awareness',
+//   '/security-awareness',
+//   '/role-based-training',
+//   '/weak-points',
+//   '/custom-trainings',
+//   '/pricing',
+//   '/about',
+//   '/contact',
+//   '/cookies',
+//   '/privacy',
+//   '/terms',
+//   '/login',
+// ];
+
+// // These routes require authentication
+// const protectedRoutes = [
+//   '/account',
+//   '/accounts',
+//   '/billing',
+//   '/dashboard',
+//   '/modules',
+//   '/practice',
+//   '/progress',
+//   '/settings',
+//   '/profile',
+//   '/admin',
+//   '/api/user',
+//   '/api/data',
+// ];
+
+// export async function middleware(req: NextRequest) {
+//   try {
+//     const res = NextResponse.next();
+//     const supabase = createMiddlewareClient({ req, res });
+//     const { pathname } = req.nextUrl;
+
+//     // Allow static and public assets
+//     if (
+//       pathname.startsWith('/_next') ||
+//       pathname.startsWith('/api/public') ||
+//       pathname === '/favicon.ico' ||
+//       pathname.startsWith('/public/')
+//     ) {
+//       return res;
+//     }
+
+//     // Check if the current path is a public route
+//     const isPublicRoute = publicRoutes.some(route => pathname === route); // Using exact match
+    
+//     // If it's a public route, allow access without authentication
+//     if (isPublicRoute) {
+//       return res;
+//     }
+
+//     // For protected routes, check authentication
+//     const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+//     if (isProtectedRoute) {
+//       const {
+//         data: { user },
+//         error: sessionError
+//       } = await supabase.auth.getUser();
+
+//       if (sessionError || !user) {
+//         return NextResponse.redirect(new URL('/login', req.url));
+//       }
+//     }
+
+//     // For all other routes, allow access
+//     return res;
+
+//   } catch (error) {
+//     console.error('Middleware error:', error);
+//     return NextResponse.redirect(new URL('/login', req.url));
+//   }
+// }
+
+// export const config = {
+//   matcher: [
+//     '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+//   ],
+// };
+
+
+
+
+
+
+// import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+// import { NextResponse } from 'next/server';
+// import type { NextRequest } from 'next/server';
+
+// // These routes will be publicly accessible
+// const publicRoutes = [
+//   '/',
+//   '/phishing-awareness',
+//   '/security-awareness',
+//   '/role-based-training',
+//   '/weak-points',
+//   '/custom-trainings',
+//   '/pricing',
+//   '/about',
+//   '/contact',
+//   '/cookies',
+//   '/privacy',
+//   '/terms',
+//   '/login',
+// ];
+
+// // These routes require authentication
+// const protectedRoutes = [
+//   '/account',
+//   '/accounts',
+//   '/billing',
+//   '/dashboard',
+//   '/modules',
+//   '/practice',
+//   '/progress',
+//   '/settings',
+//   '/profile',
+//   '/admin',
+//   '/api/user',
+//   '/api/data',
+// ];
+
+// const CACHE_DURATION = 300; 
+
+// export async function middleware(req: NextRequest) {
+//   try {
+//     // Add cache headers for static routes
+//   if (publicRoutes.some(route => req.nextUrl.pathname === route)) {
+//     const res = NextResponse.next();
+//     res.headers.set('Cache-Control', `public, max-age=${CACHE_DURATION}, stale-while-revalidate`);
+//     return res;
+//   }
+//     // Create a response object that we can modify
+//     const res = NextResponse.next();
+    
+//     // Initialize the Supabase client with both request and response
+//     const supabase = createMiddlewareClient({ req, res });
+    
+//     // Get the current path
+//     const { pathname } = req.nextUrl;
+
+//     // IMPORTANT: Refresh the session before any other operations
+//     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+//     // Allow static and public assets
+//     if (
+//       pathname.startsWith('/_next') ||
+//       pathname.startsWith('/api/public') ||
+//       pathname === '/favicon.ico' ||
+//       pathname.startsWith('/public/')
+//     ) {
+//       return res;
+//     }
+
+//     // Check if the current path is a public route
+//     const isPublicRoute = publicRoutes.some(route => pathname === route);
+//     if (isPublicRoute) {
+//       return res;
+//     }
+
+//     // For protected routes, check authentication
+//     const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+//     if (isProtectedRoute && !session) {
+//       // If no session exists, redirect to login
+//       return NextResponse.redirect(new URL('/login', req.url));
+//     }
+
+//     // Set the session in the response and continue
+//     return res;
+
+//   } catch (error) {
+//     console.error('Middleware error:', error);
+//     return NextResponse.redirect(new URL('/login', req.url));
+//   }
+// }
+
+// export const config = {
+//   matcher: [
+//     '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+//   ],
+// };
+
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const publicRoutes = [
-  // Marketing/Public pages
   '/',
   '/phishing-awareness',
   '/security-awareness',
@@ -481,13 +880,10 @@ const publicRoutes = [
   '/cookies',
   '/privacy',
   '/terms',
-  '/login',  // This should be public for OTP login
-  '/auth',   // Add this if you have auth callback routes
-  '/api/auth' // Add this if you have auth API routes
+  '/login',
 ];
 
 const protectedRoutes = [
-  // Core app routes
   '/account',
   '/accounts',
   '/billing',
@@ -497,9 +893,7 @@ const protectedRoutes = [
   '/progress',
   '/settings',
   '/profile',
-  // Admin routes
   '/admin',
-  // Protected API routes
   '/api/user',
   '/api/data',
 ];
@@ -508,38 +902,35 @@ export async function middleware(req: NextRequest) {
   try {
     const res = NextResponse.next();
     const supabase = createMiddlewareClient({ req, res });
+    
+    // Skip auth for static and public routes
     const { pathname } = req.nextUrl;
-
-    // Allow all Next.js internal routes and static files
-    if (
-      pathname.startsWith('/_next') ||
-      pathname.startsWith('/api/public') ||
-      pathname === '/favicon.ico' ||
-      pathname.startsWith('/public/')
-    ) {
+    if (pathname.startsWith('/_next') || 
+        pathname.startsWith('/api/public') || 
+        pathname === '/favicon.ico' || 
+        pathname.startsWith('/public/') ||
+        publicRoutes.includes(pathname)) {
       return res;
     }
 
+    // Check session
     const { data: { session } } = await supabase.auth.getSession();
-    const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
-    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
 
-    // Handle protected routes
-    if (isProtectedRoute && !session) {
-      return NextResponse.redirect(new URL('/', req.url));
+    // Protect routes
+    if (protectedRoutes.some(route => pathname.startsWith(route)) && !session) {
+      return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    // All other routes proceed normally
     return res;
 
   } catch (error) {
     console.error('Middleware error:', error);
-    return NextResponse.redirect(new URL('/', req.url));
+    return NextResponse.redirect(new URL('/login', req.url));
   }
 }
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
   ],
 };

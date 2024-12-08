@@ -1,9 +1,9 @@
 "use client";
 
 import React, { forwardRef, useRef } from "react";
-import modelDemo from "../assets/modelDemo.jpg";
-
-
+// import modelDemo from "../assets/images/modelDemo.jpg";
+// import modelDemo from "../../../../assets/images/modelDemo.jpg";
+import modelDemo from "../assets/images/modelDemo.jpeg"
 import { cn } from "@/lib/utils";
 import { AnimatedBeam } from "@/components/ui/animated-beam";
 import Image from "next/image";
@@ -55,15 +55,16 @@ export function AnimatedBeamDemo() {
           <Circle ref={div2Ref}>
             <Icons.notion />
           </Circle>
-          <Circle ref={div4Ref} className="size-[68px] sm:size-[72px] p-[4px] overflow-hidden relative">
-            <Image 
-                src={modelDemo} 
-                alt="Model Demo" 
-                layout="fill"
-                objectFit="cover"
-                quality={90}
+            <Circle ref={div4Ref} className="size-[68px] sm:size-[72px] p-[4px] overflow-hidden relative">
+            <Image
+              src={modelDemo}
+              alt="Model Demo"
+              fill
+              className="object-cover select-none pointer-events-none"
+              quality={90}
+              sizes="(max-width: 640px) 68px, 72px"
             />
-            </Circle>
+          </Circle>
           <Circle ref={div6Ref}>
             <Icons.zapier />
           </Circle>

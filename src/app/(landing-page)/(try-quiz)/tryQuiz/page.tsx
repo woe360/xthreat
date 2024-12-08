@@ -178,6 +178,9 @@
 // export default TryQuiz;
 
 
+
+
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -352,6 +355,9 @@ const TryQuiz = () => {
 };
 
 export default TryQuiz;
+
+
+
 
 
 

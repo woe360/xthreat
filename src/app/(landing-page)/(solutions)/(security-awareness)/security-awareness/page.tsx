@@ -574,7 +574,7 @@ const benefitsData: BenefitItemProps[] = [
 // Main Page Component
 const SecurityAwarenessPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen font-sans bg-black text-white flex flex-col">
       <Navbar />
       <div className="flex-grow py-24 px-4 relative mt-32">
         {/* Background Elements */}
@@ -619,7 +619,7 @@ const SecurityAwarenessPage: React.FC = () => {
               initial="hidden"
               animate="visible"
               transition={{ duration: 0.5 }}
-              className="text-5xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold mb-6"
+              className="text-5xl bg-clip-text text-transparent pb-1 bg-gradient-to-b from-white to-neutral-500 font-semibold mb-6"
             >
               Security Awareness
             </motion.h1>

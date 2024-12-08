@@ -1,9 +1,10 @@
 import { cn } from '@/lib/utils'
 import React from "react";
 import { BentoGrid, BentoGridItem } from "@/app/(landing-page)/(main)/components/bento-grid";
-import { useEffect, useRef} from "react";
-import { motion, useScroll, useTransform, useAnimation} from "framer-motion";
+import { useEffect, useRef, useState} from "react";
+import { motion, useScroll, useTransform, useAnimation, Variant} from "framer-motion";
 import Image from "next/image";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, LineProps, CartesianGrid } from 'recharts';
 
 // Define interfaces for type safety
 interface BentoItem {
@@ -118,85 +119,569 @@ const SkeletonOne = () => {
   );
 };
 
+// const SkeletonTwo = () => {
+//   const controls = useAnimation();
+//   const ref = useRef(null);
+
+//   const createVariants = (index: number) => ({
+//     initial: {
+//       width: "10%",
+//     },
+//     animate: {
+//       width: [
+//         `${Math.random() * (80 - 20) + 20}%`,
+//         `${Math.random() * (80 - 20) + 20}%`,
+//         `${Math.random() * (80 - 20) + 20}%`,
+//       ],
+//       transition: {
+//         duration: 8,
+//         ease: "easeInOut",
+//         repeat: Infinity,
+//         repeatType: "mirror" as const,
+//       },
+//     },
+//   });
+
+//   useEffect(() => {
+//     const startAnimation = () => {
+//       controls.start("animate");
+//     };
+
+//     startAnimation();
+//   }, [controls]);
+
+//   return (
+//     <motion.div
+//       ref={ref}
+//       initial="initial"
+//       animate="animate"
+//       className="flex flex-1 w-full h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-col space-y-2 overflow-hidden"
+//     >
+//       {words.map((word, i) => {
+//         const wordVariants = createVariants(i);
+//         return (
+//           <div
+//             key={`skeleton-two-${i}`}
+//             className="relative flex flex-row rounded-lg border border-gray-800 p-2 items-center bg-neutral-100 dark:bg-black w-full h-8 overflow-hidden"
+//           >
+//             <span className="absolute left-2 text-black dark:text-white text-s z-10">{word}</span>
+//             <motion.div
+//               className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-900 to-emerald-500/90 z-0 rounded-sm"
+//               variants={wordVariants}
+//               initial="initial"
+//               animate="animate"
+//             ></motion.div>
+//           </div>
+//         );
+//       })}
+//     </motion.div>
+//   );
+// };
+
+// const SkeletonTwo = () => {
+//   const controls = useAnimation();
+//   const ref = useRef(null);
+  
+//   const data = [
+//     { month: 'Jan', revenue: 84, users: 90, engagement: 75, retention: 95 },
+//     { month: 'Feb', revenue: 70, users: 85, engagement: 80, retention: 88 },
+//     { month: 'Mar', revenue: 95, users: 97, engagement: 85, retention: 92 },
+//     { month: 'Apr', revenue: 88, users: 92, engagement: 90, retention: 85 },
+//     { month: 'May', revenue: 82, users: 88, engagement: 95, retention: 89 },
+//     { month: 'Jun', revenue: 98, users: 95, engagement: 88, retention: 94 },
+//   ];
+
+//   const metrics = [
+//     { key: 'revenue', color: '#10b981', label: 'Revenue' },
+//     { key: 'users', color: '#6366f1', label: 'Users' },
+//     { key: 'engagement', color: '#f59e0b', label: 'Engagement' },
+//     { key: 'retention', color: '#ec4899', label: 'Retention' }
+//   ];
+
+//   const AnimatedLine = motion(Line);
+
+//   const lineVariants = {
+//     hidden: { pathLength: 0, opacity: 0 },
+//     visible: { 
+//       pathLength: 1, 
+//       opacity: 1,
+//       transition: { 
+//         duration: 2,
+//         ease: "easeInOut",
+//         repeat: Infinity,
+//         repeatType: "reverse"
+//       }
+//     }
+//   };
+
+//   useEffect(() => {
+//     controls.start("visible");
+//   }, [controls]);
+
+//   return (
+//     <motion.div
+//       ref={ref}
+//       initial="hidden"
+//       animate="visible"
+//       className="flex flex-1 w-full h-full min-h-[20rem] bg-transparent flex-col overflow-hidden"
+//     >
+//       <div className="w-full h-full p-4">
+//         <div className="flex justify-between items-center mb-4">
+//           <h3 className="text-lg font-semibold text-white">Performance Metrics</h3>
+//           <div className="flex gap-3">
+//             {metrics.map((metric) => (
+//               <div key={metric.key} className="flex items-center gap-2">
+//                 <div 
+//                   className="w-2 h-2 rounded-full" 
+//                   style={{ backgroundColor: metric.color }}
+//                 />
+//                 <span className="text-xs text-gray-400">{metric.label}</span>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+        
+//         <ResponsiveContainer width="100%" height={220}>
+//           <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 0 }}>
+//             <XAxis 
+//               dataKey="month" 
+//               stroke="#666666"
+//               fontSize={12}
+//               tickLine={false}
+//               axisLine={false}
+//             />
+//             <YAxis 
+//               stroke="#666666"
+//               fontSize={12}
+//               tickLine={false}
+//               axisLine={false}
+//               tickFormatter={(value) => `${value}%`}
+//             />
+//             <Tooltip
+//               contentStyle={{
+//                 backgroundColor: 'rgba(20, 20, 20, 0.9)',
+//                 border: 'none',
+//                 borderRadius: '4px',
+//                 color: 'white'
+//               }}
+//               itemStyle={{ color: 'white' }}
+//               labelStyle={{ color: 'white' }}
+//             />
+//             {metrics.map((metric, index) => (
+//               <AnimatedLine
+//                 key={metric.key}
+//                 type="monotone"
+//                 dataKey={metric.key}
+//                 stroke={metric.color}
+//                 strokeWidth={2}
+//                 dot={false}
+//                 activeDot={{ r: 4 }}
+//                 variants={lineVariants}
+//                 initial="hidden"
+//                 animate="visible"
+//                 transition={{
+//                   delay: index * 0.2
+//                 }}
+//               />
+//             ))}
+//           </LineChart>
+//         </ResponsiveContainer>
+//       </div>
+//     </motion.div>
+//   );
+// };
+// export default SkeletonTwo;
+
+
+// const SkeletonTwo = () => {
+//   const data = [
+//     { month: 'Jan', revenue: 85, users: 78, engagement: 65, retention: 72 },
+//     { month: 'Feb', revenue: 75, users: 82, engagement: 73, retention: 78 },
+//     { month: 'Mar', revenue: 90, users: 88, engagement: 79, retention: 85 },
+//     { month: 'Apr', revenue: 88, users: 95, engagement: 88, retention: 92 },
+//     { month: 'May', revenue: 95, users: 91, engagement: 95, retention: 88 },
+//   ];
+
+//   const metrics = [
+//     { key: 'revenue', color: '#00ff00', label: 'Revenue' },
+//     { key: 'users', color: '#0088ff', label: 'Users' },
+//     { key: 'engagement', color: '#ffbb00', label: 'Engagement' },
+//     { key: 'retention', color: '#ff00ff', label: 'Retention' }
+//   ];
+
+//   return (
+//     <div className="flex flex-1 w-full h-full min-h-[13rem] rounded-xl relative bg-transparent p-4">
+//       {/* Header */}
+//       <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+//         <div className="flex gap-4">
+//           {metrics.map((metric) => (
+//             <div key={metric.key} className="flex items-center gap-2">
+//               <div 
+//                 className="w-3 h-3 rounded-full"
+//                 style={{ backgroundColor: metric.color }}
+//               />
+//               <span className="text-sm text-white">{metric.label}</span>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* Chart with fixed dimensions */}
+//       <div className="mt-13 mt-5">
+//         <LineChart width={650} height={160} data={data}>
+//           <XAxis 
+//             dataKey="month" 
+//             stroke="#fff"
+//             tick={{ fill: '#fff' }}
+//           />
+//           <YAxis 
+//             stroke="#fff"
+//             tick={{ fill: '#fff' }}
+//             tickFormatter={(value) => `${value}%`}
+//           />
+//           {metrics.map((metric) => (
+//             <Line
+//               key={metric.key}
+//               type="monotone"
+//               dataKey={metric.key}
+//               stroke={metric.color}
+//               strokeWidth={3}
+//               dot={{ fill: metric.color, r: 4 }}
+//               activeDot={{ r: 6 }}
+//             />
+//           ))}
+//         </LineChart>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const SkeletonTwo = () => {
+//   const data = [
+//     { month: 'Jan', revenue: 85, users: 78, engagement: 65, retention: 72 },
+//     { month: 'Feb', revenue: 75, users: 82, engagement: 73, retention: 78 },
+//     { month: 'Mar', revenue: 90, users: 88, engagement: 79, retention: 85 },
+//     { month: 'Apr', revenue: 88, users: 95, engagement: 88, retention: 92 },
+//     { month: 'May', revenue: 95, users: 91, engagement: 95, retention: 88 },
+//   ];
+
+//   const metrics = [
+//     { key: 'revenue', color: '#1a6d1a', label: 'Revenue' },     // Deeper green
+//     { key: 'users', color: '#1e3a8a', label: 'Users' },         // Deeper blue
+//     { key: 'engagement', color: '#854d0e', label: 'Engagement' },// Deeper amber
+//     { key: 'retention', color: '#831843', label: 'Retention' }   // Deeper pink
+//   ];
+
+//   return (
+//     <div className="flex flex-1 w-full h-full min-h-[13rem] rounded-xl relative bg-transparent p-4">
+//       {/* Header */}
+//       <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+//         <div className="flex gap-4">
+//           {metrics.map((metric) => (
+//             <div key={metric.key} className="flex items-center gap-2">
+//               <div 
+//                 className="w-3 h-3 rounded-full"
+//                 style={{ backgroundColor: metric.color }}
+//               />
+//               <span className="text-sm text-white">{metric.label}</span>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* Chart with fixed dimensions */}
+//       <div className="mt-13 mt-5">
+//         <LineChart width={650} height={160} data={data}>
+//           <XAxis 
+//             dataKey="month" 
+//             stroke="#fff"
+//             tick={{ fill: '#fff' }}
+//           />
+//           <YAxis 
+//             stroke="#fff"
+//             tick={{ fill: '#fff' }}
+//             tickFormatter={(value) => `${value}%`}
+//           />
+//           {metrics.map((metric) => (
+//             <Line
+//               key={metric.key}
+//               type="monotone"
+//               dataKey={metric.key}
+//               stroke={metric.color}
+//               strokeWidth={3}
+//               dot={false}
+//               activeDot={false}
+//             />
+//           ))}
+//         </LineChart>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const SkeletonTwo = () => {
+//   const [currentData, setCurrentData] = useState([
+//     { month: 'Jan', revenue: 85, users: 78, engagement: 65, retention: 72 },
+//     { month: 'Feb', revenue: 75, users: 82, engagement: 73, retention: 78 },
+//     { month: 'Mar', revenue: 90, users: 88, engagement: 79, retention: 85 },
+//     { month: 'Apr', revenue: 88, users: 95, engagement: 88, retention: 92 },
+//     { month: 'May', revenue: 95, users: 91, engagement: 95, retention: 88 },
+//   ]);
+
+//   const metrics = [
+//     { key: 'revenue', color: '#1a6d1a', label: 'Revenue' },
+//     { key: 'users', color: '#1e3a8a', label: 'Users' },
+//     { key: 'engagement', color: '#854d0e', label: 'Engagement' },
+//     { key: 'retention', color: '#831843', label: 'Retention' }
+//   ];
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setCurrentData(prevData => {
+//         return prevData.map(point => ({
+//           ...point,
+//           revenue: point.revenue + (Math.random() * 10 - 5),
+//           users: point.users + (Math.random() * 10 - 5),
+//           engagement: point.engagement + (Math.random() * 10 - 5),
+//           retention: point.retention + (Math.random() * 10 - 5),
+//         }));
+//       });
+//     }, 2000); // Update every 2 seconds
+
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   return (
+//     <motion.div 
+//       className="flex flex-1 w-full h-full min-h-[13rem] rounded-xl relative bg-transparent p-4"
+//       initial={{ opacity: 0 }}
+//       animate={{ opacity: 1 }}
+//       transition={{ duration: 0.5 }}
+//     >
+//       {/* Header */}
+//       <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+//         <div className="flex gap-4">
+//           {metrics.map((metric) => (
+//             <div key={metric.key} className="flex items-center gap-2">
+//               <div 
+//                 className="w-3 h-3 rounded-full"
+//                 style={{ backgroundColor: metric.color }}
+//               />
+//               <span className="text-sm text-white">{metric.label}</span>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* Chart with fixed dimensions */}
+//       <motion.div 
+//         className="mt-13 mt-5"
+//         animate={{ opacity: [0.7, 1, 0.7] }}
+//         transition={{
+//           duration: 3,
+//           repeat: Infinity,
+//           ease: "easeInOut"
+//         }}
+//       >
+//         <LineChart width={650} height={160} data={currentData}>
+//           <XAxis 
+//             dataKey="month"
+//             stroke="#fff"
+//             tick={{ fill: '#fff' }}
+//           />
+//           <YAxis 
+//             stroke="#fff"
+//             tick={{ fill: '#fff' }}
+//             tickFormatter={(value) => `${value}%`}
+//           />
+//           {metrics.map((metric) => (
+//             <Line
+//               key={metric.key}
+//               type="monotone"
+//               dataKey={metric.key}
+//               stroke={metric.color}
+//               strokeWidth={3}
+//               dot={false}
+//               activeDot={false}
+//               animationDuration={2000}
+//             />
+//           ))}
+//         </LineChart>
+//       </motion.div>
+//     </motion.div>
+//   );
+// };
+
+// const SkeletonTwo = () => {
+//   const metrics = [
+//     { key: 'revenue', color: '#1a6d1a', label: 'Revenue' },
+//     { key: 'users', color: '#1e3a8a', label: 'Users' },
+//     { key: 'engagement', color: '#854d0e', label: 'Engagement' },
+//     { key: 'retention', color: '#831843', label: 'Retention' }
+//   ];
+
+//   const initialData = [
+//     { month: 'Jan', revenue: 85, users: 78, engagement: 65, retention: 72 },
+//     { month: 'Feb', revenue: 75, users: 82, engagement: 73, retention: 78 },
+//     { month: 'Mar', revenue: 90, users: 88, engagement: 79, retention: 85 },
+//     { month: 'Apr', revenue: 88, users: 95, engagement: 88, retention: 92 },
+//     { month: 'May', revenue: 95, users: 91, engagement: 95, retention: 88 }
+//   ];
+
+//   const [data, setData] = useState(initialData);
+//   const [time, setTime] = useState(0);
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setTime(prev => prev + 1);
+      
+//       setData(currentData =>
+//         currentData.map((item, index) => {
+//           const offset = index * 0.5;
+//           return {
+//             ...item,
+//             revenue: initialData[index].revenue + Math.sin(time * 0.1 + offset) * 5,
+//             users: initialData[index].users + Math.sin(time * 0.08 + offset) * 4,
+//             engagement: initialData[index].engagement + Math.sin(time * 0.06 + offset) * 3,
+//             retention: initialData[index].retention + Math.sin(time * 0.04 + offset) * 3
+//           };
+//         })
+//       );
+//     }, 50);
+
+//     return () => clearInterval(interval);
+//   }, [time]);
+
+//   return (
+//     <div className="flex flex-1 w-full h-full min-h-[13rem] rounded-xl relative bg-transparent p-4">
+//       <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+//         <div className="flex gap-4">
+//           {metrics.map((metric) => (
+//             <div key={metric.key} className="flex items-center gap-2">
+//               <div 
+//                 className="w-3 h-3 rounded-full" 
+//                 style={{ backgroundColor: metric.color }}
+//               />
+//               <span className="text-sm text-white">{metric.label}</span>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+      
+//       <div className="mt-12">
+//         <LineChart width={650} height={160} data={data}>
+//           <XAxis 
+//             dataKey="month" 
+//             stroke="#fff" 
+//             axisLine={false}
+//             tick={false}
+//           />
+//           <YAxis 
+//             stroke="#fff"
+//             axisLine={false}
+//             tick={false}
+//             domain={[60, 100]} 
+//           />
+//           {metrics.map((metric) => (
+//             <Line
+//               key={metric.key}
+//               type="monotone"
+//               dataKey={metric.key}
+//               stroke={metric.color}
+//               strokeWidth={3}
+//               dot={false}
+//               isAnimationActive={false}
+//             />
+//           ))}
+//         </LineChart>
+//       </div>
+//     </div>
+//   );
+// };
+
 const SkeletonTwo = () => {
-  const controls = useAnimation();
-  const ref = useRef(null);
+  const metrics = [
+    { key: 'revenue', color: '#1a6d1a', label: 'Revenue' },
+    { key: 'users', color: '#1e3a8a', label: 'Users' },
+    { key: 'engagement', color: '#854d0e', label: 'Engagement' },
+    { key: 'retention', color: '#831843', label: 'Retention' }
+  ];
 
-  // const createVariants = () => ({
-  //   initial: {
-  //     width: "10%",
-  //   },
-  //   animate: {
-  //     width: [
-  //       `${Math.random() * (80 - 20) + 20}%`,
-  //       `${Math.random() * (80 - 20) + 20}%`,
-  //       `${Math.random() * (80 - 20) + 20}%`,
-  //     ],
-  //     transition: {
-  //       duration: 8,
-  //       ease: "easeInOut",
-  //       repeat: Infinity,
-  //       repeatType: "mirror",
-  //     },
-  //   },
-  // });
+  const initialData = [
+    { month: 'Jan', revenue: 85, users: 78, engagement: 65, retention: 72 },
+    { month: 'Feb', revenue: 75, users: 82, engagement: 73, retention: 78 },
+    { month: 'Mar', revenue: 90, users: 88, engagement: 79, retention: 85 },
+    { month: 'Apr', revenue: 88, users: 95, engagement: 88, retention: 92 },
+    { month: 'May', revenue: 95, users: 91, engagement: 95, retention: 88 }
+  ];
 
-  // useEffect(() => {
-  //   controls.start("animate");
-  // }, [controls]);
-
-  const createVariants = (index: number) => ({
-    initial: {
-      width: "10%",
-    },
-    animate: {
-      width: [
-        `${Math.random() * (80 - 20) + 20}%`,
-        `${Math.random() * (80 - 20) + 20}%`,
-        `${Math.random() * (80 - 20) + 20}%`,
-      ],
-      transition: {
-        duration: 8,
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "mirror" as const,
-      },
-    },
-  });
+  const [data, setData] = useState(initialData);
+  const [time, setTime] = useState(0);
 
   useEffect(() => {
-    const startAnimation = () => {
-      controls.start("animate");
-    };
+    const interval = setInterval(() => {
+      setTime(prev => prev + 1);
+      const t = time * 0.01;
 
-    startAnimation();
-  }, [controls]);
+      setData(currentData => {
+        // Create wave-like movement across the entire line
+        const wavePhase = Math.sin(t) * 2;
+        
+        return currentData.map((item, index) => {
+          // Each metric gets its own wave pattern
+          const revenueWave = Math.sin(t * 0.8 + index * 0.5) * 3 + wavePhase;
+          const usersWave = Math.sin(t * 0.7 + index * 0.6 + 1) * 3 + wavePhase;
+          const engagementWave = Math.sin(t * 0.9 + index * 0.4 + 2) * 3 + wavePhase;
+          const retentionWave = Math.sin(t * 0.6 + index * 0.7 + 3) * 3 + wavePhase;
+
+          return {
+            ...item,
+            revenue: initialData[index].revenue + revenueWave,
+            users: initialData[index].users + usersWave,
+            engagement: initialData[index].engagement + engagementWave,
+            retention: initialData[index].retention + retentionWave
+          };
+        });
+      });
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [time]);
 
   return (
-    <motion.div
-      ref={ref}
-      initial="initial"
-      animate="animate"
-      className="flex flex-1 w-full h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-col space-y-2 overflow-hidden"
-    >
-      {words.map((word, i) => {
-        const wordVariants = createVariants(i);
-        return (
-          <div
-            key={`skeleton-two-${i}`}
-            className="relative flex flex-row rounded-lg border border-gray-800 p-2 items-center bg-neutral-100 dark:bg-black w-full h-8 overflow-hidden"
-          >
-            <span className="absolute left-2 text-black dark:text-white text-s z-10">{word}</span>
-            <motion.div
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-900 to-emerald-500/90 z-0 rounded-sm"
-              variants={wordVariants}
-              initial="initial"
-              animate="animate"
-            ></motion.div>
-          </div>
-        );
-      })}
-    </motion.div>
+    <div className="flex flex-1 w-[50px] h-full min-h-[13rem] rounded-xl relative bg-transparent p-4">
+      <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+      </div>
+      
+      <div className="mt-2">
+        <LineChart width={290} height={160} data={data}>
+          <XAxis 
+            dataKey="month" 
+            stroke="#fff" 
+            axisLine={false}
+            tick={false}
+          />
+          <YAxis 
+            stroke="#fff"
+            axisLine={false}
+            tick={false}
+            domain={[60, 100]} 
+          />
+          {metrics.map((metric) => (
+            <Line
+              key={metric.key}
+              type="monotone"
+              dataKey={metric.key}
+              stroke={metric.color}
+              strokeWidth={3}
+              dot={false}
+              isAnimationActive={false}
+              tension={0.4}
+            />
+          ))}
+        </LineChart>
+      </div>
+    </div>
   );
 };
 

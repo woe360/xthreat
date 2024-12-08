@@ -113,17 +113,310 @@
 //   }
 // }
 
-// app/layout.tsx
+
+
+// // app/layout.tsx
+// import type { Metadata } from "next";
+// import { DM_Sans } from "next/font/google";
+// import "./globals.css";
+// import { ThemeProvider } from "@/providers/theme-provider";
+// import MobileMenu from "./(landing-page)/navigation/MobileMenu";
+// import { cookies } from 'next/headers';
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { SessionProvider } from "@/providers/session-provider";
+
+// const font = DM_Sans({ subsets: ["latin"] });
+
+// export const metadata: Metadata = {
+//   title: "XThreat",
+//   description: "Cyber security training",
+//   icons: {
+//     icon: [
+//       { url: '/XThreat-white.svg', type: 'image/svg+xml' },
+//     ],
+//   },
+// };
+// export default async function RootLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   const cookieStore = await cookies()
+//   const supabase = createServerComponentClient({ cookies: () => cookieStore });
+//   const {
+//     data: { session },
+//   } = await supabase.auth.getSession();
+
+//   return (
+//     <html lang="en" suppressHydrationWarning>
+//       <body className={font.className}>
+//         <SessionProvider initialSession={session}>
+//           <ThemeProvider
+//             attribute="class"
+//             defaultTheme="dark"
+//             enableSystem
+//             disableTransitionOnChange
+//           >
+//             {children}
+//           </ThemeProvider>
+//         </SessionProvider>
+//       </body>
+//     </html>
+//   );
+// }
+
+// // app/layout.tsx
+// import type { Metadata } from "next";
+// import "./globals.css";
+// import { ThemeProvider } from "@/providers/theme-provider";
+// import MobileMenu from "./(landing-page)/navigation/MobileMenu";
+// import { cookies } from 'next/headers';
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { SessionProvider } from "@/providers/session-provider";
+
+// export const metadata: Metadata = {
+//   title: "XThreat",
+//   description: "Cyber security training",
+//   icons: {
+//     icon: [
+//       { url: '/XThreat-white.svg', type: 'image/svg+xml' },
+//     ],
+//   },
+// };
+
+// export default async function RootLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   const cookieStore = await cookies()
+//   const supabase = createServerComponentClient({ cookies: () => cookieStore });
+//   const {
+//     data: { session },
+//   } = await supabase.auth.getSession();
+
+//   return (
+//     <html lang="en" suppressHydrationWarning>
+//       <head>
+//         <link 
+//           href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" 
+//           rel="stylesheet"
+//         />
+//       </head>
+//       <body style={{ fontFamily: "'DM Sans', sans-serif" }}>
+//         <SessionProvider initialSession={session}>
+//           <ThemeProvider
+//             attribute="class"
+//             defaultTheme="dark"
+//             enableSystem
+//             disableTransitionOnChange
+//           >
+//             {children}
+//           </ThemeProvider>
+//         </SessionProvider>
+//       </body>
+//     </html>
+//   );
+// }
+
+// import type { Metadata } from "next";
+// import "./globals.css";
+// import { ThemeProvider } from "@/providers/theme-provider";
+// import MobileMenu from "./(landing-page)/navigation/MobileMenu";
+// import { cookies } from 'next/headers';
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { SessionProvider } from "@/providers/session-provider";
+
+// export const metadata: Metadata = {
+//   title: "XThreat",
+//   description: "Cyber security training",
+//   icons: {
+//     icon: [
+//       { url: '/XThreat-white.svg', type: 'image/svg+xml' },
+//     ],
+//   },
+// };
+
+// export default async function RootLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   const cookieStore = await cookies()
+//   const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  
+//   const { 
+//     data: { user },
+//   } = await supabase.auth.getUser();
+
+//   return (
+//     <html lang="en" suppressHydrationWarning>
+//       <head>
+//         <link 
+//           href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+//           rel="stylesheet"
+//         />
+//       </head>
+//       <body style={{ fontFamily: "'DM Sans', sans-serif" }}>
+//         <SessionProvider initialSession={user}>
+//           <ThemeProvider
+//             attribute="class"
+//             defaultTheme="dark"
+//             enableSystem
+//             disableTransitionOnChange
+//           >
+//             {children}
+//           </ThemeProvider>
+//         </SessionProvider>
+//       </body>
+//     </html>
+//   );
+// }
+
+
+
+// import type { Metadata } from "next";
+// import "./globals.css";
+// import { ThemeProvider } from "@/providers/theme-provider";
+// import { cookies } from 'next/headers';
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { SessionProvider } from "@/providers/session-provider";
+
+// export const metadata: Metadata = {
+//   title: "XThreat",
+//   description: "Cyber security training",
+//   icons: {
+//     icon: [
+//       { url: '/XThreat-white.svg', type: 'image/svg+xml' },
+//     ],
+//   },
+// };
+
+// export default async function RootLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   const cookieStore = cookies();
+  
+//   const supabase = createServerComponentClient({
+//     cookies: () => cookieStore,
+//   });
+  
+//   const {
+//     data: { user },
+//     error,
+//   } = await supabase.auth.getUser();
+
+//   // Create a session-like object from the user data
+//   const session = user ? {
+//     user,
+//     access_token: '', 
+//     refresh_token: '', 
+//     expires_in: 0,
+//     token_type: 'bearer',
+//   } : null;
+
+//   return (
+//     <html lang="en" suppressHydrationWarning>
+//       <head>
+//         <link 
+//           href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+//           rel="stylesheet"
+//         />
+//       </head>
+//       <body style={{ fontFamily: "'DM Sans', sans-serif" }}>
+//         <SessionProvider initialSession={session}>
+//           <ThemeProvider
+//             attribute="class"
+//             defaultTheme="dark"
+//             enableSystem
+//             disableTransitionOnChange
+//           >
+//             {children}
+//           </ThemeProvider>
+//         </SessionProvider>
+//       </body>
+//     </html>
+//   );
+// }
+
+
+
+
+// import type { Metadata } from "next";
+// import "./globals.css";
+// import { ThemeProvider } from "@/providers/theme-provider";
+// import { cookies } from 'next/headers';
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { SessionProvider } from "@/providers/session-provider";
+
+// export const metadata: Metadata = {
+//   title: "XThreat",
+//   description: "Cyber security training",
+//   icons: {
+//     icon: [
+//       { url: '/XThreat-white.svg', type: 'image/svg+xml' },
+//     ],
+//   },
+// };
+
+// export default async function RootLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   // Get the cookie store and await it
+//   const cookieStore = await cookies();
+  
+//   const supabase = createServerComponentClient({
+//     cookies: () => cookieStore,
+//   });
+  
+//   const {
+//     data: { user },
+//     error,
+//   } = await supabase.auth.getUser();
+
+//   // Create a session-like object from the user data
+//   const session = user ? {
+//     user,
+//     access_token: '', 
+//     refresh_token: '', 
+//     expires_in: 0,
+//     token_type: 'bearer',
+//   } : null;
+
+//   return (
+//     <html lang="en" suppressHydrationWarning>
+//       <head>
+//         <link 
+//           href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+//           rel="stylesheet"
+//         />
+//       </head>
+//       <body style={{ fontFamily: "'DM Sans', sans-serif" }}>
+//         <SessionProvider initialSession={session}>
+//           <ThemeProvider
+//             attribute="class"
+//             defaultTheme="dark"
+//             enableSystem
+//             disableTransitionOnChange
+//           >
+//             {children}
+//           </ThemeProvider>
+//         </SessionProvider>
+//       </body>
+//     </html>
+//   );
+// }
+// RootLayout.tsx
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
-import MobileMenu from "./(landing-page)/navigation/MobileMenu";
 import { cookies } from 'next/headers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { SessionProvider } from "@/providers/session-provider";
-
-const font = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "XThreat",
@@ -134,21 +427,38 @@ export const metadata: Metadata = {
     ],
   },
 };
+
+// async function getServerSession() {
+//   const cookieStore = cookies();
+//   const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  
+//   try {
+//     const { data: { session }, error } = await supabase.auth.getSession();
+//     if (error) throw error;
+//     return session;
+//   } catch (error) {
+//     console.error('Session fetch error:', error);
+//     return null;
+//   }
+// }
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies()
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // const session = await getServerSession();
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={font.className}>
-        <SessionProvider initialSession={session}>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        {/* <SessionProvider initialSession={session}> */}
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -157,7 +467,7 @@ export default async function RootLayout({
           >
             {children}
           </ThemeProvider>
-        </SessionProvider>
+        {/* </SessionProvider> */}
       </body>
     </html>
   );

@@ -18,12 +18,12 @@ const MobileMenu = () => {
 
   return (
     <>
-      <div className="fixed top-0 right-0 w-full h-full bg-black z-50 lg:hidden mt-[4rem] overflow-hidden">
+      <div className="fixed top-0 right-0 w-full h-full bg-black z-50 lg:hidden mt-[40px] overflow-hidden">
         <div className="flex flex-col w-full h-full p-6 overflow-y-auto items-center justify-between">
           <div className="flex flex-col items-center w-full">
-            <div className="mb-4 w-full text-center border-b border-gray-600">
+            <div className="mb-4 w-full text-center ">
               <div
-                className="flex ml-8 justify-center items-center text-2xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-2 cursor-pointer"
+                className="flex ml-5 justify-center items-center text-2xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 mb-2 cursor-pointer"
                 onClick={toggleSolutions}
               >
                 Solutions
@@ -38,7 +38,7 @@ const MobileMenu = () => {
                 <div className="text-center">
                   <ul className="mt-3 text-xl text-center space-y-3">
                     {['Phishing Awareness', 'Security Awareness', 'Role-Based Training', 'Weak Points', 'Custom Trainings'].map((item, index) => (
-                      <li key={index} className="w-full border-b border-gray-600">
+                      <li key={index} className="w-full">
                         <Link href={`/${item.toLowerCase().replace(/ /g, '-')}`} className="text-gray-300 hover:text-white block py-2">
                           {item}
                         </Link>
@@ -49,19 +49,19 @@ const MobileMenu = () => {
               )}
             </div>
 
-            <div className="w-full border-b border-gray-600 mb-4">
+            <div className="w-full  mb-4">
               <Link href="/pricing" className="text-2xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 block text-center py-2">
                 Pricing
               </Link>
             </div>
 
-            <div className="w-full border-b border-gray-600 mb-4">
+            <div className="w-full mb-4">
               <Link href="/about" className="text-2xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 block text-center py-2">
                 Company
               </Link>
             </div>
 
-            <div className="w-full border-b border-gray-600 mb-4">
+            <div className="w-full mb-4">
               <Link href="/contact" className="text-2xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 block text-center py-2">
                 Contact
               </Link>

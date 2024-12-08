@@ -1,229 +1,233 @@
-// src/app/(main)/(pages)/lessons/[module]/[lesson]/page.tsx
+'use client';
 
-// 'use client'
-// pages/modules/[module]/[lesson]/page.tsx
-import { useRouter } from 'next/router';
-// import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { 
+  ChevronLeft, 
+  BookOpen, 
+  ArrowRight, 
+  ArrowLeft,
+  Cable,
+  Clock,
+  Calendar,
+  BookOpenCheck
+} from 'lucide-react';
 
-// const LessonPage = () => {
-//   const router = useRouter();
-//   const { module, lesson } = router.query;  // Destructure module and lesson from query params
-
-//   const [lessonData, setLessonData] = useState(null);
-
-//   useEffect(() => {
-//     if (module && lesson) {
-//       // Fetch lesson data using both module and lesson slugs
-//       const fetchLessonData = async () => {
-//         try {
-//           const response = await fetch(`/api/modules/${module}/lessons/${lesson}`);
-//           const data = await response.json();
-//           setLessonData(data);
-//         } catch (error) {
-//           console.error('Error fetching lesson:', error);
-//         }
-//       };
-
-//       fetchLessonData();
-//     }
-//   }, [module, lesson]);
-
-//   if (!lessonData) {
-//     return <div>Loading...</div>;
-//   }
-
-//   return (
-//     <div className="min-h-screen p-6 bg-gray-100">
-//       <h1 className="text-4xl font-bold">{lessonData.title}</h1>
-//       <p className="mt-4 text-gray-700">{lessonData.content}</p>
-//       <p className="mt-2 text-gray-600">Points: {lessonData.points}</p>
-//     </div>
-//   );
-// };
-
-// export default LessonPage;
-
-
-
-
-// app/modules/[module]/[lesson]/page.tsx
-
-
-
-
-// import React from 'react';
-
-// interface LessonPageProps {
-//   params: {
-//     module: string;  // Dynamic module slug from the URL
-//     lesson: string;  // Dynamic lesson slug from the URL
+// interface LessonData {
+//   id: number;
+//   title: string;
+//   description: string;
+//   content?: string;
+//   level: number;
+//   points: number;
+//   topic_id?: number;
+//   module_id: number;
+//   lesson_order: number;
+//   navigation?: {
+//     previous: { id: number; title: string } | null;
+//     next: { id: number; title: string } | null;
 //   };
 // }
 
-// const LessonPage = async ({ params }: LessonPageProps) => {
-//   const { module, lesson } = params;
+// src/types/lesson.ts
+interface SubLesson {
+  id: number;
+  title: string;
+  content?: string;
+  order: number;
+  completed: boolean;
+}
 
-//   // Fetch lesson data from your backend API using the module and lesson slugs
-//   const response = await fetch(`http://localhost:5000/api/modules/${module}/lessons/${lesson}`);
-
-//   // Handle the case where the lesson is not found
-//   if (!response.ok) {
-//     return <div>Lesson not found</div>;
-//   }
-
-//   const lessonData = await response.json();
-
-//   return (
-//     <div className="container mx-auto p-4">
-//       <h1 className="text-3xl font-bold mb-6">{lessonData.title}</h1>
-//       <p>{lessonData.content}</p>
-//       <p className="mt-4 text-gray-600">Points: {lessonData.points}</p>
-//       {/* Add more detailed rendering of lesson content here */}
-//     </div>
-//   );
-// };
-
-// export default LessonPage;
-
-// app/modules/[module]/[lesson]/page.tsx
-
-'use client';
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+interface LessonData {
+  id: number;
+  title: string;
+  description: string;
+  content?: string;
+  level: number;
+  points: number;
+  topic_id?: number;
+  module_id: number;
+  lesson_order: number;
+  activity_type?: 'quiz' | 'video' | 'reading' | 'interactive';
+  sub_lessons?: SubLesson[];
+  navigation?: {
+    previous: { id: number; title: string } | null;
+    next: { id: number; title: string } | null;
+  };
+}
 
 const LessonPage = () => {
-  const { module, lesson } = useParams(); // Adjust to useParams for app router
-  
-  const [lessonData, setLessonData] = useState<any>(null);
-  const [loading, setLoading] = useState(true); // Add loading state to prevent infinite loading
+  const params = useParams();
+  const router = useRouter();
+  const [lessonData, setLessonData] = useState<LessonData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLessonData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/modules/${module}/lessons/${lesson}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        setLoading(true);
+        setError(null);
+
+        // Patikriname params
+        console.log('Raw params:', params);
+
+        // Saugiau ištraukiame ID
+        const moduleId = params?.module?.toString();
+        const lessonId = params?.lesson?.toString();
+
+        console.log('Extracted IDs:', { moduleId, lessonId });
+
+        if (!moduleId || !lessonId) {
+          throw new Error('Trūksta modulio arba pamokos ID');
         }
+
+        const response = await fetch(`/api/modules/${moduleId}/lessons/${lessonId}`);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          throw new Error(errorData?.error || `Klaida: ${response.status}`);
+        }
+
         const data = await response.json();
+        console.log('API Response:', data);
+        
+        if (!data) {
+          throw new Error('Negauti pamokos duomenys');
+        }
+
         setLessonData(data);
-        setLoading(false); // Set loading to false once the data is fetched
-      } catch (error) {
-        console.error('Error fetching lesson data:', error);
-        setLoading(false); // Stop loading in case of error
+      } catch (err) {
+        console.error('Klaida gaunant pamokos duomenis:', err);
+        setError(err instanceof Error ? err.message : 'Nepavyko užkrauti pamokos duomenų');
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (module && lesson) {
+    if (params?.module && params?.lesson) {
       fetchLessonData();
     }
-  }, [module, lesson]);
+  }, [params?.module, params?.lesson]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading until data is fetched
+    return (
+      <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-4 px-6 mt-3">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-800 rounded w-1/4"></div>
+          <div className="h-4 bg-gray-800 rounded w-1/3"></div>
+          <div className="h-4 bg-gray-800 rounded w-1/2"></div>
+        </div>
+      </div>
+    );
   }
 
-  if (!lessonData) {
-    return <div>Error: Lesson not found</div>; // Error case if lessonData is null
+  if (error || !lessonData) {
+    return (
+      <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-4 px-6 mt-3">
+        <Card className="border-red-800/50 bg-red-950/10">
+          <CardHeader>
+            <CardTitle className="text-red-400">Error</CardTitle>
+            <CardDescription className="text-red-300">
+              {error || 'Lesson not found'}
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">{lessonData.title}</h1>
-      <p>
-        Level: {lessonData.level}
-      </p>
-      <p>
-        Points: {lessonData.points}
-      </p>
-      <p>
-        Topic ID: {lessonData.topic_id ? lessonData.topic_id : 'No topic assigned'}
-      </p>
-      {/* Render additional lesson content here */}
+    <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-4 px-6 mt-3">
+      {/* Header Section */}
+      <div className="border-b border-gray-800 pb-6 mb-8">
+        <div className="flex">
+          <Link 
+            className="text-gray-400 mb-4 mr-2 hover:bg-slate-200 border px-2 py-1 rounded-lg hover:text-gray-900 transition-colors flex items-center" 
+            href={`/modules/${params.module}`}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Link>
+          <h1 className="text-2xl font-base text-white mb-4">{lessonData.title}</h1>
+        </div>
+        
+        <div className="flex space-x-3 mb-4">
+          <span className="bg-gray-500/20 text-gray-400 px-3 py-1 rounded-lg text-sm">
+            Level {lessonData.lesson_order}
+          </span>
+          <span className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-lg text-sm">
+            {lessonData.points} Points
+          </span>
+          <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-lg text-sm flex items-center gap-1">
+            <Clock className="h-4 w-4" />
+            15 mins
+          </span>
+        </div>
+
+        <div className="flex justify-between items-start mb-6">
+          <p className="text-gray-400 text-sm max-w-xl">
+            {lessonData.description}
+          </p>
+        </div>
+
+        <div className="flex space-x-3">
+          <button className="bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors px-4 py-2 rounded-lg flex items-center gap-2">
+            <BookOpenCheck className="h-5 w-5" />
+            Start Lesson
+          </button>
+          <button className="bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors px-4 py-2 rounded-lg flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
+            Save for Later
+          </button>
+        </div>
+      </div>
+
+      {/* Content Section */}
+      <div className="space-y-6">
+        {/* <Card className="border-gray-800 bg-transparent">
+          <CardContent className="pt-6">
+            {lessonData.content ? (
+              <div className="prose prose-invert max-w-none">
+                {lessonData.content}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <BookOpen className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-400">No content available for this lesson yet.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card> */}
+
+        {/* Navigation Buttons */}
+        <div className="flex justify-between pt-6">
+          {lessonData.navigation?.previous ? (
+            <button
+              onClick={() => router.push(`/modules/${params.module}/${lessonData.navigation?.previous?.id}`)}
+              className="bg-gray-800 text-neutral-200 px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Previous Lesson
+            </button>
+          ) : (
+            <div />
+          )}
+          
+          {lessonData.navigation?.next && (
+            <button
+              onClick={() => router.push(`/modules/${params.module}/${lessonData.navigation?.next?.id}`)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition-colors flex items-center gap-2"
+            >
+              Next Lesson
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
 export default LessonPage;
-
-
-//VEIKIA KAIP IR RODO LOADING....
-// import React from 'react';
-
-// interface LessonPageProps {
-//   params: {
-//     module: string;  // Dynamic module slug from the URL
-//     lesson: string;  // Dynamic lesson slug from the URL
-//   };
-// }
-
-// const LessonPage = async ({ params }: LessonPageProps) => {
-//   const { module, lesson } = params;
-
-//   console.log('Fetching lesson for module:', module, 'and lesson:', lesson);  // Debugging line
-
-//   // Fetch lesson data from your backend API using the module and lesson slugs
-//   const response = await fetch(`http://localhost:5000/api/modules/${module}/lessons/${lesson}`);
-
-//   if (!response.ok) {
-//     console.error('Failed to fetch lesson:', response.statusText);  // Log the error if any
-//     return <div>Lesson not found</div>;
-//   }
-
-//   const lessonData = await response.json();
-//   console.log('Fetched lesson data:', lessonData);  // Log fetched data
-
-//   return (
-//     <div className="container mx-auto p-4">
-//       <h1 className="text-3xl font-bold mb-6">{lessonData.title}</h1>
-//       <p>{lessonData.content}</p>
-//       <p className="mt-4 text-gray-600">Points: {lessonData.points}</p>
-//     </div>
-//   );
-// };
-
-// export default LessonPage;
-
-
-
-
-// 'use client';
-// import React, { useEffect, useState } from 'react';
-// import { useRouter } from 'next/router';
-
-// const LessonPage = () => {
-//   const router = useRouter();
-//   const { module, lesson } = router.query;
-//   const [lessonData, setLessonData] = useState(null);
-
-//   useEffect(() => {
-//     const fetchLessonData = async () => {
-//       try {
-//         const response = await fetch(`http://localhost:5000/api/modules/${module}/lessons/${lesson}`);
-//         const data = await response.json();
-//         setLessonData(data);
-//       } catch (error) {
-//         console.error('Error fetching lesson data:', error);
-//       }
-//     };
-
-//     if (module && lesson) {
-//       fetchLessonData();
-//     }
-//   }, [module, lesson]);
-
-//   if (!lessonData) {
-//     return <div>Loading...</div>;
-//   }
-
-//   return (
-//     <div className="container mx-auto p-4">
-//       <h1 className="text-3xl font-bold mb-6">{lessonData.title}</h1>
-//       <p>
-//         {lessonData.content}
-//       </p>
-//       {/* Add more detailed rendering of lesson content here */}
-//     </div>
-//   );
-// };
-
-// export default LessonPage;

@@ -700,7 +700,7 @@ const Home: React.FC = () => {
 
   return (
     <main className="relative">
-      <div className="absolute inset-0 h-full w-full bg-gradient-to-b from-[#000000] via--[#000] to-[#000000] z-[-1]"></div>
+      <div className="absolute inset-0 min-h-screen w-full bg-gradient-to-b from-[#000000] via--[#000] to-[#000000] z-[-1]"></div>
       <Navbar />
       <section className="min-h-screen w-full rounded-md !overflow-visible relative flex flex-col items-center antialiased">
         <div className="absolute inset-0 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#000_70%)]"></div>
@@ -708,7 +708,7 @@ const Home: React.FC = () => {
           <ContainerScroll
             titleComponent={
               <div className="flex items-center flex-col w-full">
-                <motion.div
+                {/* <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
@@ -725,7 +725,7 @@ const Home: React.FC = () => {
                       </span>
                     </span>
                   </Link>
-                </motion.div>
+                </motion.div> */}
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -827,18 +827,18 @@ const Home: React.FC = () => {
           <h3 className="text-lg sm:text-xl md:text-xl mb-8 mx-7 font-serif italic text-gray-400 text-center font-light">
             Every 39 seconds, a business is attacked.
           </h3>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-10">
+          <div className="flex flex-row sm:flex-row justify-center items-center gap-6 mt-10">
             <Link 
               href="/pricing" 
-              className="w-2/3 sm:w-auto px-7 py-3 text-lg font-semibold rounded-xl bg-gray-300 text-black hover:bg-black hover:text-white border hover:border-gray-700 transition-all duration-300 text-center"
+              className="w-2/5 sm:w-auto px-7 py-3 text-md font-base rounded-xl bg-gray-300 text-black hover:bg-black hover:text-white border hover:border-gray-700 transition-all duration-300 text-center"
             >
-              See Our Plans
+              Our Plans
             </Link>
             <Link 
               href="/contact" 
-              className="w-2/3 sm:w-auto px-8 py-3 text-lg font-semibold rounded-xl border border-gray-700 text-white hover:bg-white hover:text-black transition-all duration-300 text-center"
+              className="w-2/5 sm:w-auto px-5 py-3 text-md font-base rounded-xl border border-gray-700 text-white hover:bg-white hover:text-black transition-all duration-300 text-center"
             >
-              Contact Us
+              Contact
             </Link>
           </div>
         </div>

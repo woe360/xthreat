@@ -1296,17 +1296,17 @@ const ContactPage: React.FC = () => {
             </motion.p>
             <div className="space-y-4">
               <FeatureItem 
-                icon={<Shield className="w-6 h-6 text-[#990000]" />}
+                icon={<Shield className="w-6 h-6 text-gray-200" />}
                 text="Tailored, hands-on training for enhanced learning"
                 delay={0.3}
               />
               <FeatureItem 
-                icon={<Zap className="w-6 h-6 text-[#006400]" />}
+                icon={<Zap className="w-6 h-6 text-gray-200" />}
                 text="Gamified real-world scenarios for increased engagement"
                 delay={0.4}
               />
               <FeatureItem 
-                icon={<Users className="w-6 h-6 text-[#5A2D82]" />}
+                icon={<Users className="w-6 h-6 text-gray-200" />}
                 text="Continuous, practice-based learning for lasting impact"
                 delay={0.5}
               />
@@ -1324,7 +1324,7 @@ const ContactPage: React.FC = () => {
               {...fadeInUp}
               className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold pb-1 mb-8 text-center"
             >
-              Contact Us
+              Contact
             </motion.h1>
 
             <form className="space-y-6" onSubmit={handleSubmit}>

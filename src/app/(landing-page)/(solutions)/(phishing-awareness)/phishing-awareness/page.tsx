@@ -370,7 +370,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, del
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.5 }}
-    className="bg-black p-6 rounded-lg border border-gray-800 relative"
+    className="bg-black p-6 font-sans rounded-lg border border-gray-800 relative"
   >
     <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-gray-800 to-transparent opacity-20" />
     <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-gray-800 to-transparent opacity-20" />
@@ -470,7 +470,7 @@ const PhishingAwarenessPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen font-sans bg-black text-white flex flex-col">
       <Navbar />
       <div className="flex-grow py-24 px-4 relative">
         <div className="absolute inset-0 bg-black" />
@@ -489,7 +489,7 @@ const PhishingAwarenessPage: React.FC = () => {
               initial={fadeInUp.initial}
               animate={fadeInUp.animate}
               transition={fadeInUp.transition}
-              className="text-5xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold mt-32 mb-6"
+              className="text-5xl bg-clip-text text-transparent pb-1 bg-gradient-to-b from-white to-neutral-500 font-semibold mt-32 mb-6"
             >
               Phishing Awareness
             </MotionHeading>

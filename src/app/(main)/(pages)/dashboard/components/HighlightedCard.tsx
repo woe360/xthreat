@@ -146,7 +146,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRight';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';

@@ -8,6 +8,12 @@ import Billing from '@/app/(main)/navigation/sideNavigation/icons/billing'
 import Accounts from '@/app/(main)/navigation/sideNavigation/icons/accounts'
 import Account from '@/app/(main)/navigation/sideNavigation/icons/account'
 import Xlogo from '@/app/(main)/navigation/sideNavigation/icons/xlogo'
+import Home from '@/app/(main)/navigation/sideNavigation/icons/home'
+import Business from '@/app/(main)/navigation/sideNavigation/icons/home'
+import Financial from '@/app/(main)/navigation/sideNavigation/icons/financial'
+import Trainings from '@/app/(main)/navigation/sideNavigation/icons/trainings'
+import Statistics from '@/app/(main)/navigation/sideNavigation/icons/statistics'
+import RoleTraining from '@/app/(main)/navigation/sideNavigation/icons/role-based'
 // import { Connection } from './types'
 
 
@@ -18,13 +24,27 @@ export const clients = [...new Array(10)].map((client, index) => ({
   export const menuOptions = [
     { name: 'Dashboard', Component: Dashboard, href: '/dashboard' },
     { name: 'Modules', Component: Modules, href: '/modules' },
-    { name: 'Practice', Component: Practice, href: '/practice' },
+    { name: 'Role Based', Component: RoleTraining, href: '/role-based' }, 
     { name: 'Progress', Component: Progress, href: '/progress' }, 
     { name: 'Account', Component: Account, href: '/account' },
-    { name: 'Billing', Component: Billing, href: '/billing' }, 
-    { name: 'Accounts', Component: Accounts, href: '/accounts' },
     { name: 'Settings', Component: Settings, href: '/settings' },
+
+    //MANAGER
+    // { name: 'Billing', Component: Billing, href: '/billing' }, 
+    // { name: 'Accounts', Component: Accounts, href: '/accounts' },
+
     
+    //ADMIN
+    // { name: 'Clients', Component: Business, href: '/clients' },
+    // { name: 'SETTINGS', Component: Settings, href: '/settings' },
+    // { name: 'Overview', Component: Dashboard, href: '/overview' },
+    // { name: 'Financials', Component: Financial, href: '/financials' },
+    // { name: 'COMPANY', Component: Settings, href: '/settings' },
+    // { name: 'Statistics', Component: Statistics, href: '/statistics' },
+    // { name: 'Trainings', Component: Trainings, href: '/trainings' },
+
+    //UPDATES
+    // { name: 'Practice', Component: Practice, href: '/practice' },
   ]
 
 // import Category from '@/components/icons/category';

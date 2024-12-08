@@ -1,85 +1,73 @@
-// src/components/auth/RouteGuard.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import type { AuthGuardProps } from '@/lib/types/auth';
 
-interface RouteGuardProps {
-  children: React.ReactNode;
-}
-
-export default function RouteGuard({ children }: RouteGuardProps) {
-  const router = useRouter();
-  const pathname = usePathname();
+const ProtectedRoute = ({ children }: AuthGuardProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    let mounted = true;
-
     const checkAuth = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-
-        if (error) throw error;
-
-        if (mounted) {
-          if (!session) {
-            router.replace(`/auth/signin?redirect_to=${pathname}`);
-          } else {
-            setIsAuthenticated(true);
-            setIsLoading(false);
-          }
+        const { data: { user }, error } = await supabase.auth.getUser();
+        
+        if (error || !user) {
+          router.replace('/login');
+          return;
         }
+        
+        setIsAuthenticated(true);
+        setIsLoading(false);
       } catch (error) {
         console.error('Auth check failed:', error);
-        if (mounted) {
-          router.replace('/auth/signin');
-        }
+        router.replace('/login');
       }
     };
 
     checkAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_OUT' || !session) {
         setIsAuthenticated(false);
-        router.replace('/auth/signin');
+        router.replace('/login');
       } else if (event === 'SIGNED_IN' && session) {
+        // Double check user authentication after sign in
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if (error || !user) {
+          router.replace('/login');
+          return;
+        }
         setIsAuthenticated(true);
         setIsLoading(false);
       }
     });
 
     return () => {
-      mounted = false;
       subscription.unsubscribe();
     };
-  }, [pathname, router, supabase]);
+  }, [router, supabase]);
 
+  // Loading state
   if (isLoading) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-          bgcolor: 'background.default'
-        }}
-      >
-        <CircularProgress />
-      </Box>
+      <div className="flex items-center justify-center h-screen bg-black">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-200"></div>
+      </div>
     );
   }
 
+  // Not authenticated
   if (!isAuthenticated) {
     return null;
   }
 
+  // Authenticated
   return <>{children}</>;
-}
+};
+
+export default ProtectedRoute;

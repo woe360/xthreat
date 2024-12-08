@@ -191,7 +191,7 @@ const Layout = ({ children }: Props) => {
         }}
       >
         <CssBaseline />
-        <ProtectedRoute>
+        {/* <ProtectedRoute> */}
           <Sidebar />
           <Box
             component="main"
@@ -207,7 +207,7 @@ const Layout = ({ children }: Props) => {
           >
             {children}
           </Box>
-        </ProtectedRoute>
+        {/* </ProtectedRoute> */}
       </Box>
     </AppTheme>
   )
