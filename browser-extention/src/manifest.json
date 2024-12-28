@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "XThreat Security Training",
+    "version": "1.0",
+    "permissions": [
+      "webRequest",
+      "webRequestBlocking",
+      "<all_urls>",
+      "storage",
+      "tabs"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [{
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }],
+    "host_permissions": [
+      "https://your-xthreat-domain.com/*"
+    ]
+  }

@@ -1,39 +1,31 @@
 // src/app/api/modules/[module]/route.ts
-import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
 
 export async function GET(
-  request: Request,
+  req: Request,
   { params }: { params: { module: string } }
 ) {
+  const cookieStore = await cookies()
+  const moduleSlug = params.module
+
   try {
+    const supabase = createRouteHandlerClient({
+      cookies: () => cookieStore,
+    })
+
     const { data, error } = await supabase
       .from('modules')
       .select('*')
-      .eq('slug', params.module) // Changed from 'id' to 'slug'
-      .single();
+      .eq('slug', moduleSlug)
+      .single()
 
-    if (error) {
-      console.error('Supabase error:', error); // Add logging
-      return NextResponse.json(
-        { error: 'Failed to fetch module' },
-        { status: 500 }
-      );
-    }
+    if (error) throw error
 
-    if (!data) {
-      return NextResponse.json(
-        { error: 'Module not found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(data);
+    return NextResponse.json(data)
   } catch (error) {
-    console.error('Server error:', error); // Add logging
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('API Error:', error)
+    return NextResponse.json({ error: 'Failed to fetch module' }, { status: 500 })
   }
 }

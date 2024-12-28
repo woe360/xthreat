@@ -11,7 +11,7 @@ import XLogo from '../assets/XThreat_icon_primary_white_to_gradient.svg';
 // import XLogo from '../assets/XThreat_Logotype_primary_white_to_gradient.svg'
 import useCalendarPreload from './cal-preloading';
 
-const CAL_URL = "https://cal.com/xthreat/30min?hide_event_type_details=true";
+const CAL_URL = "https://cal.com/domass/30min?hide_event_type_details=true";
 
 const Navbar = () => {
   useCalendarPreload(CAL_URL);

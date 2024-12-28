@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
 
-const CAL_URL = "https://cal.com/xthreat/30min?hide_event_type_details=true";
+const CAL_URL = "https://cal.com/domass/30min?hide_event_type_details=true";
 
 const MobileMenu = () => {
   const [solutionsOpen, setSolutionsOpen] = useState(false);

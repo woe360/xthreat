@@ -1379,6 +1379,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { cn } from "@/lib/utils"
 import { Slider } from "@/components/ui/slider"
+import { Metadata } from 'next';
+
+// export const metadata: Metadata = {
+//   title: 'Pricing - XThreat',
+//   description: 'XThreat Pricing',
+// };
 
 interface PricingTier {
   users: number;
@@ -1663,6 +1669,7 @@ const pricingTiers: PricingTier[] = [
       </motion.div>
     );
   };
+  
 
   return (
     <div className="min-h-screen font-sans bg-black text-white relative overflow-hidden">
@@ -1676,10 +1683,10 @@ const pricingTiers: PricingTier[] = [
           className="text-center"
         >
           <h2 className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold pb-1 sm:text-5xl">
-            Flexible per-user pricing to meet your needs
+            Pricing
           </h2>
           <p className="mt-4 text-xl font-serif italic text-gray-400">
-            No tricks or hidden fees. You pay per user, what you see here.
+            You pay per user, what you see here.
           </p>
         </motion.div>
 

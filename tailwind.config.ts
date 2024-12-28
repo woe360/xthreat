@@ -20,7 +20,8 @@ const config = {
   	extend: {
 		animation: {
 			move: "move 5s linear infinite",
-			shimmer: "shimmer 2s linear infinite"
+			shimmer: "shimmer 2s linear infinite",
+			pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 		  },
 		keyframes: {
 			move: {
@@ -34,7 +35,11 @@ const config = {
 				to: {
 				  "backgroundPosition": "-200% 0"
 				}
-			  }
+			  },
+			pulse: {
+				'0%, 100%': { opacity: '1' },
+				'50%': { opacity: '.5' },
+			},
 		  },
   		backdropBlur: {
   			none: '0',

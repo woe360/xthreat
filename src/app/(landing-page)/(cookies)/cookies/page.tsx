@@ -165,11 +165,9 @@ export default function CookiePolicy() {
   return (
     <main className="bg-black min-h-screen text-white relative overflow-hidden pt-20 font-sans">
       <Navbar/>
-      <BackgroundGradient direction="left" />
-      <BackgroundGradient direction="right" />
       
       <div className="max-w-[1330px] mx-auto py-12 px-4 sm:px-6 lg:py-16 relative z-10">
-        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b pb-2 from-white to-neutral-600 sm:text-5xl sm:tracking-tight lg:text-6xl mb-8 pb-4 border-b-2 border-gray-700">
+        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 sm:text-5xl sm:tracking-tight lg:text-6xl mb-8 pb-4 border-b-2 border-gray-700">
           Cookie Policy
         </h1>
         

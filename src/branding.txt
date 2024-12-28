@@ -2,4 +2,4 @@ color-dashboard:#0D1018
 
 mui-color:#090B0D
 
-my-new-color: #050607
+brand-color: #050607
