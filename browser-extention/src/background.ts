@@ -1,12 +1,21 @@
 // browser-extension/src/background.ts
 import { Config, Quiz } from './types';
 
+// Teisingas Chrome API tipų deklaravimas
+declare global {
+  interface Window {
+    chrome: typeof chrome;
+  }
+}
+
 const chrome = window.chrome;
 
 let config: Config = {
   workDomains: [],
   quizInterval: 30 * 60 * 1000 // 30 minutes
 };
+
+const API_BASE = 'https://jusu-domenas.com/api';
 
 chrome.runtime.onInstalled.addListener(async () => {
   try {
@@ -17,7 +26,8 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
 });
 
-chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
+// Pridedame details tipo aprašymą
+chrome.webNavigation.onBeforeNavigate.addListener(async (details: chrome.webNavigation.WebNavigationParentedCallbackDetails) => {
   if (details.frameId !== 0) return;
   
   const url = new URL(details.url);

@@ -81,7 +81,7 @@ const Modules: React.FC = () => {
           <div className="border-b border-gray-800">
             <div className=" py-4">
               <h1 className="text-xl font-medium mb-4 mt-3">Courses</h1>
-              <p className="text-gray-400 w-3/5 text-base mb-8">
+              <p className="text-gray-400 w-3/5 text-sm mb-8">
                 Master cybersecurity essentials with our comprehensive learning paths. From threat detection and incident response
                 to compliance frameworks and security best practices - enhance your organization's security posture with
                 practical, industry-aligned courses designed for modern security challenges.
@@ -91,7 +91,7 @@ const Modules: React.FC = () => {
         </div>
 
         {/* Sticky Tags Section */}
-        <div className="sticky top-0 z-10 bg-[#050607]">
+        <div className="sticky top-0 bg-[#050607] z-[50]">
           <div className="border-b border-gray-800 shadow-lg mx-10">
             <div className="py-4">
               <div className="flex items-center justify-between">
@@ -120,7 +120,7 @@ const Modules: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {filteredModules.map((module) => (
             <Link href={`/modules/${module.slug}`} key={module.id} className="h-[220px]">
-              <div className="bg-gray-700/30 hover:bg-gray-700/40 hover:border border-gray-400/30 border-1px mb-6 rounded-lg p-6 cursor-pointer h-full"> 
+              <div className="bg-[#181b24] hover:bg-[#181b24]/80 border border-transparent hover:border-gray-800  mb-6 rounded-lg p-6 cursor-pointer h-full"> 
                 <div className="flex flex-col h-full">
                   <h2 className="text-xl font-base mb-2 text-gray-100">{module.title}</h2>
                   <p className="text-gray-400 text-sm mb-4 flex-grow line-clamp-2">{module.description}</p>

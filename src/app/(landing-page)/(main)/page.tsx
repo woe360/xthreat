@@ -624,14 +624,14 @@ const AnimatedSolutionSection: React.FC<AnimatedSolutionSectionProps> = ({
         opacity: useSpring(opacity, { stiffness: 300, damping: 30 }),
         scale: useSpring(scale, { stiffness: 300, damping: 30 }),
       }}
-      className={`flex flex-col md:flex-row items-center bg-gray-900/30 [box-shadow:0_-20px_70px_-20px_#ffffff1f_inset] bg-black border border-gray-800 rounded-xl p-4 md:p-8 w-full max-w-6xl mx-auto mb-8`}
+      className={`flex flex-col md:flex-row items-center  border-gray-800 rounded-xl p-4 md:p-8 w-full max-w-6xl mx-auto mb-8`}
     >
       {isEven ? (
         <>
           <div className="w-full md:w-1/2 p-4 md:p-8 order-2 md:order-1">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">{title}</h2>
-            <p className="text-lg md:text-lg text-gray-400 mb-6">{description}</p>
-            <Link href={link} className="inline-block bg-gray-300 hover:bg-gray-200 font-bold py-2 px-4 rounded transition duration-300">
+            <h2 className="text-2xl md:text-3xl text-right font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">{title}</h2>
+            <p className="text-lg md:text-lg text-gray-400 text-right mb-6">{description}</p>
+            <Link href={link} className="float-right inline-block bg-gray-300 hover:bg-gray-200 font-bold py-2 px-4 rounded transition duration-300">
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-600 to-neutral-800">
                 Learn more
               </span>
@@ -647,9 +647,9 @@ const AnimatedSolutionSection: React.FC<AnimatedSolutionSectionProps> = ({
             {renderVisual(title, icon)}
           </div>
           <div className="w-full md:w-1/2 p-4 md:p-8 order-2">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">{title}</h2>
-            <p className="text-lg md:text-lg text-gray-400 mb-6">{description}</p>
-            <Link href={link} className="inline-block bg-gray-300 hover:bg-gray-200 font-bold py-2 px-4 rounded transition duration-300">
+            <h2 className="text-2xl md:text-3xl text-left font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">{title}</h2>
+            <p className="text-lg md:text-lg text-left text-gray-400 mb-6">{description}</p>
+            <Link href={link} className="float-left inline-block bg-gray-300 hover:bg-gray-200 font-bold py-2 px-4 rounded transition duration-300">
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-600 to-neutral-800">
                 Learn more
               </span>
@@ -715,7 +715,7 @@ const Home: React.FC = () => {
                   className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block"
                 >
                   <Link 
-                    href="/ai-training"
+                    href="/pricing"
                     className="relative inline-flex h-8 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
                   >
                     <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
@@ -749,14 +749,27 @@ const Home: React.FC = () => {
                   transition={{ duration: 0.5, delay: 0.6 }}
                   className="flex justify-center gap-4 mt-8 mb-12"
                 >
-                  <Link href="/tryQuiz" passHref>
+                  <Link href="/try-quiz" passHref>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 mb-8 md:mb-10 text-xl sm:text-2xl w-full sm:w-fit border-t-2 rounded-xl border-[#4D4D4D] bg-[#dad9d9] hover:bg-white group transition-all flex items-center justify-center gap-4 hover:shadow-xl hover:shadow-neutral-500 duration-500"
+                      className="px-4 py-2 mb-8 md:mb-10 text-md sm:text-xl w-full sm:w-fit rounded-xl bg-gray-300 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4"
                     >
-                      <span className="bg-clip-text ml-[4px] font-sans inline-flex text-transparent bg-gradient-to-r from-gray-600 to-gray-900 md:text-center group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
-                        Try quiz <ChevronRight className="mt-[6px]" color="black"/>
+                      <span className="ml-[4px] font-sans inline-flex text-black md:text-center ">
+                        Try quiz 
+                        <ChevronRight className="mt-[6px]" size={20} color="black"/>
+                      </span>
+                    </motion.button>
+                  </Link>
+                  <Link href="/pricing" passHref>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 mb-8 md:mb-10 text-md sm:text-xl w-full sm:w-fit rounded-xl  bg-transparent border border-gray-400 hover:border-gray-300 group transition-all flex items-center justify-center gap-4"
+                    >
+                      <span className="ml-[4px] font-sans inline-flex text-white md:text-center ">
+                        Free Trial 
+                        <ChevronRight className="mt-[6px]" size={20} color="white"/>
                       </span>
                     </motion.button>
                   </Link>
@@ -775,7 +788,7 @@ const Home: React.FC = () => {
           <p className="text-xl mb-14 mx-10 text-center font-serif italic text-gray-400">
             Human error is the leading cause of cyber attacks, and malicious actors exploit this vulnerability
           </p>
-          <div className="border bg-gray-900/30 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] rounded-xl mx-8 border-gray-800 p-9">
+          <div className=" rounded-xl mx-8 border-gray-800 p-9">
             <StatisticsHack />
           </div>
         </div>
@@ -832,11 +845,11 @@ const Home: React.FC = () => {
               href="/pricing" 
               className="w-2/5 sm:w-auto px-7 py-3 text-md font-base rounded-xl bg-gray-100 text-black hover:bg-gray-300 border hover:border-gray-700 transition-all duration-300 text-center"
             >
-              Our Plans
+              View Plans
             </Link>
             <Link 
               href="/contact" 
-              className="w-2/5 sm:w-auto px-5 py-3 text-md font-base rounded-xl border border-gray-700 text-white hover:bg-gray-900/50 transition-all duration-300 text-center"
+              className="w-2/5 sm:w-auto px-5 py-3 text-md font-base rounded-xl border border-transparent hover:border-gray-600 text-white transition-all duration-300 text-center"
             >
               Contact Us
             </Link>

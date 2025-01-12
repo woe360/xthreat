@@ -6,7 +6,12 @@ import React from 'react'
 import { Quiz } from '@/components/lessons/Quiz'
 import { QuizSkeleton } from '@/components/lessons/QuizSkeleton'
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ChevronLeft } from 'lucide-react'
+// import { EmailInspector } from '@/components/lessons/Email'
+import B2BPhishingVariants from '@/components/lessons/Variants'
+import VendorPortalSimulator from '@/components/lessons/Vendor'
+import MultiChannelPhishingSimulator from '@/components/lessons/Multi'
+import { EmailInspector } from '@/components/lessons/Email'
 
 const LessonPage = () => {
   const router = useRouter()
@@ -63,34 +68,53 @@ const LessonPage = () => {
     fetchData()
   }, [params.lesson])
 
-  if (loading) return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Loading...</h1>
-      <QuizSkeleton />
-    </div>
-  )
+  const renderLessonContent = () => {
+    // Jei tai yra "Recognizing Phishing Emails" pamoka
+    if (lesson.id === 2) { // Pakeiskite į teisingą pamokos ID iš DB
+      return <EmailInspector />
+    }
 
-  return (
-    <div className="max-w-4xl mx-auto p-6">
-      <Button
-        variant="ghost"
-        className="mb-4 flex items-center gap-2 hover:bg-gray-800/50"
-        onClick={() => router.push(`/modules/${params.module}`)}
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Lessons
-      </Button>
+    if (lesson.id === 3) { // Pakeiskite į teisingą pamokos ID iš DB
+        // return <B2BPhishingVariants />
+        return <VendorPortalSimulator />
+      }
 
-      <h1 className="text-2xl font-bold mb-6">{lesson.title}</h1>
-      {lesson.description && (
-        <p className="text-gray-400 mb-6">{lesson.description}</p>
-      )}
-      
+      if (lesson.id === 4) { // Pakeiskite į teisingą pamokos ID iš DB
+        return <MultiChannelPhishingSimulator />
+      }
+
+    // Kitoms pamokoms rodome įprastą Quiz
+    return (
       <Quiz 
         questions={questions}
         answers={answers}
         moduleId={params.module as string}
       />
+    )
+  }
+
+  if (loading) return (
+    <div className="max-w-4xl mx-auto p-6">
+      <QuizSkeleton />
+    </div>
+  )
+
+  return (
+    <div className="min-h-screen bg-[#050607] text-gray-100 p-4 px-10 mt-3">
+      <div className="pb-6 mb-8">
+        <div className="flex items-center gap-3 mb-6">
+          <button
+            onClick={() => router.push(`/modules/${params.module}`)}
+            className="text-gray-400 justify-center hover:bg-gray-800 border border-gray-700 w-8 h-8 rounded-lg hover:text-gray-200 transition-colors flex items-center"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+  
+      <div className="w-full max-w-4xl mx-auto">
+        {renderLessonContent()}
+      </div>
     </div>
   )
 }

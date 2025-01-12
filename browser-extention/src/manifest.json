@@ -1,22 +1,24 @@
 {
     "manifest_version": 3,
-    "name": "XThreat Security Training",
+    "name": "Security Training Quiz",
     "version": "1.0",
+    "description": "Security awareness training through quizzes",
     "permissions": [
-      "webRequest",
-      "webRequestBlocking",
-      "<all_urls>",
+      "webNavigation",
       "storage",
       "tabs"
+    ],
+    "host_permissions": [
+      "https://your-xthreat-domain.com/*"
     ],
     "background": {
       "service_worker": "background.js"
     },
+    "action": {
+      "default_popup": "popup.html"
+    },
     "content_scripts": [{
       "matches": ["<all_urls>"],
       "js": ["content.js"]
-    }],
-    "host_permissions": [
-      "https://your-xthreat-domain.com/*"
-    ]
+    }]
   }

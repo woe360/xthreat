@@ -157,7 +157,12 @@ export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
         transition: 'max-width 0.2s ease-in-out',
       }}
     >
-      <Typography variant="h6" sx={{ mb: 3 }} className="mt-6">
+      <Typography 
+        variant="h6" 
+        sx={{ 
+          mb: 3,
+          mt: { xs: 4, md: 3.1 }
+       }}>
         Dashboard
       </Typography>
 

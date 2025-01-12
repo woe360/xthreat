@@ -213,7 +213,7 @@ const Navbar = () => {
                       setIsDemoOpen(true);
                       setIsLoading(true);
                     }} 
-                    className="p-4 h-9 w-full sm:w-fit rounded-xl border-[#4D4D4D] bg-gradient-to-b from-neutral-100 to-neutral-500 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4"
+                    className="p-4 h-9 w-full sm:w-fit rounded-xl bg-gray-200/90 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4"
                   >
                     <span className="bg-clip-text flex text-transparent bg-gradient-to-r from-neutral-800 to-neutral-900 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
                       Book a demo <ChevronRight className="text-black mt-[3px]" size={15}/>

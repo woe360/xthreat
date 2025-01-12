@@ -1366,12 +1366,12 @@ const ContactPage: React.FC = () => {
                 <motion.div {...fadeInUp} transition={{ delay: 0.4 }}>
                   <Select name="numberOfEmployees" required>
                     <SelectTrigger className={cn(
-                      "w-full px-5 py-6 rounded-lg bg-neutral-900/30  text-gray-300 border border-gray-800",
+                      "w-full px-5 py-6 rounded-lg text-base bg-neutral-900/30  text-gray-400 border border-gray-800",
                       "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                     )}>
-                      <SelectValue placeholder="Select number of employees*" />
+                      <SelectValue placeholder="Company size*" />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#050607] border border-gray-800 text-gray-300">
+                    <SelectContent className="bg-neutral-950 border border-gray-800 text-gray-300">
                       <SelectItem value="1-50" className="hover:bg-neutral-800">1-50</SelectItem>
                       <SelectItem value="51-250" className="hover:bg-neutral-800">51-250</SelectItem>
                       <SelectItem value="251-500" className="hover:bg-neutral-800">251-500</SelectItem>
@@ -1383,12 +1383,12 @@ const ContactPage: React.FC = () => {
                 <motion.div {...fadeInUp} transition={{ delay: 0.5 }}>
                   <Select name="reason" required>
                     <SelectTrigger className={cn(
-                      "w-full px-4 py-6 rounded-lg bg-neutral-900/30 text-gray-300 border border-gray-800",
+                      "w-full px-4 py-6 rounded-lg text-base bg-neutral-900/30 text-gray-400 border border-gray-800",
                       "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                     )}>
                       <SelectValue placeholder="Select your reason*" />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#050607] border border-gray-800 text-gray-300">
+                    <SelectContent className="bg-neutral-950 border border-gray-800 text-gray-300">
                       <SelectItem value="Get a Quote" className="hover:bg-neutral-800">Get a custom quote</SelectItem>
                       <SelectItem value="More information about the products" className="hover:bg-neutral-800">To know more about products</SelectItem>
                       <SelectItem value="General Inquiry" className="hover:bg-neutral-800">General inquiry</SelectItem>
@@ -1401,7 +1401,7 @@ const ContactPage: React.FC = () => {
                 <textarea
                   id="additional"
                   name="additionalDetails"
-                  placeholder="Any additional details you'd like to share"
+                  placeholder="Any additional details you'd like to share with us?"
                   className="w-full px-4 py-3 rounded-lg bg-neutral-900/30 text-gray-300 focus:outline-none border border-gray-800 h-24"
                 />
                 <p className="text-xs text-gray-400 mt-2 text-center">
@@ -1420,7 +1420,7 @@ const ContactPage: React.FC = () => {
                   disabled={isSubmitting}
                   whileHover={!isSubmitting ? { scale: 1.05 } : {}}
                   whileTap={!isSubmitting ? { scale: 0.95 } : {}}
-                  className={`bg-gray-200 hover:bg-gray-300 text-black px-8 py-3 rounded-xl font-semibold transition duration-300 ${isSubmitting ? 'opacity-50' : ''}`}
+                  className={`bg-gray-200 hover:bg-gray-300 text-black px-10 py-3 rounded-xl font-normal transition duration-300 ${isSubmitting ? 'opacity-50' : ''}`}
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit'}
                 </motion.button>

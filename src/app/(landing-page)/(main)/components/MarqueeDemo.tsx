@@ -117,11 +117,11 @@ import Image from "next/image";
 import { StaticImageData } from "next/image";
 
 // Import all images
-import ITImage from "../assets/images/IT.jpg";
-import SoftwareImage from "../assets/images/Software.jpg";
+// import ITImage from "../assets/images/IT.jpg";
+// import SoftwareImage from "../assets/images/Software.jpg";
 import NetworkImage from "../assets/images/Network.jpg";
-import DataImage from "../assets/images/Data.jpg";
-import HRImage from "../assets/images/HR.jpg";
+// import DataImage from "../assets/images/Data.jpg";
+// import HRImage from "../assets/images/HR.jpg";
 import ExecutiveImage from "../assets/images/Executive.jpg";
 
 interface JobFunction {
@@ -135,13 +135,13 @@ const jobFunctions: JobFunction[] = [
   {
     role: "IT Manager",
     description: "Security policies and risk management",
-    image: ITImage,
+    image: ExecutiveImage,
     imagePosition: "object-[center_30%]",
   },
   {
     role: "Software Developer",
     description: "Secure coding practices",
-    image: SoftwareImage,
+    image: ExecutiveImage,
     imagePosition: "object-[center_5%]",
   },
   {
@@ -153,13 +153,13 @@ const jobFunctions: JobFunction[] = [
   {
     role: "Data Analyst",
     description: "Data protection compliance",
-    image: DataImage,
+    image: ExecutiveImage,
     imagePosition: "object-[center_30%]",
   },
   {
     role: "HR Specialist",
     description: "Employee security awareness",
-    image: HRImage,
+    image: ExecutiveImage,
     imagePosition: "object-[center_35%]",
   },
   {

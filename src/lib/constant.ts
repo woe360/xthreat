@@ -14,6 +14,7 @@ import Financial from '@/app/(main)/navigation/sideNavigation/icons/financial'
 import Trainings from '@/app/(main)/navigation/sideNavigation/icons/trainings'
 import Statistics from '@/app/(main)/navigation/sideNavigation/icons/statistics'
 import RoleTraining from '@/app/(main)/navigation/sideNavigation/icons/role-based'
+import ChatAssistant from '@/app/(main)/navigation/sideNavigation/icons/assistant'
 // import { Connection } from './types'
 
 
@@ -24,14 +25,15 @@ export const clients = [...new Array(10)].map((client, index) => ({
   export const menuOptions = [
     { name: 'Dashboard', Component: Dashboard, href: '/dashboard' },
     { name: 'Modules', Component: Modules, href: '/modules' },
-    { name: 'Role Based', Component: RoleTraining, href: '/role-based' }, 
-    { name: 'Progress', Component: Progress, href: '/progress' }, 
+    { name: 'Role Based', Component: RoleTraining, href: '/role-based' },
+    { name: 'Assistant', Component: ChatAssistant, href: '/assistant' },  
     { name: 'Account', Component: Account, href: '/account' },
     { name: 'Settings', Component: Settings, href: '/settings' },
 
     //MANAGER
     // { name: 'Billing', Component: Billing, href: '/billing' }, 
     // { name: 'Accounts', Component: Accounts, href: '/accounts' },
+    // { name: 'Progress', Component: Progress, href: '/progress' },
 
     
     //ADMIN
