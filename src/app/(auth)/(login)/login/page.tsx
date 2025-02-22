@@ -915,23 +915,61 @@ export default function SignIn() {
 
     setVerifying(true);
     try {
-      const { error } = await supabaseClient.current.auth.verifyOtp({
+      // Verify OTP
+      const { data, error } = await supabaseClient.current.auth.verifyOtp({
         email: email.toLowerCase(),
         token: otpString,
         type: 'email'
       });
 
       if (error) {
+        console.error('OTP verification error:', error);
         setError('Invalid verification code. Please try again.');
         resetOtp();
         return;
       }
 
-      // Immediate redirect on success
-      router.push('/dashboard');
-      router.refresh();
+      if (!data?.user) {
+        console.error('No user data after verification');
+        setError('Verification failed. Please try again.');
+        return;
+      }
+
+      // Create or update user record in users table
+      const { error: upsertError } = await supabaseClient.current
+        .from('users')
+        .upsert({
+          id: data.user.id,
+          email: data.user.email,
+          role: 'user', // default role
+          is_active: true
+        }, {
+          onConflict: 'id'
+        });
+
+      if (upsertError) {
+        console.error('Failed to create user record:', upsertError);
+        setError('Failed to complete signup. Please try again.');
+        return;
+      }
+
+      // Get session to confirm everything is set
+      const { data: { session }, error: sessionError } = 
+        await supabaseClient.current.auth.getSession();
+      
+      if (sessionError || !session) {
+        console.error('Session error:', sessionError);
+        setError('Failed to establish session. Please try again.');
+        return;
+      }
+
+      console.log('Successfully logged in and created user record:', data.user);
+      
+      // Use window.location for a full page reload
+      window.location.href = '/dashboard';
       
     } catch (error) {
+      console.error('Verification error:', error);
       setError(error instanceof Error ? error.message : 'Verification failed. Please try again.');
       resetOtp();
     } finally {
