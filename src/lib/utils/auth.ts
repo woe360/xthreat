@@ -1,17 +1,16 @@
-// // src/lib/utils/auth.ts
-// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 // export const checkAuthStatus = async () => {
 //   const supabase = createClientComponentClient()
   
 //   try {
-//     const { data: { session }, error } = await supabase.auth.getSession()
+//     const { data: { user }, error } = await supabase.auth.getUser()
     
 //     if (error) throw error
     
 //     return {
-//       isAuthenticated: !!session,
-//       user: session?.user || null,
+//       isAuthenticated: !!user,
+//       user: user || null,
 //       error: null
 //     }
 //   } catch (error) {
@@ -24,21 +23,6 @@
 //   }
 // }
 
-// export const signOut = async () => {
-//   const supabase = createClientComponentClient()
-  
-//   try {
-//     await supabase.auth.signOut()
-//     return { error: null }
-//   } catch (error) {
-//     console.error('Sign out failed:', error)
-//     return { error }
-//   }
-// }
-
-// src/lib/utils/auth.ts
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-
 export const checkAuthStatus = async () => {
   const supabase = createClientComponentClient()
   
@@ -46,6 +30,24 @@ export const checkAuthStatus = async () => {
     const { data: { user }, error } = await supabase.auth.getUser()
     
     if (error) throw error
+    
+    if (user) {
+      // Also check if user exists in users table
+      const { data: dbUser, error: dbError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+        
+      if (dbError || !dbUser) {
+        console.error('User not in database:', dbError);
+        return {
+          isAuthenticated: false,
+          user: null,
+          error: new Error('User not found in database')
+        }
+      }
+    }
     
     return {
       isAuthenticated: !!user,

@@ -1,20 +1,17 @@
-import Settings from '@/app/(main)/navigation/sideNavigation/icons/settings'
-import Progress from '@/app/(main)/navigation/sideNavigation/icons/progress'
-import Practice from '@/app/(main)/navigation/sideNavigation/icons/practice'
-import Modules from '@/app/(main)/navigation/sideNavigation/icons/modules'
-import Dashboard from '@/app/(main)/navigation/sideNavigation/icons/dashboard'
-import { CloudCog } from 'lucide-react'
-import Billing from '@/app/(main)/navigation/sideNavigation/icons/billing'
-import Accounts from '@/app/(main)/navigation/sideNavigation/icons/accounts'
-import Account from '@/app/(main)/navigation/sideNavigation/icons/account'
-import Xlogo from '@/app/(main)/navigation/sideNavigation/icons/xlogo'
-import Home from '@/app/(main)/navigation/sideNavigation/icons/home'
-import Business from '@/app/(main)/navigation/sideNavigation/icons/home'
-import Financial from '@/app/(main)/navigation/sideNavigation/icons/financial'
-import Trainings from '@/app/(main)/navigation/sideNavigation/icons/trainings'
-import Statistics from '@/app/(main)/navigation/sideNavigation/icons/statistics'
-import RoleTraining from '@/app/(main)/navigation/sideNavigation/icons/role-based'
-import ChatAssistant from '@/app/(main)/navigation/sideNavigation/icons/assistant'
+import Settings from '@/app/(dashboard)/navigation/sideNavigation/icons/settings'
+import Progress from '@/app/(dashboard)/navigation/sideNavigation/icons/progress'
+import Practice from '@/app/(dashboard)/navigation/sideNavigation/icons/practice'
+import Modules from '@/app/(dashboard)/navigation/sideNavigation/icons/modules'
+import Dashboard from '@/app/(dashboard)/navigation/sideNavigation/icons/dashboard'
+import Billing from '@/app/(dashboard)/navigation/sideNavigation/icons/billing'
+import Accounts from '@/app/(dashboard)/navigation/sideNavigation/icons/accounts'
+import Account from '@/app/(dashboard)/navigation/sideNavigation/icons/account'
+import Business from '@/app/(dashboard)/navigation/sideNavigation/icons/home'
+import Financial from '@/app/(dashboard)/navigation/sideNavigation/icons/financial'
+import Trainings from '@/app/(dashboard)/navigation/sideNavigation/icons/trainings'
+import Statistics from '@/app/(dashboard)/navigation/sideNavigation/icons/statistics'
+import RoleTraining from '@/app/(dashboard)/navigation/sideNavigation/icons/role-based'
+import ChatAssistant from '@/app/(dashboard)/navigation/sideNavigation/icons/assistant'
 // import { Connection } from './types'
 
 
@@ -22,32 +19,51 @@ export const clients = [...new Array(10)].map((client, index) => ({
     href: `/${index + 1}.png`,
   }))
 
-  export const menuOptions = [
-    { name: 'Dashboard', Component: Dashboard, href: '/dashboard' },
-    { name: 'Modules', Component: Modules, href: '/modules' },
-    { name: 'Role Based', Component: RoleTraining, href: '/role-based' },
-    { name: 'Assistant', Component: ChatAssistant, href: '/assistant' },  
-    { name: 'Account', Component: Account, href: '/account' },
-    { name: 'Settings', Component: Settings, href: '/settings' },
+// Default menu options (available to all users)
+const defaultOptions = [
+  { name: 'Dashboard', Component: Dashboard, href: '/dashboard' },
+  { name: 'Modules', Component: Modules, href: '/modules' },
+  { name: 'Role Based', Component: RoleTraining, href: '/role-based' },
+  { name: 'Account', Component: Account, href: '/account' },
+  { name: 'Settings', Component: Settings, href: '/settings' },
+]
 
-    //MANAGER
-    // { name: 'Billing', Component: Billing, href: '/billing' }, 
-    // { name: 'Accounts', Component: Accounts, href: '/accounts' },
-    // { name: 'Progress', Component: Progress, href: '/progress' },
+// Features in development
+const developmentOptions = [
+  { name: 'Practice', Component: Practice, href: '/practice' },
+  { name: 'Assistant', Component: ChatAssistant, href: '/assistant' },
+]
 
-    
-    //ADMIN
-    // { name: 'Clients', Component: Business, href: '/clients' },
-    // { name: 'SETTINGS', Component: Settings, href: '/settings' },
-    // { name: 'Overview', Component: Dashboard, href: '/overview' },
-    // { name: 'Financials', Component: Financial, href: '/financials' },
-    // { name: 'COMPANY', Component: Settings, href: '/settings' },
-    // { name: 'Statistics', Component: Statistics, href: '/statistics' },
-    // { name: 'Trainings', Component: Trainings, href: '/trainings' },
+// Manager-specific options
+const managerOptions = [
+  { name: 'Billing', Component: Billing, href: '/billing' },
+  { name: 'Accounts', Component: Accounts, href: '/accounts' },
+  { name: 'Progress', Component: Progress, href: '/progress' },
+]
 
-    //UPDATES
-    // { name: 'Practice', Component: Practice, href: '/practice' },
-  ]
+// Admin-specific options
+const adminOptions = [
+  { name: 'Clients', Component: Business, href: '/clients' },
+  { name: 'Overview', Component: Dashboard, href: '/overview' },
+  { name: 'Financials', Component: Financial, href: '/financials' },
+  { name: 'Statistics', Component: Statistics, href: '/statistics' },
+  { name: 'Trainings', Component: Trainings, href: '/trainings' },
+]
+
+// Export function to get menu options based on role
+export const getMenuOptions = (role?: 'admin' | 'manager' | 'user') => {
+  switch (role) {
+    case 'admin':
+      return [...defaultOptions, ...adminOptions]
+    case 'manager':
+      return [...defaultOptions, ...managerOptions]
+    default:
+      return [...defaultOptions]
+  }
+}
+
+// Default export for backward compatibility - shows only default options
+export const menuOptions = defaultOptions
 
 // import Category from '@/components/icons/category';
 // import Logs from '@/components/icons/clipboard';

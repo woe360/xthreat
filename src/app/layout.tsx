@@ -410,64 +410,52 @@
 //     </html>
 //   );
 // }
+
 // RootLayout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { SessionProvider } from "@/providers/session-provider";
+import { Inter } from 'next/font/google';
+import { cn } from "@/lib/utils";
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "XThreat",
   description: "Cyber security training",
   icons: {
     icon: [
-      { url: '/XThreat-white.svg', type: 'image/svg+xml' },
+      { url: '/XThreat_icon_primary_white_to_gradient.svg', type: 'image/svg+xml' },
     ],
   },
 };
 
-// async function getServerSession() {
-//   const cookieStore = cookies();
-//   const supabase = createServerComponentClient({ cookies: () => cookieStore });
-  
-//   try {
-//     const { data: { session }, error } = await supabase.auth.getSession();
-//     if (error) throw error;
-//     return session;
-//   } catch (error) {
-//     console.error('Session fetch error:', error);
-//     return null;
-//   }
-// }
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  // const session = await getServerSession();
-
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body style={{ fontFamily: "'DM Sans', sans-serif" }}>
-        {/* <SessionProvider initialSession={session}> */}
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        {/* </SessionProvider> */}
+      <body className={cn(
+        "min-h-screen bg-neutral-950 text-white antialiased",
+        inter.className
+      )}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="relative flex min-h-screen flex-col">
+            <main className="flex-1">
+              {children}
+            </main>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
