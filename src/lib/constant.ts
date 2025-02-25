@@ -1,18 +1,18 @@
-import Settings from '@/app/(dashboard)/navigation/sideNavigation/icons/settings'
-import Progress from '@/app/(dashboard)/navigation/sideNavigation/icons/progress'
-import Practice from '@/app/(dashboard)/navigation/sideNavigation/icons/practice'
-import Modules from '@/app/(dashboard)/navigation/sideNavigation/icons/modules'
-import Dashboard from '@/app/(dashboard)/navigation/sideNavigation/icons/dashboard'
-import Billing from '@/app/(dashboard)/navigation/sideNavigation/icons/billing'
-import Accounts from '@/app/(dashboard)/navigation/sideNavigation/icons/accounts'
-import Account from '@/app/(dashboard)/navigation/sideNavigation/icons/account'
-import Business from '@/app/(dashboard)/navigation/sideNavigation/icons/home'
-import Financial from '@/app/(dashboard)/navigation/sideNavigation/icons/financial'
-import Trainings from '@/app/(dashboard)/navigation/sideNavigation/icons/trainings'
-import Statistics from '@/app/(dashboard)/navigation/sideNavigation/icons/statistics'
-import RoleTraining from '@/app/(dashboard)/navigation/sideNavigation/icons/role-based'
-import ChatAssistant from '@/app/(dashboard)/navigation/sideNavigation/icons/assistant'
-// import { Connection } from './types'
+
+import Progress from '@/app/(dashboard)/navigation/icons/progress'
+import Practice from '@/app/(dashboard)/navigation/icons/practice'
+import Modules from '@/app/(dashboard)/navigation/icons/modules'
+import Dashboard from '@/app/(dashboard)/navigation/icons/dashboard'
+import Billing from '@/app/(dashboard)/navigation/icons/billing'
+import Accounts from '@/app/(dashboard)/navigation/icons/accounts'
+import Account from '@/app/(dashboard)/navigation/icons/account'
+import Business from '@/app/(dashboard)/navigation/icons/home'
+import Financial from '@/app/(dashboard)/navigation/icons/financial'
+import Trainings from '@/app/(dashboard)/navigation/icons/trainings'
+import Statistics from '@/app/(dashboard)/navigation/icons/statistics'
+import RoleTraining from '@/app/(dashboard)/navigation/icons/role-based'
+import ChatAssistant from '@/app/(dashboard)/navigation/icons/assistant'
+import Settings from '@/app/(dashboard)/navigation/icons/settings'
 
 
 export const clients = [...new Array(10)].map((client, index) => ({
@@ -25,7 +25,6 @@ const defaultOptions = [
   { name: 'Modules', Component: Modules, href: '/modules' },
   { name: 'Role Based', Component: RoleTraining, href: '/role-based' },
   { name: 'Account', Component: Account, href: '/account' },
-  { name: 'Settings', Component: Settings, href: '/settings' },
 ]
 
 // Features in development
@@ -43,18 +42,23 @@ const managerOptions = [
 
 // Admin-specific options
 const adminOptions = [
-  { name: 'Clients', Component: Business, href: '/clients' },
   { name: 'Overview', Component: Dashboard, href: '/overview' },
+  { name: 'Companies', Component: Business, href: '/companies' },
+  { name: 'Clients', Component: Accounts, href: '/clients' },
   { name: 'Financials', Component: Financial, href: '/financials' },
   { name: 'Statistics', Component: Statistics, href: '/statistics' },
   { name: 'Trainings', Component: Trainings, href: '/trainings' },
+  { name: 'Account', Component: Account, href: '/account' },
+  { name: 'Settings', Component: Settings, href: '/settings' },
 ]
 
 // Export function to get menu options based on role
 export const getMenuOptions = (role?: 'admin' | 'manager' | 'user') => {
+  console.log('getMenuOptions called with role:', role) // Debug log
+  
   switch (role) {
     case 'admin':
-      return [...defaultOptions, ...adminOptions]
+      return [...adminOptions]
     case 'manager':
       return [...defaultOptions, ...managerOptions]
     default:

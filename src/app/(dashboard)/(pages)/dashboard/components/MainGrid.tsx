@@ -188,22 +188,16 @@ export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
         </Grid>
       </Grid>
 
-      {/* <Typography variant="h6" sx={{ mb: 3 }}>
-        Details
-      </Typography> */}
+      <Typography variant="h6" sx={{ mb: 3 }}>
+        Leaderboard
+      </Typography>
 
       {/* Bottom row */}
-      {/* <Grid container spacing={3}>
-        <Grid item xs={12} lg={9}>
+      <Grid container spacing={0}>
+        <Grid item xs={12} lg={13}>
           <CustomizedDataGrid />
         </Grid>
-        <Grid item xs={12} lg={3}>
-          <Stack spacing={3} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <CustomizedTreeView />
-            <ChartUserByCountry />
-          </Stack>
-        </Grid>
-      </Grid> */}
+      </Grid>
     </Box>
   );
 }

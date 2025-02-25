@@ -168,9 +168,10 @@
 
 'use client'
 import React from 'react'
-import Sidebar from '@/app/(dashboard)/navigation/sideNavigation/sidebar'
+// import Sidebar from '@/app/(dashboard)/navigation/sidebar'
 import { CssBaseline, Box } from '@mui/material'
 import AppTheme from '@/app/(dashboard)/(pages)/dashboard/shared-theme/AppTheme'
+import Sidebar from './navigation/sidebar'
 
 type Props = {
   children: React.ReactNode

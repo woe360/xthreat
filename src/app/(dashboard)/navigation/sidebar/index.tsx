@@ -747,12 +747,212 @@
 
 // export default MenuOptions;
 
+
+
+
+// 'use client'
+
+// import Link from 'next/link'
+// import Image from 'next/image'
+// import { usePathname } from 'next/navigation'
+// import React, { useState, useEffect } from 'react'
+// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+// import { useRouter } from 'next/navigation'
+// import {
+//   Tooltip,
+//   TooltipContent,
+//   TooltipProvider,
+//   TooltipTrigger,
+// } from '@/components/tooltip'
+// import { getMenuOptions } from '@/lib/constant'
+// import { LogOut, Bug } from 'lucide-react'
+// import { Separator } from '@/components/separator'
+// import { cn } from "@/lib/utils"
+// import XLogo from '../../../../(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg'
+// import { BugReportModal } from './BugReport'
+
+// const MenuOptions = () => {
+//   const pathName = usePathname()
+//   const [isBugReportOpen, setIsBugReportOpen] = useState(false)
+//   const [userRole, setUserRole] = useState<'admin' | 'manager' | 'user' | undefined>()
+//   const [menuItems, setMenuItems] = useState(getMenuOptions())
+//   const supabase = createClientComponentClient()
+//   const router = useRouter()
+
+//   useEffect(() => {
+//     const getUserRole = async () => {
+//       try {
+//         const { data: { user }, error } = await supabase.auth.getUser()
+//         if (error) throw error
+
+//         console.log('User ID:', user?.id) // Debug log
+
+//         // Fetch user role from your database
+//         const { data: profile, error: profileError } = await supabase
+//           .from('users')
+//           .select('role')
+//           .eq('id', user?.id)
+//           .single()
+
+//         if (profileError) throw profileError
+
+//         console.log('User Role from DB:', profile?.role) // Debug log
+        
+//         setUserRole(profile?.role as 'admin' | 'manager' | 'user')
+//         const roleSpecificMenuItems = getMenuOptions(profile?.role as 'admin' | 'manager' | 'user')
+//         console.log('Menu Items for role:', roleSpecificMenuItems) // Debug log
+        
+//         setMenuItems(roleSpecificMenuItems)
+//       } catch (error) {
+//         console.error('Error fetching user role:', error)
+//         // Default to user role if there's an error
+//         setMenuItems(getMenuOptions('user'))
+//       }
+//     }
+
+//     getUserRole()
+//   }, [supabase])
+
+//   const isPathActive = (href: string) => {
+//     return pathName.startsWith(href)
+//   }
+
+//   const handleLogout = async () => {
+//     try {
+//       const { error } = await supabase.auth.signOut()
+//       if (error) throw error
+//       router.push('/')
+//     } catch (error) {
+//       console.error('Error logging out:', error)
+//     }
+//   }
+
+//   return (
+//     <nav className="dark:bg-black w-16 h-screen font-sans flex flex-col sticky justify-between py-6 border-r border-gray-800/20 z-[100] flex-shrink-0">
+//       {/* Logo */}
+//       <div className="px-2 mb-3 flex justify-center">
+//         <Image
+//           src={XLogo}
+//           alt="X Logo"
+//           width={20}
+//           height={20}
+//           className="select-none"
+//         />
+//       </div>
+
+//       {/* Menu Items */}
+//       <div className="flex flex-col items-center justify-start flex-grow gap-1 px-2">
+//         <TooltipProvider delayDuration={0}>
+//           {menuItems.map((menuItem) => (
+//             <Tooltip key={menuItem.name}>
+//               <TooltipTrigger asChild>
+//                 <Link
+//                   href={menuItem.href}
+//                   className={cn(
+//                     'group h-10 flex items-center justify-center rounded-lg p-2',
+//                     'cursor-pointer transition-colors duration-150',
+//                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500',
+//                     {
+//                       'bg-gradient-to-b from-[#21222f]/80 to-[#21222f]/60 text-gray-200': isPathActive(menuItem.href),
+//                       'hover:bg-gradient-to-b hover:from-[#21222f]/80 hover:to-[#21222f]/60 text-gray-400 hover:text-gray-200': !isPathActive(menuItem.href),
+//                     }
+//                   )}
+//                 >
+//                   <div className="w-7 h-7 flex items-center justify-center">
+//                     <menuItem.Component 
+//                       selected={isPathActive(menuItem.href)}
+//                       className="transition-transform duration-150 group-hover:scale-110" 
+//                     />
+//                   </div>
+//                 </Link>
+//               </TooltipTrigger>
+//               <TooltipContent 
+//                 side="right" 
+//                 sideOffset={10}
+//                 className="bg-[#181b24] text-gray-200 border-gray-700 z-[9999]"
+//               >
+//                 {menuItem.name}
+//               </TooltipContent>
+//             </Tooltip>
+//           ))}
+//         </TooltipProvider>
+//       </div>
+
+//       {/* Bottom Actions */}
+//       <div className="flex flex-col items-center mt-auto gap-2 w-full px-2">
+//         <TooltipProvider delayDuration={0}>
+//           <Tooltip>
+//             <TooltipTrigger asChild>
+//               <button           
+//                 onClick={() => setIsBugReportOpen(true)}           
+//                 className={cn(
+//                   "flex items-center justify-center w-10 h-10 rounded-lg",
+//                   "text-gray-400 hover:text-gray-200 cursor-pointer",
+//                   "hover:bg-[#21222f] transition-colors duration-150 group",
+//                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
+//                 )}        
+//               >           
+//                 <Bug 
+//                   className="transition-transform group-hover:scale-110"              
+//                   size={20}  
+//                 />           
+//               </button>
+//             </TooltipTrigger>
+//             <TooltipContent 
+//               side="right" 
+//               sideOffset={10}
+//               className="bg-[#181b24] text-gray-200 border-gray-700 z-[9999]"
+//             >
+//               Report
+//             </TooltipContent>
+//           </Tooltip>
+
+//           <Separator className="my-1" />
+          
+//           <Tooltip>
+//             <TooltipTrigger asChild>
+//               <button           
+//                 onClick={handleLogout}           
+//                 className={cn(
+//                   "flex items-center justify-center w-10 h-10 rounded-lg",
+//                   "text-gray-400 hover:text-gray-200 cursor-pointer",
+//                   "hover:bg-[#21222f] transition-colors duration-150 group",
+//                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
+//                 )}         
+//               >           
+//                 <LogOut 
+//                   className="transition-transform group-hover:scale-110" 
+//                   size={20} 
+//                 />           
+//               </button>
+//             </TooltipTrigger>
+//             <TooltipContent 
+//               side="right" 
+//               sideOffset={10}
+//               className="bg-[#181b24] text-gray-200 border-gray-700 z-[9999]"
+//             >
+//               Log out
+//             </TooltipContent>
+//           </Tooltip>
+//         </TooltipProvider>
+//       </div>
+
+//       <BugReportModal
+//         isOpen={isBugReportOpen}
+//         onClose={() => setIsBugReportOpen(false)}
+//       />
+//     </nav>
+//   )
+// }
+
+// export default MenuOptions
+
 'use client'
 
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import {
@@ -761,21 +961,109 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/tooltip'
-import { menuOptions } from '@/lib/constant'
+import { getMenuOptions } from '@/lib/constant'
 import { LogOut, Bug } from 'lucide-react'
 import { Separator } from '@/components/separator'
 import { cn } from "@/lib/utils"
-import XLogo from '../../../../(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg'
+import XLogo from '../../../../app/(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg'
 import { BugReportModal } from './BugReport'
 
 const MenuOptions = () => {
   const pathName = usePathname()
   const [isBugReportOpen, setIsBugReportOpen] = useState(false)
+  const [userRole, setUserRole] = useState<'admin' | 'manager' | 'user' | undefined>()
+  const [menuItems, setMenuItems] = useState<ReturnType<typeof getMenuOptions>>([])
+  const [isLoading, setIsLoading] = useState(true)
   const supabase = createClientComponentClient()
   const router = useRouter()
 
+  useEffect(() => {
+    const getUserRole = async () => {
+      setIsLoading(true)
+      try {
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser()
+        
+        if (authError) {
+          console.error('Auth error:', authError)
+          throw authError
+        }
+
+        if (!user?.id) {
+          console.error('No user ID found')
+          setMenuItems(getMenuOptions('user'))
+          return
+        }
+
+        const { data: userData, error: dbError } = await supabase
+          .from('users')
+          .select('id, email, role, first_name, last_name')
+          .eq('email', user.email)
+          .single()
+
+        let role: 'admin' | 'manager' | 'user'
+
+        if (dbError) {
+          console.error('Database error details:', dbError)
+          role = 'user'
+        } else if (!userData) {
+          console.log('No user found in database, creating new user record')
+          const { data: insertData, error: insertError } = await supabase
+            .from('users')
+            .insert([
+              { 
+                id: user.id,
+                email: user.email,
+                role: 'user',
+                first_name: user.user_metadata?.first_name || '',
+                last_name: user.user_metadata?.last_name || ''
+              }
+            ])
+            .select()
+            .single()
+
+          if (insertError) {
+            console.error('Error inserting new user:', insertError)
+            role = 'user'
+          } else {
+            console.log('Created new user record:', insertData)
+            role = insertData.role as 'admin' | 'manager' | 'user'
+          }
+        } else {
+          role = (userData.role as 'admin' | 'manager' | 'user') || 'user'
+          console.log('Using role from database:', role)
+        }
+
+        setUserRole(role)
+        setMenuItems(getMenuOptions(role))
+      } catch (error) {
+        console.error('Error in getUserRole:', error)
+        setMenuItems(getMenuOptions('user'))
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    getUserRole()
+  }, [supabase])
+
   const isPathActive = (href: string) => {
-    return pathName.startsWith(href)
+    if (href === '/' || href === '') {
+      return pathName === href
+    }
+    
+    const pathSegments = pathName.split('/')
+    const hrefSegments = href.split('/')
+    
+    for (let i = 0; i < hrefSegments.length; i++) {
+      if (hrefSegments[i] !== pathSegments[i]) {
+        return false
+      }
+    }
+    
+    return true
   }
 
   const handleLogout = async () => {
@@ -790,7 +1078,6 @@ const MenuOptions = () => {
 
   return (
     <nav className="dark:bg-black w-16 h-screen font-sans flex flex-col sticky justify-between py-6 border-r border-gray-800/20 z-[100] flex-shrink-0">
-      {/* Logo */}
       <div className="px-2 mb-3 flex justify-center">
         <Image
           src={XLogo}
@@ -801,10 +1088,9 @@ const MenuOptions = () => {
         />
       </div>
 
-      {/* Menu Items */}
       <div className="flex flex-col items-center justify-start flex-grow gap-1 px-2">
         <TooltipProvider delayDuration={0}>
-          {menuOptions.map((menuItem) => (
+          {!isLoading && menuItems.map((menuItem) => (
             <Tooltip key={menuItem.name}>
               <TooltipTrigger asChild>
                 <Link
@@ -839,7 +1125,6 @@ const MenuOptions = () => {
         </TooltipProvider>
       </div>
 
-      {/* Bottom Actions */}
       <div className="flex flex-col items-center mt-auto gap-2 w-full px-2">
         <TooltipProvider delayDuration={0}>
           <Tooltip>
@@ -861,8 +1146,7 @@ const MenuOptions = () => {
             </TooltipTrigger>
             <TooltipContent 
               side="right" 
-              sideOffset={10}
-              className="bg-[#181b24] text-gray-200 border-gray-700 z-[9999]"
+              className="bg-gray-800 text-gray-200 border-gray-700"
             >
               Report
             </TooltipContent>
@@ -889,8 +1173,7 @@ const MenuOptions = () => {
             </TooltipTrigger>
             <TooltipContent 
               side="right" 
-              sideOffset={10}
-              className="bg-[#181b24] text-gray-200 border-gray-700 z-[9999]"
+              className="bg-gray-800 text-gray-200 border-gray-700"
             >
               Log out
             </TooltipContent>
