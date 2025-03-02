@@ -20,28 +20,50 @@ export function useRoleAccess({ requiredRole, redirectTo = '/dashboard' }: UseRo
     async function checkAccess() {
       try {
         // Get the current session
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
-        if (!session) {
+        if (sessionError) {
+          console.error('Session error:', sessionError);
           router.push('/login');
           return;
         }
 
-        // Get user role from the database
-        const { data: userData, error } = await supabase
+        if (!session) {
+          console.log('No active session');
+          router.push('/login');
+          return;
+        }
+
+        // Get user roles from the database - get all matches to handle duplicates
+        const { data: userRecords, error: userError } = await supabase
           .from('users')
           .select('role')
-          .eq('id', session.user.id)
-          .single();
+          .eq('email', session.user.email);
 
-        if (error || !userData) {
-          console.error('Error fetching user role:', error);
+        if (userError) {
+          console.error('Error fetching user roles:', userError);
           router.push('/login');
           return;
         }
 
-        const userRole = userData.role as UserRole || 'user';
-        setRole(userRole);
+        // If no user records found, sign out and redirect to login
+        if (!userRecords || userRecords.length === 0) {
+          console.error('No user record found in database');
+          await supabase.auth.signOut();
+          router.push('/login?error=unauthorized&message=Account+not+found');
+          return;
+        }
+
+        // Handle multiple user records - take the highest privilege role
+        let effectiveRole: UserRole = 'user';
+        // Priority: admin > manager > user
+        if (userRecords.some(record => record.role === 'admin')) {
+          effectiveRole = 'admin';
+        } else if (userRecords.some(record => record.role === 'manager')) {
+          effectiveRole = 'manager';
+        }
+
+        setRole(effectiveRole);
 
         // If no specific role is required, grant access
         if (!requiredRole) {
@@ -52,27 +74,24 @@ export function useRoleAccess({ requiredRole, redirectTo = '/dashboard' }: UseRo
 
         // Check if user has required role
         const requiredRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
-        const hasRequiredRole = userRole === 'admin' || requiredRoles.includes(userRole);
+        const hasRequiredRole = effectiveRole === 'admin' || requiredRoles.includes(effectiveRole);
 
-        if (!hasRequiredRole && redirectTo) {
+        setHasAccess(hasRequiredRole);
+        if (!hasRequiredRole) {
           router.push(redirectTo);
         }
 
-        setHasAccess(hasRequiredRole);
         setLoading(false);
-
       } catch (error) {
         console.error('Error checking role access:', error);
         setHasAccess(false);
         setLoading(false);
-        if (redirectTo) {
-          router.push(redirectTo);
-        }
+        router.push(redirectTo);
       }
     }
 
     checkAccess();
-  }, [requiredRole, redirectTo, router, supabase]);
+  }, [router, supabase, requiredRole, redirectTo]);
 
   return { role, hasAccess, loading };
 }

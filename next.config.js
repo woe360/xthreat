@@ -20,7 +20,22 @@ const nextConfig = {
     optimizePackageImports: ['@supabase/supabase-js']
   },
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'app.xthreat.eu'],
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: process.env.NODE_ENV === 'development' 
+              ? 'http://localhost:3000' 
+              : 'https://app.xthreat.eu',
+          },
+        ],
+      },
+    ];
   },
 };
 

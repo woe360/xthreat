@@ -170,7 +170,7 @@
 import React from 'react'
 // import Sidebar from '@/app/(dashboard)/navigation/sidebar'
 import { CssBaseline, Box } from '@mui/material'
-import AppTheme from '@/app/(dashboard)/(pages)/dashboard/shared-theme/AppTheme'
+import AppTheme from '@/app/(dashboard)/(shared)/dashboard/shared-theme/AppTheme'
 import Sidebar from './navigation/sidebar'
 
 type Props = {

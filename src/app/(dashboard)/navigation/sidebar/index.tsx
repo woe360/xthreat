@@ -965,6 +965,7 @@ import { getMenuOptions } from '@/lib/constant'
 import { LogOut, Bug } from 'lucide-react'
 import { Separator } from '@/components/separator'
 import { cn } from "@/lib/utils"
+import { getDeviceInfo } from '@/lib/utils/session'
 import XLogo from '../../../../app/(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg'
 import { BugReportModal } from './BugReport'
 
@@ -1068,13 +1069,67 @@ const MenuOptions = () => {
 
   const handleLogout = async () => {
     try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
-      router.push('/')
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user?.id) {
+        try {
+          // Get the last login session for this user
+          const { data: lastLoginSession, error: sessionError } = await supabase
+            .from('user_sessions')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('event_type', 'login')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+          if (sessionError) {
+            console.error('Error fetching last login session:', sessionError);
+          }
+
+          // Calculate session duration if we have a last login
+          const sessionDuration = lastLoginSession 
+            ? Math.floor((new Date().getTime() - new Date(lastLoginSession.created_at).getTime()) / 1000) // Duration in seconds
+            : null;
+
+          console.log('Last login session:', lastLoginSession);
+          console.log('Calculated session duration:', sessionDuration);
+
+          // Track logout event with all session info
+          const { error: insertError } = await supabase
+            .from('user_sessions')
+            .insert({
+              user_id: user.id,
+              event_type: 'logout',
+              timestamp: new Date().toISOString(),
+              ip_address: window.location.hostname,
+              user_agent: navigator.userAgent,
+              device_info: getDeviceInfo(),
+              session_id: lastLoginSession?.session_id || null,
+              session_status: 'terminated',
+              last_active_at: new Date().toISOString(),
+              session_duration: sessionDuration,
+              created_at: new Date().toISOString()
+            });
+
+          if (insertError) {
+            console.error('Error inserting logout session:', insertError);
+          }
+        } catch (error) {
+          console.error('Error tracking logout:', error);
+          // Continue with logout even if tracking fails
+        }
+      }
+
+      // Always attempt to sign out
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      router.push('/');
     } catch (error) {
-      console.error('Error logging out:', error)
+      console.error('Error logging out:', error);
     }
-  }
+  };
 
   return (
     <nav className="dark:bg-black w-16 h-screen font-sans flex flex-col sticky justify-between py-6 border-r border-gray-800/20 z-[100] flex-shrink-0">
@@ -1106,10 +1161,9 @@ const MenuOptions = () => {
                   )}
                 >
                   <div className="w-7 h-7 flex items-center justify-center">
-                    <menuItem.Component 
-                      selected={isPathActive(menuItem.href)}
-                      className="transition-transform duration-150 group-hover:scale-110" 
-                    />
+                    <div className="transition-transform duration-150 group-hover:scale-110">
+                      <menuItem.Component selected={isPathActive(menuItem.href)} />
+                    </div>
                   </div>
                 </Link>
               </TooltipTrigger>

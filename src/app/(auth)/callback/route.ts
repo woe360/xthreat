@@ -55,63 +55,72 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
   const supabase = createRouteHandlerClient({ cookies });
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const baseUrl = isDevelopment ? requestUrl.origin : 'https://xthreat.eu';
+  const appBaseUrl = isDevelopment ? requestUrl.origin : 'https://app.xthreat.eu';
 
   if (code) {
     try {
       // Exchange code for session
-      await supabase.auth.exchangeCodeForSession(code);
+      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
       
+      if (exchangeError) {
+        console.error('Code exchange error:', exchangeError);
+        return NextResponse.redirect(`${baseUrl}/login?error=code_exchange`);
+      }
+
       // Verify session
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError || !session) {
         console.error('Session error:', sessionError);
-        return NextResponse.redirect(`${requestUrl.origin}/login?error=session_error`);
+        return NextResponse.redirect(`${baseUrl}/login?error=session_error`);
       }
 
-      // Important: Check if user exists in your users table
+      // Check if user exists in your users table
       const { data: dbUser, error: dbError } = await supabase
         .from('users')
-        .select('id, email')
-        .eq('id', session.user.id)
+        .select('id, email, role')
+        .eq('email', session.user.email)
         .single();
-
-      console.log('User check:', { dbUser, dbError, sessionUser: session.user });
 
       if (dbError || !dbUser) {
         console.error('User not found in database:', dbError);
-        
-        // Option 1: Create the user
-        const { error: insertError } = await supabase
-          .from('users')
-          .insert({
-            id: session.user.id,
-            email: session.user.email,
-            role: 'user' // default role
-          });
-
-        if (insertError) {
-          console.error('Failed to create user:', insertError);
-          await supabase.auth.signOut();
-          return NextResponse.redirect(`${requestUrl.origin}/login?error=user_creation_failed`);
-        }
+        await supabase.auth.signOut();
+        return NextResponse.redirect(`${baseUrl}/login?error=unauthorized&message=Account+not+found`);
       }
-      
-      const response = NextResponse.redirect(`${requestUrl.origin}/dashboard`);
+
+      // Determine redirect path based on user role
+      const redirectPath = dbUser.role === 'admin' ? '/overview' : '/dashboard';
+      const response = NextResponse.redirect(`${appBaseUrl}${redirectPath}`);
       response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate');
       return response;
 
     } catch (error) {
       console.error('Auth error:', error);
-      return NextResponse.redirect(`${requestUrl.origin}/login?error=auth_failed`);
+      await supabase.auth.signOut();
+      return NextResponse.redirect(`${baseUrl}/login?error=auth_failed`);
     }
   }
 
   // Check existing session
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
-    return NextResponse.redirect(`${requestUrl.origin}/dashboard`);
+    // Check user role for redirection
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('role')
+      .eq('email', session.user.email)
+      .single();
+
+    if (userError || !userData) {
+      await supabase.auth.signOut();
+      return NextResponse.redirect(`${baseUrl}/login?error=unauthorized`);
+    }
+
+    const redirectPath = userData.role === 'admin' ? '/overview' : '/dashboard';
+    return NextResponse.redirect(`${appBaseUrl}${redirectPath}`);
   }
 
-  return NextResponse.redirect(requestUrl.origin);
+  return NextResponse.redirect(`${baseUrl}/login`);
 }

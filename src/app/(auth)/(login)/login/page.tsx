@@ -1,1537 +1,13 @@
-// 'use client'
-// import { useState, FormEvent, useRef, useEffect } from 'react';
-// import Image from 'next/image';
-// import XLogo from '../../../(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg'
-// import Link from 'next/link';
-// import { Copy, Loader2 } from 'lucide-react';
-// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-// import { useRouter } from 'next/navigation';
-
-// const BottomGradient = () => {
-//   return (
-//     <>
-//       <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-//       <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-//     </>
-//   );
-// };
-
-// export default function SignIn() {
-//   const [email, setEmail] = useState('');
-//   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-//   const [showOtpInput, setShowOtpInput] = useState(false);
-//   const [loading, setLoading] = useState(false);
-//   const [verifying, setVerifying] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
-//   const [copied, setCopied] = useState(false);
-//   const [attemptCount, setAttemptCount] = useState(0);
-  
-//   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-//   const containerRef = useRef<HTMLDivElement>(null);
-//   const formRef = useRef<HTMLFormElement>(null);
-//   const router = useRouter();
-//   const supabase = createClientComponentClient();
-
-//   // Memoize the client to prevent unnecessary re-creation
-//   const supabaseClient = useRef(supabase);
-
-//   const resetOtp = () => {
-//     setOtp(['', '', '', '', '', '']);
-//     inputRefs.current[0]?.focus();
-//   };
-
-//   // Optimized paste handler
-//   const handlePaste = (e: ClipboardEvent) => {
-//     e.preventDefault();
-//     if (!showOtpInput) return;
-
-//     const pastedData = e.clipboardData?.getData('text');
-//     if (!pastedData) return;
-
-//     const numbers = pastedData.replace(/\D/g, '').slice(0, 6).split('');
-//     setOtp(numbers.concat(Array(6 - numbers.length).fill('')));
-//   };
-
-//   // Debounced auto-submit
-//   useEffect(() => {
-//     if (!showOtpInput || loading) return;
-    
-//     const isComplete = otp.every(digit => digit !== '');
-//     if (!isComplete) return;
-
-//     const timeoutId = setTimeout(() => {
-//       formRef.current?.requestSubmit();
-//     }, 100);
-
-//     return () => clearTimeout(timeoutId);
-//   }, [otp, showOtpInput, loading]);
-
-//   // Optimized keydown handler
-//   useEffect(() => {
-//     if (!showOtpInput) return;
-
-//     const handleGlobalKeyDown = (e: KeyboardEvent) => {
-//       if (!showOtpInput) return;
-
-//       if (e.key === 'Backspace' || e.key === 'Delete') {
-//         e.preventDefault();
-//         const lastFilledIndex = otp.findLastIndex(digit => digit !== '');
-//         if (lastFilledIndex !== -1) {
-//           const newOtp = [...otp];
-//           newOtp[lastFilledIndex] = '';
-//           setOtp(newOtp);
-//           inputRefs.current[lastFilledIndex]?.focus();
-//         }
-//         return;
-//       }
-      
-//       if (!/^\d$/.test(e.key)) return;
-      
-//       const emptyIndex = otp.findIndex(digit => digit === '');
-//       if (emptyIndex !== -1) {
-//         const newOtp = [...otp];
-//         newOtp[emptyIndex] = e.key;
-//         setOtp(newOtp);
-//         if (emptyIndex < 5) inputRefs.current[emptyIndex + 1]?.focus();
-//       }
-//     };
-
-//     document.addEventListener('keydown', handleGlobalKeyDown);
-//     document.addEventListener('paste', handlePaste);
-    
-//     return () => {
-//       document.removeEventListener('keydown', handleGlobalKeyDown);
-//       document.removeEventListener('paste', handlePaste);
-//     };
-//   }, [showOtpInput, otp]);
-
-//   // Cached user existence check
-//   const checkUserExists = async (email: string) => {
-//     const normalizedEmail = email.toLowerCase();
-    
-//     try {
-//       const { data, error } = await supabaseClient.current
-//         .from('users')
-//         .select('email')
-//         .ilike('email', normalizedEmail)
-//         .single();
-      
-//       return { exists: !!data, error: null };
-//     } catch (error) {
-//       return { exists: false, error };
-//     }
-//   };
-
-//   const handleRequestOTP = async (e: FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (loading) return;
-//     setLoading(true);
-//     setError(null);
-
-//     try {
-//       if (attemptCount >= 5) {
-//         throw new Error('Too many attempts. Please try again later.');
-//       }
-
-//       if (!email.includes('@')) {
-//         throw new Error('Please enter a valid email address');
-//       }
-
-//       const normalizedEmail = email.toLowerCase().trim();
-      
-//       // First check if user exists in database
-//       const { exists, error: checkError } = await checkUserExists(normalizedEmail);
-      
-//       if (checkError || !exists) {
-//         setAttemptCount(prev => prev + 1);
-//         setError('Email not found. Please check your email or contact support.');
-//         return;
-//       }
-
-//       // Only send OTP if user exists
-//       const { error: otpError } = await supabaseClient.current.auth.signInWithOtp({
-//         email: normalizedEmail,
-//         options: {
-//           emailRedirectTo: `${window.location.origin}/login/callback`,
-//           shouldCreateUser: false, // This is important!
-//         }
-//       });
-
-//       if (otpError) throw otpError;
-
-//       setShowOtpInput(true);
-//       setError(null);
-
-//     } catch (error) {
-//       console.error('Login error:', error);
-//       setError(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
-//       setAttemptCount(prev => prev + 1);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleVerifyOTP = async (e: FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (loading || verifying) return;
-    
-//     const otpString = otp.join('');
-//     if (otpString.length !== 6) {
-//       setError('Please enter a valid verification code');
-//       resetOtp();
-//       return;
-//     }
-
-//     setVerifying(true);
-//     try {
-//       const { data, error } = await supabaseClient.current.auth.verifyOtp({
-//         email: email.toLowerCase(),
-//         token: otpString,
-//         type: 'email'
-//       });
-
-//       if (error) {
-//         setError('Invalid verification code. Please try again.');
-//         resetOtp();
-//         return;
-//       }
-
-//       if (data?.user) {
-//         // Redirect to dashboard - middleware will handle role-specific routing
-//         window.location.href = '/dashboard';
-//       } else {
-//         throw new Error('Authentication failed');
-//       }
-      
-//     } catch (error) {
-//       console.error('Full error object:', error);
-//       setError(error instanceof Error ? error.message : 'Verification failed. Please try again.');
-//       resetOtp();
-//     } finally {
-//       setVerifying(false);
-//     }
-//   };
-
-//   const handleOtpChange = (index: number, value: string) => {
-//     if (value.length > 1) value = value[0];
-//     if (!/^\d*$/.test(value)) return;
-
-//     const newOtp = [...otp];
-//     newOtp[index] = value;
-//     setOtp(newOtp);
-
-//     if (value && index < 5) {
-//       inputRefs.current[index + 1]?.focus();
-//     }
-//   };
-
-//   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-//     if (e.key === 'Backspace' || e.key === 'Delete') {
-//       e.preventDefault();
-//       const newOtp = [...otp];
-//       if (otp[index]) {
-//         newOtp[index] = '';
-//       } else if (index > 0) {
-//         newOtp[index - 1] = '';
-//         inputRefs.current[index - 1]?.focus();
-//       }
-//       setOtp(newOtp);
-//     }
-//   };
-
-//   const copyToClipboard = async () => {
-//     try {
-//       await navigator.clipboard.writeText('support@xthreat.eu');
-//       setCopied(true);
-//       setTimeout(() => setCopied(false), 1000);
-//     } catch (error) {
-//       console.error('Failed to copy:', error);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-r font-sans bg-black flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-//       <div className="max-w-md w-full space-y-8">
-//         <div className="mt-8 bg-gray-900/30 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] border border-gray-800 py-8 px-4 shadow rounded-xl sm:px-10">
-//           <div className="bg-transparent mb-6">
-//             <div className="flex justify-center">
-//               <Link href="/" className="inline-flex">
-//                 <Image
-//                   src={XLogo}
-//                   alt="X Logo"
-//                   width={16}
-//                   height={16}
-//                   className="w-8 h-8 md:w-[30px] md:h-[30px]"
-//                   priority
-//                 />
-//               </Link>
-//             </div>
-//           </div>
-
-//           {error && !loading && (
-//             <div className="p-3 bg-red-500/10 border mb-5 border-red-500/50 rounded-md">
-//               <p className="text-red-500 text-sm text-center font-medium">
-//                 {error}
-//               </p>
-//             </div>
-//           )}
-
-//           <form ref={formRef} onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP} className="space-y-6">
-//             {!showOtpInput ? (
-//               <div>
-//                 <label htmlFor="email" className="sr-only">
-//                   Email address
-//                 </label>
-//                 <input
-//                   id="email"
-//                   name="email"
-//                   type="email"
-//                   autoComplete="email"
-//                   required
-//                   className="appearance-none rounded-md text-center relative block w-full px-3 py-3 border border-gray-700 placeholder-gray-500 text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] focus:z-10 sm:text-sm"
-//                   placeholder="Email address"
-//                   value={email}
-//                   onChange={(e) => setEmail(e.target.value)}
-//                 />
-//                 <BottomGradient />
-//               </div>
-//             ) : (
-//               <div>
-//                 <div className="text-sm text-gray-400 text-center mb-4">
-//                   Enter the code sent to {email}
-//                 </div>
-//                 <div 
-//                   ref={containerRef}
-//                   tabIndex={-1}
-//                   className="flex gap-2 justify-center focus:outline-none"
-//                 >
-//                   {otp.map((digit, index) => (
-//                     <input
-//                       key={index}
-//                       ref={(el) => inputRefs.current[index] = el}
-//                       type="text"
-//                       inputMode="numeric"
-//                       pattern="\d*"
-//                       maxLength={1}
-//                       value={digit}
-//                       onChange={(e) => handleOtpChange(index, e.target.value)}
-//                       onKeyDown={(e) => handleKeyDown(index, e)}
-//                       className="w-12 h-12 text-center border border-gray-700 rounded-md text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] text-xl"
-//                     />
-//                   ))}
-//                 </div>
-//                 {verifying && (
-//                   <div className="flex justify-center mt-4">
-//                     <Loader2 className="w-6 h-6 text-white animate-spin" />
-//                   </div>
-//                 )}
-//               </div>
-//             )}
-
-//             {!showOtpInput && (
-//               <div>
-//                 <button
-//                   type="submit"
-//                   disabled={loading}
-//                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-//                 >
-//                   {loading ? (
-//                     <div className="flex items-center">
-//                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-//                       Sending code...
-//                     </div>
-//                   ) : (
-//                     'Continue'
-//                   )}
-//                 </button>
-//               </div>
-//             )}
-//           </form>
-
-//           <div className="relative">
-//             <div className="relative flex flex-col items-center justify-center text-sm mt-6 h-[28px]">
-//               <div className="flex flex-row items-center">
-//                 <span className="text-gray-400">support@xthreat.eu</span>
-//                 <button
-//                   onClick={copyToClipboard}
-//                   className="ml-2 mt-[2px] text-gray-400 hover:text-gray-300 focus:outline-none"
-//                   aria-label="Copy email"
-//                 >
-//                   <Copy size={14} />
-//                 </button>
-//               </div>
-//               <div className="h-2">
-//                 {copied && (
-//                   <span className="text-green-500 text-xs">Copied!</span>
-//                 )}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-// 'use client'
-// import { useState, FormEvent, useRef, useEffect } from 'react';
-// import Image from 'next/image';
-// import XLogo from '../../../(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg'
-// import Link from 'next/link';
-// import { Copy, Loader2 } from 'lucide-react';
-// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-// import { useRouter } from 'next/navigation';
-
-// const BottomGradient = () => {
-//   return (
-//     <>
-//       <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-//       <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-//     </>
-//   );
-// };
-
-// export default function SignIn() {
-//   const [email, setEmail] = useState('');
-//   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-//   const [showOtpInput, setShowOtpInput] = useState(false);
-//   const [loading, setLoading] = useState(false);
-//   const [verifying, setVerifying] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
-//   const [copied, setCopied] = useState(false);
-//   const [attemptCount, setAttemptCount] = useState(0);
-  
-//   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-//   const containerRef = useRef<HTMLDivElement>(null);
-//   const formRef = useRef<HTMLFormElement>(null);
-//   const router = useRouter();
-//   const supabase = createClientComponentClient();
-
-//   // Memoize the client to prevent unnecessary re-creation
-//   const supabaseClient = useRef(supabase);
-
-//   const resetOtp = () => {
-//     setOtp(['', '', '', '', '', '']);
-//     inputRefs.current[0]?.focus();
-//   };
-
-//   // Optimized paste handler
-//   const handlePaste = (e: ClipboardEvent) => {
-//     e.preventDefault();
-//     if (!showOtpInput) return;
-
-//     const pastedData = e.clipboardData?.getData('text');
-//     if (!pastedData) return;
-
-//     const numbers = pastedData.replace(/\D/g, '').slice(0, 6).split('');
-//     setOtp(numbers.concat(Array(6 - numbers.length).fill('')));
-//   };
-
-//   // Debounced auto-submit
-//   useEffect(() => {
-//     if (!showOtpInput || loading) return;
-    
-//     const isComplete = otp.every(digit => digit !== '');
-//     if (!isComplete) return;
-
-//     const timeoutId = setTimeout(() => {
-//       formRef.current?.requestSubmit();
-//     }, 100);
-
-//     return () => clearTimeout(timeoutId);
-//   }, [otp, showOtpInput, loading]);
-
-//   // Optimized keydown handler
-//   useEffect(() => {
-//     if (!showOtpInput) return;
-
-//     const handleGlobalKeyDown = (e: KeyboardEvent) => {
-//       if (!showOtpInput) return;
-
-//       if (e.key === 'Backspace' || e.key === 'Delete') {
-//         e.preventDefault();
-//         const lastFilledIndex = otp.findLastIndex(digit => digit !== '');
-//         if (lastFilledIndex !== -1) {
-//           const newOtp = [...otp];
-//           newOtp[lastFilledIndex] = '';
-//           setOtp(newOtp);
-//           inputRefs.current[lastFilledIndex]?.focus();
-//         }
-//         return;
-//       }
-      
-//       if (!/^\d$/.test(e.key)) return;
-      
-//       const emptyIndex = otp.findIndex(digit => digit === '');
-//       if (emptyIndex !== -1) {
-//         const newOtp = [...otp];
-//         newOtp[emptyIndex] = e.key;
-//         setOtp(newOtp);
-//         if (emptyIndex < 5) inputRefs.current[emptyIndex + 1]?.focus();
-//       }
-//     };
-
-//     document.addEventListener('keydown', handleGlobalKeyDown);
-//     document.addEventListener('paste', handlePaste);
-    
-//     return () => {
-//       document.removeEventListener('keydown', handleGlobalKeyDown);
-//       document.removeEventListener('paste', handlePaste);
-//     };
-//   }, [showOtpInput, otp]);
-
-//   // Cached user existence check
-//   const checkUserExists = async (email: string) => {
-//     const normalizedEmail = email.toLowerCase();
-    
-//     try {
-//       const { data, error } = await supabaseClient.current
-//         .from('users')
-//         .select('email')
-//         .ilike('email', normalizedEmail)
-//         .single();
-      
-//       return { exists: !!data, error: null };
-//     } catch (error) {
-//       return { exists: false, error };
-//     }
-//   };
-
-//   const handleRequestOTP = async (e: FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (loading) return;
-//     setLoading(true);
-//     setError(null);
-
-//     try {
-//       if (attemptCount >= 5) {
-//         throw new Error('Too many attempts. Please try again later.');
-//       }
-
-//       if (!email.includes('@')) {
-//         throw new Error('Please enter a valid email address');
-//       }
-
-//       const normalizedEmail = email.toLowerCase().trim();
-      
-//       // Send OTP first
-//       const { error: otpError } = await supabaseClient.current.auth.signInWithOtp({
-//         email: normalizedEmail,
-//         options: {
-//           emailRedirectTo: `${window.location.origin}/login/callback`,
-//           shouldCreateUser: false,
-//         }
-//       });
-
-//       if (otpError) throw otpError;
-
-//       // If OTP sent successfully, show input
-//       setShowOtpInput(true);
-//       setError(null);
-
-//     } catch (error) {
-//       console.error('Login error:', error);
-//       setError(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
-//       setAttemptCount(prev => prev + 1);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleVerifyOTP = async (e: FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (loading || verifying) return;
-    
-//     const otpString = otp.join('');
-//     if (otpString.length !== 6) {
-//       setError('Please enter a valid verification code');
-//       resetOtp();
-//       return;
-//     }
-
-//     setVerifying(true);
-//     try {
-//       // Verify OTP
-//       const { data, error } = await supabaseClient.current.auth.verifyOtp({
-//         email: email.toLowerCase(),
-//         token: otpString,
-//         type: 'email'
-//       });
-
-//       if (error) {
-//         console.error('OTP verification error:', error);
-//         setError('Invalid verification code. Please try again.');
-//         resetOtp();
-//         return;
-//       }
-
-//       if (!data?.user) {
-//         console.error('No user data after verification');
-//         setError('Verification failed. Please try again.');
-//         return;
-//       }
-
-//       // Create or update user record in users table
-//       const { error: upsertError } = await supabaseClient.current
-//         .from('users')
-//         .upsert({
-//           id: data.user.id,
-//           email: data.user.email,
-//           role: 'user', // default role
-//           is_active: true
-//         }, {
-//           onConflict: 'id'
-//         });
-
-//       if (upsertError) {
-//         console.error('Failed to create user record:', upsertError);
-//         setError('Failed to complete signup. Please try again.');
-//         return;
-//       }
-
-//       // Get session to confirm everything is set
-//       const { data: { session }, error: sessionError } = 
-//         await supabaseClient.current.auth.getSession();
-      
-//       if (sessionError || !session) {
-//         console.error('Session error:', sessionError);
-//         setError('Failed to establish session. Please try again.');
-//         return;
-//       }
-
-//       console.log('Successfully logged in and created user record:', data.user);
-      
-//       // Use window.location for a full page reload
-//       window.location.href = '/dashboard';
-      
-//     } catch (error) {
-//       console.error('Verification error:', error);
-//       setError(error instanceof Error ? error.message : 'Verification failed. Please try again.');
-//       resetOtp();
-//     } finally {
-//       setVerifying(false);
-//     }
-//   };
-
-//   const handleOtpChange = (index: number, value: string) => {
-//     if (value.length > 1) value = value[0];
-//     if (!/^\d*$/.test(value)) return;
-
-//     const newOtp = [...otp];
-//     newOtp[index] = value;
-//     setOtp(newOtp);
-
-//     if (value && index < 5) {
-//       inputRefs.current[index + 1]?.focus();
-//     }
-//   };
-
-//   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-//     if (e.key === 'Backspace' || e.key === 'Delete') {
-//       e.preventDefault();
-//       const newOtp = [...otp];
-//       if (otp[index]) {
-//         newOtp[index] = '';
-//       } else if (index > 0) {
-//         newOtp[index - 1] = '';
-//         inputRefs.current[index - 1]?.focus();
-//       }
-//       setOtp(newOtp);
-//     }
-//   };
-
-//   const copyToClipboard = async () => {
-//     try {
-//       await navigator.clipboard.writeText('support@xthreat.eu');
-//       setCopied(true);
-//       setTimeout(() => setCopied(false), 1000);
-//     } catch (error) {
-//       console.error('Failed to copy:', error);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-r font-sans bg-black flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-//       <div className="max-w-md w-full space-y-8">
-//         <div className="mt-8 bg-gray-900/30 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] border border-gray-800 py-8 px-4 shadow rounded-xl sm:px-10">
-//           <div className="bg-transparent mb-6">
-//             <div className="flex justify-center">
-//               <Link href="/" className="inline-flex">
-//                 <Image
-//                   src={XLogo}
-//                   alt="X Logo"
-//                   width={16}
-//                   height={16}
-//                   className="w-8 h-8 md:w-[30px] md:h-[30px]"
-//                   priority
-//                 />
-//               </Link>
-//             </div>
-//           </div>
-
-//           {error && !loading && (
-//             <div className="p-3 bg-red-500/10 border mb-5 border-red-500/50 rounded-md">
-//               <p className="text-red-500 text-sm text-center font-medium">
-//                 {error}
-//               </p>
-//             </div>
-//           )}
-
-//           <form ref={formRef} onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP} className="space-y-6">
-//             {!showOtpInput ? (
-//               <div>
-//                 <label htmlFor="email" className="sr-only">
-//                   Email address
-//                 </label>
-//                 <input
-//                   id="email"
-//                   name="email"
-//                   type="email"
-//                   autoComplete="email"
-//                   required
-//                   className="appearance-none rounded-md text-center relative block w-full px-3 py-3 border border-gray-700 placeholder-gray-500 text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] focus:z-10 sm:text-sm"
-//                   placeholder="Email address"
-//                   value={email}
-//                   onChange={(e) => setEmail(e.target.value)}
-//                 />
-//                 <BottomGradient />
-//               </div>
-//             ) : (
-//               <div>
-//                 <div className="text-sm text-gray-400 text-center mb-4">
-//                   Enter the code sent to {email}
-//                 </div>
-//                 <div 
-//                   ref={containerRef}
-//                   tabIndex={-1}
-//                   className="flex gap-2 justify-center focus:outline-none"
-//                 >
-//                   {otp.map((digit, index) => (
-//                     <input
-//                       key={index}
-//                       ref={(el) => inputRefs.current[index] = el}
-//                       type="text"
-//                       inputMode="numeric"
-//                       pattern="\d*"
-//                       maxLength={1}
-//                       value={digit}
-//                       onChange={(e) => handleOtpChange(index, e.target.value)}
-//                       onKeyDown={(e) => handleKeyDown(index, e)}
-//                       className="w-12 h-12 text-center border border-gray-700 rounded-md text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] text-xl"
-//                     />
-//                   ))}
-//                 </div>
-//                 {verifying && (
-//                   <div className="flex justify-center mt-4">
-//                     <Loader2 className="w-6 h-6 text-white animate-spin" />
-//                   </div>
-//                 )}
-//               </div>
-//             )}
-
-//             {!showOtpInput && (
-//               <div>
-//                 <button
-//                   type="submit"
-//                   disabled={loading}
-//                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-//                 >
-//                   {loading ? (
-//                     <div className="flex items-center">
-//                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-//                       Sending code...
-//                     </div>
-//                   ) : (
-//                     'Continue'
-//                   )}
-//                 </button>
-//               </div>
-//             )}
-//           </form>
-
-//           <div className="relative">
-//             <div className="relative flex flex-col items-center justify-center text-sm mt-6 h-[28px]">
-//               <div className="flex flex-row items-center">
-//                 <span className="text-gray-400">support@xthreat.eu</span>
-//                 <button
-//                   onClick={copyToClipboard}
-//                   className="ml-2 mt-[2px] text-gray-400 hover:text-gray-300 focus:outline-none"
-//                   aria-label="Copy email"
-//                 >
-//                   <Copy size={14} />
-//                 </button>
-//               </div>
-//               <div className="h-2">
-//                 {copied && (
-//                   <span className="text-green-500 text-xs">Copied!</span>
-//                 )}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-// 'use client'
-// import { useState, FormEvent, useRef, useEffect } from 'react';
-// import Image from 'next/image';
-// import XLogo from '../../../(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg';
-// import Link from 'next/link';
-// import { Copy, Loader2 } from 'lucide-react';
-// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-// import { useRouter } from 'next/navigation';
-
-// const BottomGradient = () => {
-//   return (
-//     <>
-//       <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-//       <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-//     </>
-//   );
-// };
-
-// export default function SignIn() {
-//   const [email, setEmail] = useState('');
-//   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-//   const [showOtpInput, setShowOtpInput] = useState(false);
-//   const [loading, setLoading] = useState(false);
-//   const [verifying, setVerifying] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
-//   const [copied, setCopied] = useState(false);
-//   const [attemptCount, setAttemptCount] = useState(0);
-
-//   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-//   const formRef = useRef<HTMLFormElement>(null);
-//   const router = useRouter();
-//   const supabase = createClientComponentClient();
-//   const supabaseClient = useRef(supabase);
-
-//   // Clears the OTP array and focuses on the first box
-//   const resetOtp = () => {
-//     setOtp(['', '', '', '', '', '']);
-//     inputRefs.current[0]?.focus();
-//   };
-
-//   // Auto-submit when all 6 digits are filled
-//   useEffect(() => {
-//     if (!showOtpInput || loading) return;
-
-//     const isComplete = otp.every(digit => digit !== '');
-//     if (!isComplete) return;
-
-//     const timeoutId = setTimeout(() => {
-//       formRef.current?.requestSubmit();
-//     }, 100);
-
-//     return () => clearTimeout(timeoutId);
-//   }, [otp, showOtpInput, loading]);
-
-//   // Check if user exists in your custom `users` table
-//   const checkUserExists = async (email: string) => {
-//     const normalizedEmail = email.toLowerCase();
-
-//     try {
-//       const { data, error } = await supabaseClient.current
-//         .from('users')
-//         .select('email')
-//         .eq('email', normalizedEmail)
-//         .single();
-
-//       // If `data` is found, user exists
-//       return { exists: !!data, error: null };
-//     } catch (err: any) {
-//       return { exists: false, error: err };
-//     }
-//   };
-
-//   // Request OTP for an existing user
-//   const handleRequestOTP = async (e: FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (loading) return;
-//     setLoading(true);
-//     setError(null);
-
-//     try {
-//       if (attemptCount >= 5) {
-//         throw new Error('Too many attempts. Please try again later.');
-//       }
-
-//       if (!email.includes('@')) {
-//         throw new Error('Please enter a valid email address');
-//       }
-
-//       const normalizedEmail = email.toLowerCase().trim();
-
-//       // 1) Check if user already exists in the DB:
-//       const { exists, error: userCheckError } = await checkUserExists(normalizedEmail);
-//       if (userCheckError) {
-//         throw new Error(`Error checking user: ${userCheckError.message}`);
-//       }
-//       if (!exists) {
-//         throw new Error('No account found with that email address.');
-//       }
-
-//       // 2) Since user exists, send OTP without creating a new user
-//       const { error: otpError } = await supabaseClient.current.auth.signInWithOtp({
-//         email: normalizedEmail,
-//         options: {
-//           emailRedirectTo: `${window.location.origin}/login/callback`,
-//           shouldCreateUser: false, // Don't auto-create
-//         },
-//       });
-
-//       if (otpError) throw otpError;
-
-//       // Show OTP input if successful
-//       setShowOtpInput(true);
-//       setError(null);
-//     } catch (error) {
-//       console.error('Login error:', error);
-//       setError(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
-//       setAttemptCount(prev => prev + 1);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // Verify the OTP
-//   const handleVerifyOTP = async (e: FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (loading || verifying) return;
-
-//     const otpString = otp.join('');
-//     if (otpString.length !== 6) {
-//       setError('Please enter a valid verification code');
-//       resetOtp();
-//       return;
-//     }
-
-//     setVerifying(true);
-//     try {
-//       // Verify OTP with Supabase
-//       const { data, error } = await supabaseClient.current.auth.verifyOtp({
-//         email: email.toLowerCase(),
-//         token: otpString,
-//         type: 'email',
-//       });
-
-//       if (error) {
-//         console.error('OTP verification error:', error);
-//         setError('Invalid verification code. Please try again.');
-//         resetOtp();
-//         return;
-//       }
-
-//       if (!data?.user) {
-//         console.error('No user data after verification');
-//         setError('Verification failed. Please try again.');
-//         return;
-//       }
-
-//       // If you still want to ensure there's a matching row in your `users` table:
-//       // Upsert by the user’s Auth ID (which should remain consistent):
-//       const { error: upsertError } = await supabaseClient.current
-//         .from('users')
-//         .upsert(
-//           {
-//             id: data.user.id, // from Supabase Auth
-//             email: data.user.email,
-//             role: 'user', // default role
-//             is_active: true,
-//           },
-//           {
-//             onConflict: 'id', // or 'email' if that's how your DB is structured
-//           }
-//         );
-
-//       if (upsertError) {
-//         console.error('Failed to create/update user record:', upsertError);
-//         setError('Failed to complete signup. Please try again.');
-//         return;
-//       }
-
-//       // Confirm session is established
-//       const {
-//         data: { session },
-//         error: sessionError,
-//       } = await supabaseClient.current.auth.getSession();
-
-//       if (sessionError || !session) {
-//         console.error('Session error:', sessionError);
-//         setError('Failed to establish session. Please try again.');
-//         return;
-//       }
-
-//       // If everything is good, redirect:
-//       window.location.href = '/dashboard';
-//     } catch (error) {
-//       console.error('Verification error:', error);
-//       setError(error instanceof Error ? error.message : 'Verification failed. Please try again.');
-//       resetOtp();
-//     } finally {
-//       setVerifying(false);
-//     }
-//   };
-
-//   // Handle typing in each OTP input (one digit)
-//   const handleOtpChange = (index: number, value: string) => {
-//     // Only allow a single digit 0-9
-//     if (value.length > 1) value = value[0];
-//     if (!/^\d*$/.test(value)) return;
-
-//     const newOtp = [...otp];
-//     newOtp[index] = value;
-//     setOtp(newOtp);
-
-//     // Move focus to next box if digit is entered
-//     if (value && index < 5) {
-//       inputRefs.current[index + 1]?.focus();
-//     }
-//   };
-
-//   // Handle backspace or delete at each input
-//   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-//     if (e.key === 'Backspace' || e.key === 'Delete') {
-//       e.preventDefault();
-//       const newOtp = [...otp];
-//       // If current box has a digit, clear it
-//       if (otp[index]) {
-//         newOtp[index] = '';
-//         setOtp(newOtp);
-//         return;
-//       }
-//       // Otherwise go back to previous box
-//       if (index > 0) {
-//         newOtp[index - 1] = '';
-//         setOtp(newOtp);
-//         inputRefs.current[index - 1]?.focus();
-//       }
-//     }
-//   };
-
-//   // Handle paste at the input level
-//   const handlePasteEvent = (e: React.ClipboardEvent<HTMLInputElement>) => {
-//     e.preventDefault();
-//     const pastedData = e.clipboardData.getData('text');
-//     if (!pastedData) return;
-
-//     const numbers = pastedData.replace(/\D/g, '').slice(0, 6).split('');
-//     const newOtp = [...otp];
-//     for (let i = 0; i < numbers.length; i++) {
-//       newOtp[i] = numbers[i];
-//     }
-//     setOtp(newOtp);
-//   };
-
-//   // Copy support email to clipboard
-//   const copyToClipboard = async () => {
-//     try {
-//       await navigator.clipboard.writeText('support@xthreat.eu');
-//       setCopied(true);
-//       setTimeout(() => setCopied(false), 1000);
-//     } catch (error) {
-//       console.error('Failed to copy:', error);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-r font-sans bg-black flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-//       <div className="max-w-md w-full space-y-8">
-//         <div className="mt-8 bg-gray-900/30 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] border border-gray-800 py-8 px-4 shadow rounded-xl sm:px-10">
-//           <div className="bg-transparent mb-6">
-//             <div className="flex justify-center">
-//               <Link href="/" className="inline-flex">
-//                 <Image
-//                   src={XLogo}
-//                   alt="X Logo"
-//                   width={16}
-//                   height={16}
-//                   className="w-8 h-8 md:w-[30px] md:h-[30px]"
-//                   priority
-//                 />
-//               </Link>
-//             </div>
-//           </div>
-
-//           {error && !loading && (
-//             <div className="p-3 bg-red-500/10 border mb-5 border-red-500/50 rounded-md">
-//               <p className="text-red-500 text-sm text-center font-medium">
-//                 {error}
-//               </p>
-//             </div>
-//           )}
-
-//           <form
-//             ref={formRef}
-//             onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP}
-//             className="space-y-6"
-//           >
-//             {!showOtpInput ? (
-//               <div>
-//                 <label htmlFor="email" className="sr-only">
-//                   Email address
-//                 </label>
-//                 <input
-//                   id="email"
-//                   name="email"
-//                   type="email"
-//                   autoComplete="email"
-//                   required
-//                   className="appearance-none rounded-md text-center relative block w-full px-3 py-3 border border-gray-700 placeholder-gray-500 text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] focus:z-10 sm:text-sm"
-//                   placeholder="Email address"
-//                   value={email}
-//                   onChange={(e) => setEmail(e.target.value)}
-//                 />
-//                 <BottomGradient />
-//               </div>
-//             ) : (
-//               <div>
-//                 <div className="text-sm text-gray-400 text-center mb-4">
-//                   Enter the code sent to {email}
-//                 </div>
-//                 <div className="flex gap-2 justify-center">
-//                   {otp.map((digit, index) => (
-//                     <input
-//                       key={index}
-//                       ref={(el) => (inputRefs.current[index] = el)}
-//                       type="text"
-//                       inputMode="numeric"
-//                       pattern="\d*"
-//                       maxLength={1}
-//                       value={digit}
-//                       onChange={(e) => handleOtpChange(index, e.target.value)}
-//                       onKeyDown={(e) => handleKeyDown(index, e)}
-//                       onPaste={handlePasteEvent}
-//                       className="w-12 h-12 text-center border border-gray-700 rounded-md text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] text-xl"
-//                     />
-//                   ))}
-//                 </div>
-//                 {verifying && (
-//                   <div className="flex justify-center mt-4">
-//                     <Loader2 className="w-6 h-6 text-white animate-spin" />
-//                   </div>
-//                 )}
-//               </div>
-//             )}
-
-//             {!showOtpInput && (
-//               <div>
-//                 <button
-//                   type="submit"
-//                   disabled={loading}
-//                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-//                 >
-//                   {loading ? (
-//                     <div className="flex items-center">
-//                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-//                       Sending code...
-//                     </div>
-//                   ) : (
-//                     'Continue'
-//                   )}
-//                 </button>
-//               </div>
-//             )}
-//           </form>
-
-//           <div className="relative">
-//             <div className="relative flex flex-col items-center justify-center text-sm mt-6 h-[28px]">
-//               <div className="flex flex-row items-center">
-//                 <span className="text-gray-400">support@xthreat.eu</span>
-//                 <button
-//                   onClick={copyToClipboard}
-//                   className="ml-2 mt-[2px] text-gray-400 hover:text-gray-300 focus:outline-none"
-//                   aria-label="Copy email"
-//                 >
-//                   <Copy size={14} />
-//                 </button>
-//               </div>
-//               <div className="h-2">
-//                 {copied && (
-//                   <span className="text-green-500 text-xs">Copied!</span>
-//                 )}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-// 'use client'
-// import { useState, FormEvent, useRef, useEffect } from 'react';
-// import Image from 'next/image';
-// import XLogo from '../../../(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg';
-// import Link from 'next/link';
-// import { Copy, Loader2 } from 'lucide-react';
-// import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-// import { useRouter } from 'next/navigation';
-
-// const BottomGradient = () => {
-//   return (
-//     <>
-//       <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-//       <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-//     </>
-//   );
-// };
-
-// export default function SignIn() {
-//   const [email, setEmail] = useState('');
-//   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-//   const [showOtpInput, setShowOtpInput] = useState(false);
-//   const [loading, setLoading] = useState(false);
-//   const [verifying, setVerifying] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
-//   const [copied, setCopied] = useState(false);
-//   const [attemptCount, setAttemptCount] = useState(0);
-
-//   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-//   const formRef = useRef<HTMLFormElement>(null);
-//   const router = useRouter();
-//   const supabase = createClientComponentClient();
-//   const supabaseClient = useRef(supabase);
-
-//   // Clears the OTP array and focuses on the first box
-//   const resetOtp = () => {
-//     setOtp(['', '', '', '', '', '']);
-//     inputRefs.current[0]?.focus();
-//   };
-
-//   // Auto-submit when all 6 digits are filled
-//   useEffect(() => {
-//     if (!showOtpInput || loading) return;
-//     const isComplete = otp.every(digit => digit !== '');
-//     if (!isComplete) return;
-//     const timeoutId = setTimeout(() => {
-//       formRef.current?.requestSubmit();
-//     }, 100);
-//     return () => clearTimeout(timeoutId);
-//   }, [otp, showOtpInput, loading]);
-
-//   // Check if user exists using our secure RPC function that returns a boolean.
-//   const checkUserExists = async (email: string) => {
-//     const normalizedEmail = email.toLowerCase().trim();
-//     try {
-//       const { data, error } = await supabaseClient.current.rpc('check_user_exists', {
-//         _email: normalizedEmail,
-//       });
-//       if (error) {
-//         return { exists: false, error };
-//       }
-//       // data should be a boolean from the RPC function
-//       return { exists: data === true, error: null };
-//     } catch (err: any) {
-//       return { exists: false, error: err };
-//     }
-//   };
-
-//   // Request OTP for an existing user
-//   const handleRequestOTP = async (e: FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (loading) return;
-//     setLoading(true);
-//     setError(null);
-
-//     try {
-//       if (attemptCount >= 5) {
-//         throw new Error('Too many attempts. Please try again later.');
-//       }
-//       if (!email.includes('@')) {
-//         throw new Error('Please enter a valid email address');
-//       }
-//       const normalizedEmail = email.toLowerCase().trim();
-
-//       // 1) Check if user already exists using our RPC function.
-//       const { exists, error: userCheckError } = await checkUserExists(normalizedEmail);
-//       if (userCheckError) {
-//         throw new Error(`Error checking user: ${userCheckError.message}`);
-//       }
-//       if (!exists) {
-//         throw new Error('No account found with that email address.');
-//       }
-
-//       // 2) Since the user exists, send OTP without creating a new user.
-//       const { error: otpError } = await supabaseClient.current.auth.signInWithOtp({
-//         email: normalizedEmail,
-//         options: {
-//           emailRedirectTo: `${window.location.origin}/login/callback`,
-//           shouldCreateUser: false,
-//         },
-//       });
-//       if (otpError) throw otpError;
-
-//       // Show OTP input if OTP is sent successfully.
-//       setShowOtpInput(true);
-//       setError(null);
-//     } catch (error) {
-//       console.error('Login error:', error);
-//       setError(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
-//       setAttemptCount(prev => prev + 1);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // Verify the OTP
-//   const handleVerifyOTP = async (e: FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (loading || verifying) return;
-
-//     const otpString = otp.join('');
-//     if (otpString.length !== 6) {
-//       setError('Please enter a valid verification code');
-//       resetOtp();
-//       return;
-//     }
-
-//     setVerifying(true);
-//     try {
-//       // Verify OTP with Supabase
-//       const { data, error } = await supabaseClient.current.auth.verifyOtp({
-//         email: email.toLowerCase(),
-//         token: otpString,
-//         type: 'email',
-//       });
-//       if (error) {
-//         console.error('OTP verification error:', error);
-//         setError('Invalid verification code. Please try again.');
-//         resetOtp();
-//         return;
-//       }
-//       if (!data?.user) {
-//         console.error('No user data after verification');
-//         setError('Verification failed. Please try again.');
-//         return;
-//       }
-
-//       // Upsert to ensure there's a matching row in your `users` table.
-//       const { error: upsertError } = await supabaseClient.current
-//         .from('users')
-//         .upsert(
-//           {
-//             id: data.user.id,
-//             email: data.user.email,
-//             role: 'user',
-//             is_active: true,
-//           },
-//           {
-//             onConflict: 'id',
-//           }
-//         );
-//       if (upsertError) {
-//         console.error('Failed to create/update user record:', upsertError);
-//         setError('Failed to complete signup. Please try again.');
-//         return;
-//       }
-
-//       // Confirm session is established.
-//       const {
-//         data: { session },
-//         error: sessionError,
-//       } = await supabaseClient.current.auth.getSession();
-//       if (sessionError || !session) {
-//         console.error('Session error:', sessionError);
-//         setError('Failed to establish session. Please try again.');
-//         return;
-//       }
-
-//       // Redirect to dashboard if everything is good.
-//       window.location.href = '/dashboard';
-//     } catch (error) {
-//       console.error('Verification error:', error);
-//       setError(error instanceof Error ? error.message : 'Verification failed. Please try again.');
-//       resetOtp();
-//     } finally {
-//       setVerifying(false);
-//     }
-//   };
-
-//   // Handle typing in each OTP input (one digit)
-//   const handleOtpChange = (index: number, value: string) => {
-//     if (value.length > 1) value = value[0];
-//     if (!/^\d*$/.test(value)) return;
-//     const newOtp = [...otp];
-//     newOtp[index] = value;
-//     setOtp(newOtp);
-//     if (value && index < 5) {
-//       inputRefs.current[index + 1]?.focus();
-//     }
-//   };
-
-//   // Handle backspace or delete at each input
-//   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-//     if (e.key === 'Backspace' || e.key === 'Delete') {
-//       e.preventDefault();
-//       const newOtp = [...otp];
-//       if (otp[index]) {
-//         newOtp[index] = '';
-//         setOtp(newOtp);
-//         return;
-//       }
-//       if (index > 0) {
-//         newOtp[index - 1] = '';
-//         setOtp(newOtp);
-//         inputRefs.current[index - 1]?.focus();
-//       }
-//     }
-//   };
-
-//   // Handle paste at the input level
-//   const handlePasteEvent = (e: React.ClipboardEvent<HTMLInputElement>) => {
-//     e.preventDefault();
-//     const pastedData = e.clipboardData.getData('text');
-//     if (!pastedData) return;
-//     const numbers = pastedData.replace(/\D/g, '').slice(0, 6).split('');
-//     const newOtp = [...otp];
-//     for (let i = 0; i < numbers.length; i++) {
-//       newOtp[i] = numbers[i];
-//     }
-//     setOtp(newOtp);
-//   };
-
-//   // Copy support email to clipboard
-//   const copyToClipboard = async () => {
-//     try {
-//       await navigator.clipboard.writeText('support@xthreat.eu');
-//       setCopied(true);
-//       setTimeout(() => setCopied(false), 1000);
-//     } catch (error) {
-//       console.error('Failed to copy:', error);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-r font-sans bg-black flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-//       <div className="max-w-md w-full space-y-8">
-//         <div className="mt-8 bg-gray-900/30 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] border border-gray-800 py-8 px-4 shadow rounded-xl sm:px-10">
-//           <div className="bg-transparent mb-6">
-//             <div className="flex justify-center">
-//               <Link href="/" className="inline-flex">
-//                 <Image
-//                   src={XLogo}
-//                   alt="X Logo"
-//                   width={16}
-//                   height={16}
-//                   className="w-8 h-8 md:w-[30px] md:h-[30px]"
-//                   priority
-//                 />
-//               </Link>
-//             </div>
-//           </div>
-//           {error && !loading && (
-//             <div className="p-3 bg-red-500/10 border mb-5 border-red-500/50 rounded-md">
-//               <p className="text-red-500 text-sm text-center font-medium">{error}</p>
-//             </div>
-//           )}
-//           <form
-//             ref={formRef}
-//             onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP}
-//             className="space-y-6"
-//           >
-//             {!showOtpInput ? (
-//               <div>
-//                 <label htmlFor="email" className="sr-only">Email address</label>
-//                 <input
-//                   id="email"
-//                   name="email"
-//                   type="email"
-//                   autoComplete="email"
-//                   required
-//                   className="appearance-none rounded-md text-center relative block w-full px-3 py-3 border border-gray-700 placeholder-gray-500 text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] focus:z-10 sm:text-sm"
-//                   placeholder="Email address"
-//                   value={email}
-//                   onChange={(e) => setEmail(e.target.value)}
-//                 />
-//                 <BottomGradient />
-//               </div>
-//             ) : (
-//               <div>
-//                 <div className="text-sm text-gray-400 text-center mb-4">Enter the code sent to {email}</div>
-//                 <div className="flex gap-2 justify-center">
-//                   {otp.map((digit, index) => (
-//                     <input
-//                       key={index}
-//                       ref={(el) => (inputRefs.current[index] = el)}
-//                       type="text"
-//                       inputMode="numeric"
-//                       pattern="\d*"
-//                       maxLength={1}
-//                       value={digit}
-//                       onChange={(e) => handleOtpChange(index, e.target.value)}
-//                       onKeyDown={(e) => handleKeyDown(index, e)}
-//                       onPaste={handlePasteEvent}
-//                       className="w-12 h-12 text-center border border-gray-700 rounded-md text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] text-xl"
-//                     />
-//                   ))}
-//                 </div>
-//                 {verifying && (
-//                   <div className="flex justify-center mt-4">
-//                     <Loader2 className="w-6 h-6 text-white animate-spin" />
-//                   </div>
-//                 )}
-//               </div>
-//             )}
-//             {!showOtpInput && (
-//               <div>
-//                 <button
-//                   type="submit"
-//                   disabled={loading}
-//                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-//                 >
-//                   {loading ? (
-//                     <div className="flex items-center">
-//                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-//                       Sending code...
-//                     </div>
-//                   ) : (
-//                     'Continue'
-//                   )}
-//                 </button>
-//               </div>
-//             )}
-//           </form>
-//           <div className="relative">
-//             <div className="relative flex flex-col items-center justify-center text-sm mt-6 h-[28px]">
-//               <div className="flex flex-row items-center">
-//                 <span className="text-gray-400">support@xthreat.eu</span>
-//                 <button
-//                   onClick={copyToClipboard}
-//                   className="ml-2 mt-[2px] text-gray-400 hover:text-gray-300 focus:outline-none"
-//                   aria-label="Copy email"
-//                 >
-//                   <Copy size={14} />
-//                 </button>
-//               </div>
-//               <div className="h-2">
-//                 {copied && (
-//                   <span className="text-green-500 text-xs">Copied!</span>
-//                 )}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 'use client'
 import { useState, FormEvent, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import XLogo from '../../../(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg';
+import XLogo from '../../../(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg'
 import Link from 'next/link';
 import { Copy, Loader2 } from 'lucide-react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { setAuthToken } from '@/lib/utils/jwt';
+import { getClientIP, getDeviceInfo } from '@/lib/utils/session';
+import { getTabSpecificSupabaseClient } from '@/lib/supabase/client';
 
 const BottomGradient = () => {
   return (
@@ -1551,23 +27,38 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [attemptCount, setAttemptCount] = useState(0);
-
+  
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
-  const supabase = createClientComponentClient();
+
+  // Use tab-specific Supabase client
+  const supabase = getTabSpecificSupabaseClient();
   const supabaseClient = useRef(supabase);
 
-  // Clears the OTP array and focuses on the first box
   const resetOtp = () => {
     setOtp(['', '', '', '', '', '']);
     inputRefs.current[0]?.focus();
   };
 
-  // Auto-submit when all 6 digits are filled
+  // Optimized paste handler
+  const handlePaste = (e: ClipboardEvent) => {
+    e.preventDefault();
+    if (!showOtpInput) return;
+
+    const pastedData = e.clipboardData?.getData('text');
+    if (!pastedData) return;
+
+    const numbers = pastedData.replace(/\D/g, '').slice(0, 6).split('');
+    setOtp(numbers.concat(Array(6 - numbers.length).fill('')));
+  };
+
+  // Debounced auto-submit
   useEffect(() => {
     if (!showOtpInput || loading) return;
-    const isComplete = otp.every((digit) => digit !== '');
+    
+    const isComplete = otp.every(digit => digit !== '');
     if (!isComplete) return;
 
     const timeoutId = setTimeout(() => {
@@ -1577,24 +68,61 @@ export default function SignIn() {
     return () => clearTimeout(timeoutId);
   }, [otp, showOtpInput, loading]);
 
-  // Check if user exists using our secure RPC function
-  const checkUserExists = async (email: string) => {
-    const normalizedEmail = email.toLowerCase().trim();
-    try {
-      const { data, error } = await supabaseClient.current.rpc('check_user_exists', {
-        _email: normalizedEmail,
-      });
-      if (error) {
-        return { exists: false, error };
-      }
-      // data should be a boolean from the RPC function
-      return { exists: data === true, error: null };
-    } catch (err: any) {
-      return { exists: false, error: err };
-    }
-  };
+  // Optimized keydown handler
+  useEffect(() => {
+    if (!showOtpInput) return;
 
-  // Request OTP for an existing user
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // Disable global keydown handler if the target is an input
+      if (e.target instanceof HTMLInputElement) return;
+      
+      if (!showOtpInput) return;
+
+      if (e.key === 'Backspace' || e.key === 'Delete') {
+        e.preventDefault();
+        const lastFilledIndex = otp.findLastIndex(digit => digit !== '');
+        if (lastFilledIndex !== -1) {
+          const newOtp = [...otp];
+          newOtp[lastFilledIndex] = '';
+          setOtp(newOtp);
+          inputRefs.current[lastFilledIndex]?.focus();
+        }
+        return;
+      }
+      
+      if (!/^\d$/.test(e.key)) return;
+      
+      const emptyIndex = otp.findIndex(digit => digit === '');
+      if (emptyIndex !== -1) {
+        const newOtp = [...otp];
+        newOtp[emptyIndex] = e.key;
+        setOtp(newOtp);
+        if (emptyIndex < 5) inputRefs.current[emptyIndex + 1]?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleGlobalKeyDown);
+    document.addEventListener('paste', handlePaste);
+    
+    return () => {
+      document.removeEventListener('keydown', handleGlobalKeyDown);
+      document.removeEventListener('paste', handlePaste);
+    };
+  }, [showOtpInput, otp]);
+
+  // Initialize the client when component loads
+  useEffect(() => {
+    // Clear all auth cookies on load to prevent cross-tab contamination
+    document.cookie = 'sb-access-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+    document.cookie = 'sb-refresh-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+    document.cookie = 'supabase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+    
+    // Force a re-initialization of the Supabase client for this tab
+    supabaseClient.current = getTabSpecificSupabaseClient();
+    
+    console.log("Login page initialized with tab-specific Supabase client");
+  }, []);
+
   const handleRequestOTP = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (loading) return;
@@ -1605,46 +133,66 @@ export default function SignIn() {
       if (attemptCount >= 5) {
         throw new Error('Too many attempts. Please try again later.');
       }
+
       if (!email.includes('@')) {
         throw new Error('Please enter a valid email address');
       }
+
       const normalizedEmail = email.toLowerCase().trim();
+      
+      // First check if user exists in database
+      const { data: userData, error: checkError } = await supabaseClient.current
+        .from('users')
+        .select('id, email')
+        .eq('email', normalizedEmail)
+        .single();
+      
+      if (checkError || !userData) {
+        // Track failed login attempt
+        await supabaseClient.current
+          .from('user_sessions')
+          .insert([
+            { 
+              user_id: null,
+              event_type: 'login_failed',
+              timestamp: new Date().toISOString(),
+              ip_address: window.location.hostname,
+              user_agent: navigator.userAgent,
+              error_message: 'Email not found'
+            }
+          ]);
 
-      // 1) Check if user already exists using our RPC function.
-      const { exists, error: userCheckError } = await checkUserExists(normalizedEmail);
-      if (userCheckError) {
-        throw new Error(`Error checking user: ${userCheckError.message}`);
-      }
-      if (!exists) {
-        throw new Error('No account found with that email address.');
+        setAttemptCount(prev => prev + 1);
+        throw new Error('Email not found. Please contact support to create an account.');
       }
 
-      // 2) Since the user exists, send OTP without creating a new user
+      // Only send OTP if user exists
       const { error: otpError } = await supabaseClient.current.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
-          shouldCreateUser: false, // DO NOT create new users
-        },
+          shouldCreateUser: false,
+          emailRedirectTo: `${window.location.origin}/login/callback`,
+        }
       });
+
       if (otpError) throw otpError;
 
-      // Show OTP input if OTP is sent successfully
       setShowOtpInput(true);
       setError(null);
+
     } catch (error) {
       console.error('Login error:', error);
       setError(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
-      setAttemptCount((prev) => prev + 1);
+      setAttemptCount(prev => prev + 1);
     } finally {
       setLoading(false);
     }
   };
 
-  // Verify the OTP (No user creation/upsert)
   const handleVerifyOTP = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (loading || verifying) return;
-
+    
     const otpString = otp.join('');
     if (otpString.length !== 6) {
       setError('Please enter a valid verification code');
@@ -1654,43 +202,72 @@ export default function SignIn() {
 
     setVerifying(true);
     try {
-      // Verify OTP with Supabase
+      // Clear all auth cookies again before verification
+      document.cookie = 'sb-access-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+      document.cookie = 'sb-refresh-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+      document.cookie = 'supabase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+
       const { data, error } = await supabaseClient.current.auth.verifyOtp({
-        email: email.toLowerCase().trim(),
+        email: email.toLowerCase(),
         token: otpString,
-        type: 'email',
+        type: 'email'
       });
+
       if (error) {
+        // Track OTP verification failure
+        await supabaseClient.current
+          .from('user_sessions')
+          .insert([
+            { 
+              user_id: null,
+              event_type: 'login_failed',
+              timestamp: new Date().toISOString(),
+              ip_address: window.location.hostname,
+              user_agent: navigator.userAgent,
+              error_message: 'Invalid OTP'
+            }
+          ]);
+
         console.error('OTP verification error:', error);
         setError('Invalid verification code. Please try again.');
         resetOtp();
         return;
       }
-      if (!data?.user) {
-        console.error('No user data after verification');
-        setError('Verification failed. Please try again.');
-        return;
+
+      if (data?.user) {
+        console.log(`Login successful for user: ${data.user.email}`);
+        
+        // Session will be automatically stored in sessionStorage by the client's
+        // onAuthStateChange handler, so we don't need to store it manually.
+        // Just trigger a navigation to dashboard
+        
+        // Track successful login
+        const sessionId = Math.random().toString(36).substring(2);
+        await supabaseClient.current
+          .from('user_sessions')
+          .insert([
+            { 
+              user_id: data.user.id,
+              event_type: 'login',
+              timestamp: new Date().toISOString(),
+              ip_address: await getClientIP(),
+              user_agent: navigator.userAgent,
+              device_info: getDeviceInfo(),
+              session_id: sessionId,
+              session_status: 'active',
+              last_active_at: new Date().toISOString()
+            }
+          ]);
+
+        // Redirect to dashboard - using router.push instead of location.href
+        // to prevent a full page reload
+        router.push('/dashboard');
+      } else {
+        throw new Error('Authentication failed');
       }
-
-      // 3) DO NOT upsert or create user in your table. 
-      //    This is purely a login flow, so we skip the upsert.
-
-      // 4) Confirm session is established
-      const {
-        data: { session },
-        error: sessionError,
-      } = await supabaseClient.current.auth.getSession();
-      if (sessionError || !session) {
-        console.error('Session error:', sessionError);
-        setError('Failed to establish session. Please try again.');
-        return;
-      }
-
-      // 5) Redirect (or do whatever you want) 
-      //    Using Next router for a client-side navigation:
-      router.push('/dashboard');
+      
     } catch (error) {
-      console.error('Verification error:', error);
+      console.error('Full error object:', error);
       setError(error instanceof Error ? error.message : 'Verification failed. Please try again.');
       resetOtp();
     } finally {
@@ -1698,7 +275,6 @@ export default function SignIn() {
     }
   };
 
-  // Handle typing in each OTP input (one digit)
   const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) value = value[0];
     if (!/^\d*$/.test(value)) return;
@@ -1712,41 +288,20 @@ export default function SignIn() {
     }
   };
 
-  // Handle backspace or delete at each input
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Backspace' || e.key === 'Delete') {
       e.preventDefault();
       const newOtp = [...otp];
-      // If current box has a digit, clear it
       if (otp[index]) {
         newOtp[index] = '';
-        setOtp(newOtp);
-        return;
-      }
-      // Otherwise go back to previous box
-      if (index > 0) {
+      } else if (index > 0) {
         newOtp[index - 1] = '';
-        setOtp(newOtp);
         inputRefs.current[index - 1]?.focus();
       }
+      setOtp(newOtp);
     }
   };
 
-  // Handle paste at the input level
-  const handlePasteEvent = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pastedData = e.clipboardData.getData('text');
-    if (!pastedData) return;
-
-    const numbers = pastedData.replace(/\D/g, '').slice(0, 6).split('');
-    const newOtp = [...otp];
-    for (let i = 0; i < numbers.length; i++) {
-      newOtp[i] = numbers[i];
-    }
-    setOtp(newOtp);
-  };
-
-  // Copy support email to clipboard
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText('support@xthreat.eu');
@@ -1784,11 +339,7 @@ export default function SignIn() {
             </div>
           )}
 
-          <form
-            ref={formRef}
-            onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP}
-            className="space-y-6"
-          >
+          <form ref={formRef} onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP} className="space-y-6">
             {!showOtpInput ? (
               <div>
                 <label htmlFor="email" className="sr-only">
@@ -1812,19 +363,22 @@ export default function SignIn() {
                 <div className="text-sm text-gray-400 text-center mb-4">
                   Enter the code sent to {email}
                 </div>
-                <div className="flex gap-2 justify-center">
+                <div 
+                  ref={containerRef}
+                  tabIndex={-1}
+                  className="flex gap-2 justify-center focus:outline-none"
+                >
                   {otp.map((digit, index) => (
                     <input
                       key={index}
-                      ref={(el) => (inputRefs.current[index] = el)}
+                      ref={(el) => inputRefs.current[index] = el}
                       type="text"
                       inputMode="numeric"
                       pattern="\d*"
                       maxLength={1}
                       value={digit}
                       onChange={(e) => handleOtpChange(index, e.target.value)}
-                      onKeyDown={(ev) => handleKeyDown(index, ev)}
-                      onPaste={handlePasteEvent}
+                      onKeyDown={(e) => handleKeyDown(index, e)}
                       className="w-12 h-12 text-center border border-gray-700 rounded-md text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] text-xl"
                     />
                   ))}

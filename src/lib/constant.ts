@@ -1,4 +1,3 @@
-
 import Progress from '@/app/(dashboard)/navigation/icons/progress'
 import Practice from '@/app/(dashboard)/navigation/icons/practice'
 import Modules from '@/app/(dashboard)/navigation/icons/modules'
@@ -13,6 +12,7 @@ import Statistics from '@/app/(dashboard)/navigation/icons/statistics'
 import RoleTraining from '@/app/(dashboard)/navigation/icons/role-based'
 import ChatAssistant from '@/app/(dashboard)/navigation/icons/assistant'
 import Settings from '@/app/(dashboard)/navigation/icons/settings'
+import Sessions from '@/app/(dashboard)/navigation/icons/sessions'
 
 
 export const clients = [...new Array(10)].map((client, index) => ({
@@ -43,11 +43,12 @@ const managerOptions = [
 // Admin-specific options
 const adminOptions = [
   { name: 'Overview', Component: Dashboard, href: '/overview' },
-  { name: 'Companies', Component: Business, href: '/companies' },
-  { name: 'Clients', Component: Accounts, href: '/clients' },
+  { name: 'Clients', Component: Business, href: '/clients' },
+  { name: 'Users', Component: Accounts, href: '/users' },
   { name: 'Financials', Component: Financial, href: '/financials' },
-  { name: 'Statistics', Component: Statistics, href: '/statistics' },
+  { name: 'Analytics', Component: Statistics, href: '/analytics' },
   { name: 'Trainings', Component: Trainings, href: '/trainings' },
+  { name: 'Sessions', Component: Sessions, href: '/sessions' },
   { name: 'Account', Component: Account, href: '/account' },
   { name: 'Settings', Component: Settings, href: '/settings' },
 ]
