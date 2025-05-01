@@ -2,12 +2,24 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Clock, AlertTriangle, ArrowRight, Shield, Users, Building } from 'lucide-react';
+
+interface Department {
+  id: string;
+  title: string;
+  description: string;
+  riskLevel: 'High' | 'Medium' | 'Low';
+  estimatedTime: number;
+  available?: boolean;
+  icon?: React.ReactNode;
+  preview: string;
+  keyTopics: string[];
+}
 
 const DepartmentTraining = () => {
-  const [selectedDept, setSelectedDept] = useState(null);
+  const [selectedDept, setSelectedDept] = useState<Department | null>(null);
 
-  const departments = [
+  const departments: Department[] = [
     {
       id: 'finance',
       title: 'Finance & Accounting',
@@ -15,6 +27,7 @@ const DepartmentTraining = () => {
       riskLevel: 'High',
       estimatedTime: 4,
       available: true,
+      icon: <Building className="h-5 w-5 text-blue-400" />,
       preview: 'Learn to protect financial assets, secure transactions, and prevent cyber fraud. This training covers secure banking protocols, financial data protection, and identifying financial fraud attempts.',
       keyTopics: [
         'Secure financial transaction handling',
@@ -29,6 +42,7 @@ const DepartmentTraining = () => {
       description: 'Training focused on protecting employee data, preventing social engineering attacks, and maintaining personnel information security.',
       riskLevel: 'High',
       estimatedTime: 3,
+      icon: <Users className="h-5 w-5 text-purple-400" />,
       preview: 'Master the protection of sensitive employee information and prevent social engineering attacks. Learn about secure data handling and privacy compliance.',
       keyTopics: [
         'Employee data protection',
@@ -43,6 +57,7 @@ const DepartmentTraining = () => {
       description: 'Advanced security protocols, system protection, and infrastructure security best practices.',
       riskLevel: 'High',
       estimatedTime: 6,
+      icon: <Shield className="h-5 w-5 text-green-400" />,
       preview: 'Advanced security training covering system protection, infrastructure security, and technical safeguards. Designed for IT professionals managing company systems.',
       keyTopics: [
         'System security protocols',
@@ -97,95 +112,136 @@ const DepartmentTraining = () => {
 
   if (selectedDept) {
     return (
-      <div className="h-[calc(100vh-theme(spacing.3))] font-sans bg-[#050607] text-gray-100 p-4 px-10 mt-3 overflow-auto">
-        <div className="border-b border-gray-800/40 pb-6 mb-8">
-          <div className="flex items-center gap-3 mb-6">
-          <button
-            onClick={() => setSelectedDept(null)}
-            className="text-gray-400 justify-center hover:bg-[#181b24] border border-gray-700 w-8 h-8 rounded-lg hover:text-gray-200 transition-colors flex items-center"
+      <div className="min-h-screen font-sans bg-[#050607] text-gray-100">
+        <div className="max-w-[1400px] mx-auto px-6 py-12">
+          {/* Header with back button */}
+          <div className="mb-8">
+            <button
+              onClick={() => setSelectedDept(null)}
+              className="text-gray-400 inline-flex items-center hover:text-white mb-6 group"
+            >
+              <ChevronLeft className="h-4 w-4 mr-1 group-hover:transform group-hover:-translate-x-0.5 transition-transform" />
+              Back to departments
+            </button>
             
+            <h1 className="text-3xl md:text-4xl font-light bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-4">
+              {selectedDept.title}
+            </h1>
+            
+            <p className="text-gray-400 max-w-3xl mb-6">
+              {selectedDept.preview}
+            </p>
+            
+            <div className="flex flex-wrap gap-3 mt-4">
+              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${
+                selectedDept.riskLevel === 'High' 
+                  ? 'bg-red-500/10 text-red-400' 
+                  : 'bg-orange-500/10 text-orange-400'
+              }`}>
+                <AlertTriangle className="h-3.5 w-3.5 mr-1.5" />
+                {selectedDept.riskLevel} Risk Level
+              </span>
+              
+              <span className="bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full text-sm inline-flex items-center">
+                <Clock className="h-3.5 w-3.5 mr-1.5" />
+                {selectedDept.estimatedTime} hours estimated
+              </span>
+            </div>
+          </div>
+
+          {/* Key Topics */}
+          <div className="mb-8">
+            <h2 className="text-xl font-light text-white mb-6">Key Topics Covered</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {selectedDept.keyTopics.map((topic, index) => (
+                <div 
+                  key={index} 
+                  className="bg-black/20 border border-gray-800/40 hover:border-gray-700/70 p-5 rounded-lg transition-all"
+                >
+                  <p className="text-gray-200">{topic}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <Link 
+            href={`/training/${selectedDept.id}/start`}
+            className="inline-flex items-center bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 px-6 py-3 rounded-lg transition-colors border border-blue-500/30 hover:border-blue-500/50 group mt-4"
           >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-            <h1 className="text-2xl font-medium text-white">{selectedDept.title}</h1>
-          </div>
-          
-          {/* <h1 className="text-2xl font-medium text-white mb-4">{selectedDept.title}</h1> */}
-          <p className="text-gray-400 text-sm max-w-3xl mb-6">
-            {selectedDept.preview}
-          </p>
-          
-          <div className="flex gap-3">
-            <span className={`${selectedDept.riskLevel === 'High' ? 'text-red-400' : 'text-orange-400'} px-3 py-1 rounded-lg text-sm`}>
-              {selectedDept.riskLevel} Risk Level
-            </span>
-            <span className="text-gray-400 text-sm">
-              {selectedDept.estimatedTime} hours estimated
-            </span>
-          </div>
+            Start Training
+            <ArrowRight className="ml-2 h-4 w-4 group-hover:transform group-hover:translate-x-0.5 transition-transform" />
+          </Link>
         </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-medium text-white mb-4">Key Topics Covered</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {selectedDept.keyTopics.map((topic, index) => (
-              <div key={index} className="bg-[#181b24] p-4 rounded-lg">
-                <p className="text-gray-300">{topic}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <Link 
-          href={`/training/${selectedDept.id}/start`}
-          className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
-        >
-          Start Training
-        </Link>
       </div>
     );
   }
 
   return (
-    <div className="h-[calc(100vh-theme(spacing.3))] font-sans bg-[#050607] text-gray-100 p-4 px-10 mt-3 overflow-auto">
-      <div className="border-b border-gray-800/40 pb-6 mb-8">
-        <h1 className="text-2xl font-medium text-white mb-4">Security Awareness Training</h1>
-        <p className="text-gray-400 text-sm max-w-3xl">
-          Select your department to access specialized cybersecurity training modules tailored to your role's specific security requirements and risk factors.
-        </p>
-      </div>
+    <div className="min-h-screen font-sans bg-[#050607] text-gray-100">
+      <div className="max-w-[1400px] mx-auto px-6 py-12">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-light bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-4">
+            Role-Based Security Training
+          </h1>
+          <p className="text-gray-400 max-w-3xl">
+            Select your department to access specialized cybersecurity training modules tailored to your role's specific security requirements and risk factors.
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {departments.map((dept) => (
-          <button 
-            key={dept.id}
-            onClick={() => dept.id === 'finance' ? setSelectedDept(dept) : null}
-            className={`text-left ${dept.id !== 'finance' ? 'cursor-not-allowed opacity-70' : ''}`}
-          >
-            <div className="bg-[#181b24] border border-gray-800/50 hover:border-gray-700 rounded-lg transition-all duration-200">
-              <div className="p-6">
-                <div className="flex flex-col">
+        {/* Departments Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {departments.map((dept) => (
+            <button 
+              key={dept.id}
+              onClick={() => dept.id === 'finance' ? setSelectedDept(dept) : null}
+              className={`text-left ${dept.id !== 'finance' ? 'cursor-not-allowed' : 'hover:transform hover:-translate-y-1'} transition-all duration-200`}
+              disabled={dept.id !== 'finance'}
+            >
+              <div className={`bg-black/20 border border-gray-800/40 ${dept.id === 'finance' ? 'hover:border-gray-700/70' : 'opacity-70'} rounded-lg h-full transition-all`}>
+                <div className="p-6 flex flex-col h-full">
+                  {/* Department Header */}
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-lg font-medium text-white">
-                      {dept.title}
-                    </h3>
+                    <div className="flex items-center">
+                      {dept.icon ? dept.icon : null}
+                      <h3 className="text-xl font-light text-white ml-2">
+                        {dept.title}
+                      </h3>
+                    </div>
                     {dept.id !== 'finance' && (
-                      <span className="bg-amber-500/10 text-amber-500 px-4 py-1.5 rounded-lg text-sm font-medium ml-4">
-                        In Development
+                      <span className="bg-amber-500/10 text-amber-500 px-2.5 py-1 rounded-full text-xs font-medium">
+                        Coming Soon
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-400 text-sm mb-4">
+                  
+                  {/* Description */}
+                  <p className="text-gray-400 text-sm mb-4 flex-grow">
                     {dept.description}
                   </p>
-                  <span className="text-sm text-gray-500">
-                    Estimated completion: {dept.estimatedTime} hours
-                  </span>
+                  
+                  {/* Info Tags */}
+                  <div className="flex flex-wrap gap-2 mt-auto">
+                    <span className={`text-xs rounded-full px-2.5 py-1 inline-flex items-center ${
+                      dept.riskLevel === 'High' 
+                        ? 'bg-red-500/10 text-red-300' 
+                        : 'bg-orange-500/10 text-orange-300'
+                    }`}>
+                      <AlertTriangle className="h-3 w-3 mr-1" />
+                      {dept.riskLevel} Risk
+                    </span>
+                    
+                    <span className="bg-blue-500/10 text-blue-300 px-2.5 py-1 rounded-full text-xs inline-flex items-center">
+                      <Clock className="h-3 w-3 mr-1" />
+                      {dept.estimatedTime} hours
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </button>
-        ))}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

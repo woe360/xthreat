@@ -366,9 +366,7 @@
 // }: Readonly<{
 //   children: React.ReactNode;
 // }>) {
-//   // Get the cookie store and await it
-//   const cookieStore = await cookies();
-  
+//   const cookieStore = await cookies()
 //   const supabase = createServerComponentClient({
 //     cookies: () => cookieStore,
 //   });
@@ -415,13 +413,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { Inter } from 'next/font/google';
 import { cn } from "@/lib/utils";
 
-const inter = Inter({
-  subsets: ['latin'],
+const savass = {
+  variable: '--font-savass',
   display: 'swap',
-});
+};
 
 export const metadata: Metadata = {
   title: "XThreat",
@@ -440,9 +437,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="stylesheet" href="https://use.typekit.net/yourkit.css" /> {/* Replace 'yourkit' with actual Savass Sans font kit ID if using Adobe Fonts */}
+      </head>
       <body className={cn(
-        "min-h-screen bg-neutral-950 text-white antialiased",
-        inter.className
+        "min-h-screen bg-neutral-950 text-white antialiased"
       )}>
         <ThemeProvider
           attribute="class"

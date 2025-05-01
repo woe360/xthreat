@@ -74,7 +74,7 @@ const JobFunctionCard = ({
     <div
       className={cn(
         "relative w-64 h-28 flex items-center cursor-pointer overflow-hidden rounded-lg border m-2 p-4",
-        "border-gray-700 bg-black",
+        "border-gray-700 bg-[#181b24]",
         "transition-colors duration-300"
       )}
     >
@@ -126,8 +126,8 @@ export function MarqueeDemo() {
               />
             ))}
           </Marquee>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/12 bg-gradient-to-r from-gray-900/10 to-transparent"></div>
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/12 bg-gradient-to-l from-gray-900/10 to-transparent"></div>
+          {/* <div className="pointer-events-none absolute inset-y-0 left-0 w-1/12 bg-gradient-to-r from-gray-900/10 to-transparent"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/12 bg-gradient-to-l from-gray-900/10 to-transparent"></div> */}
         </div>
       </div>
     </section>

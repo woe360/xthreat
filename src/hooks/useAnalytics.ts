@@ -1,7 +1,7 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { getTabSpecificSupabaseClient } from '@/lib/supabase/client'
 
 export const useAnalytics = () => {
-  const supabase = createClientComponentClient()
+  const supabase = getTabSpecificSupabaseClient()
 
   const trackInteraction = async ({
     interactionType,

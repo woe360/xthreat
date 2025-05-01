@@ -1132,7 +1132,7 @@ const MenuOptions = () => {
   };
 
   return (
-    <nav className="dark:bg-black w-16 h-screen font-sans flex flex-col sticky justify-between py-6 border-r border-gray-800/20 z-[100] flex-shrink-0">
+    <nav className="dark:bg-black w-16 h-screen font-sans flex flex-col sticky justify-between py-6 z-[100] flex-shrink-0">
       <div className="px-2 mb-3 flex justify-center">
         <Image
           src={XLogo}

@@ -1,6 +1,6 @@
 'use client'
-import React, { useState } from 'react';
-import { BookOpen, Users, Timer, BarChart2, Play, Plus, Edit, Trash2, Star, Filter, Search, ArrowUpDown } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { BookOpen, Users, Timer, BarChart2, Play, Plus, Edit, Trash2, Star, Filter, Search, ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import {
   Dialog,
@@ -17,6 +17,26 @@ import { Input } from "@/components/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select"
 import { Button } from "@/components/button"
 import { Card } from "@/components/card"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { Badge } from "@/components/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/dropdown-menu"
+// import { ColumnDef } from "@tanstack/react-table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { useRouter } from 'next/navigation';
 
 interface ContentSection {
   id: number;
@@ -67,63 +87,65 @@ interface Exercise {
   };
 }
 
-interface Module {
-  id: number;
+interface ModuleResponse {
+  id: string;
   title: string;
   description: string;
-  topic: string;
-  duration: number;
-  completionRate: number;
-  averageScore: number;
-  difficulty: 'Novice' | 'Proficient' | 'Master';
-  status: 'active' | 'draft' | 'archived';
-  lastUpdated: string;
-  ratings: number;
-  thumbnail?: string;
-  prerequisites?: string[];
-  objectives?: string[];
-  contentSections: ContentSection[];
-  questions?: Question[];
-  exercises?: Exercise[];
+  tags: string[];
+  slug: string;
+  points: number;
+  created_at: string;
+  updated_at: string;
+  lessons: LessonResponse[];
+}
+
+interface LessonResponse {
+  id: string;
+  title: string;
+  description: string;
+  level: string;
+  points: number;
+  estimated_time: number;
+  lesson_order: number;
+  module_id?: string;
+}
+
+interface Module {
+  id: string;
+  title: string;
+  description: string;
+  tags: string[];
+  slug: string;
+  points: number;
+  status?: string;
+  difficulty?: string;
+  topic?: string;
+  duration?: number;
+  ratings?: number;
+  completionRate?: number;
+  averageScore?: number;
+  contentSections: {
+    id: string;
+    title: string;
+    description: string;
+    level: string;
+    points: number;
+    estimatedTime: number;
+    order: number;
+  }[];
   settings: {
-    availableFrom?: string;
-    availableTo?: string;
-    minScore: number;
-    requireAllSections: boolean;
-    timeLimit?: number;
-    certification?: {
-      name: string;
-      badge: string;
-    };
-    notifications: {
-      onStart: boolean;
-      onComplete: boolean;
-      onDue: boolean;
-    };
+    isPublished: boolean;
+    isArchived: boolean;
+    isDeleted: boolean;
   };
   analytics: {
-    totalAttempts: number;
-    averageTimeSpent: number;
-    completionsByDepartment: Record<string, number>;
-    questionStats: Record<number, {
-      correctRate: number;
-      avgTimeSpent: number;
-    }>;
-    feedback: {
-      average: number;
-      total: number;
-      comments: string[];
-    };
-  };
-  version: {
-    number: string;
-    changes: string[];
-    publishedAt?: string;
-    reviewedBy?: string;
+    totalEnrollments: number;
+    completionRate: number;
+    averageRating: number;
   };
 }
 
-type SortableColumn = 'title' | 'topic' | 'completionRate' | 'difficulty' | 'ratings' | 'status';
+type SortableColumn = 'title' | 'tags' | 'points' | 'enrollments';
 
 interface ModuleFormData {
   title: string;
@@ -135,6 +157,7 @@ interface ModuleFormData {
   prerequisites: string[];
   thumbnail?: File;
   contentSections: ContentSection[];
+  selectedLessons: { id: number; order: number }[];
 }
 
 interface StatCardProps {
@@ -146,8 +169,17 @@ interface StatCardProps {
   percentageChange: number;
 }
 
-const CreateModuleDialog = () => {
+interface TableRow {
+  row: {
+    original: Module;
+  };
+}
+
+const CreateModuleDialog = ({ onModuleCreated }: { onModuleCreated: () => void }) => {
   const [step, setStep] = useState(1);
+  const [topics, setTopics] = useState<string[]>([]);
+  const [availableLessons, setAvailableLessons] = useState<any[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<ModuleFormData>({
     title: '',
     description: '',
@@ -156,8 +188,38 @@ const CreateModuleDialog = () => {
     objectives: [''],
     duration: 30,
     prerequisites: [],
-    contentSections: []
+    contentSections: [],
+    selectedLessons: []
   });
+
+  useEffect(() => {
+    const fetchTopicsAndLessons = async () => {
+      try {
+        // Fetch modules to get topics
+        const modulesResponse = await fetch('/api/modules');
+        if (!modulesResponse.ok) {
+          throw new Error(`HTTP error! status: ${modulesResponse.status}`);
+        }
+        const modulesData = await modulesResponse.json() as ModuleResponse[];
+        
+        // Extract unique topics from tags arrays
+        const uniqueTopics = [...new Set(modulesData.flatMap((m: ModuleResponse) => m.tags || []))];
+        setTopics(uniqueTopics);
+
+        // Fetch available lessons
+        const lessonsResponse = await fetch('/api/lessons');
+        if (!lessonsResponse.ok) {
+          throw new Error(`HTTP error! status: ${lessonsResponse.status}`);
+        }
+        const lessonsData = await lessonsResponse.json() as LessonResponse[];
+        setAvailableLessons(lessonsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchTopicsAndLessons();
+  }, []);
 
   const handleInputChange = (field: keyof ModuleFormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -176,6 +238,79 @@ const CreateModuleDialog = () => {
   const removeObjective = (index: number) => {
     const newObjectives = formData.objectives.filter((_, i) => i !== index);
     handleInputChange('objectives', newObjectives);
+  };
+
+  const handleLessonSelection = (lessonId: number, checked: boolean) => {
+    if (checked) {
+      const order = formData.selectedLessons.length + 1;
+      handleInputChange('selectedLessons', [...formData.selectedLessons, { id: lessonId, order }]);
+    } else {
+      const newLessons = formData.selectedLessons.filter(l => l.id !== lessonId);
+      // Reorder remaining lessons
+      const reorderedLessons = newLessons.map((l, idx) => ({ ...l, order: idx + 1 }));
+      handleInputChange('selectedLessons', reorderedLessons);
+    }
+  };
+
+  const handleLessonReorder = (lessonId: number, newOrder: number) => {
+    const lessons = [...formData.selectedLessons];
+    const oldOrder = lessons.find(l => l.id === lessonId)?.order || 0;
+    
+    const reorderedLessons = lessons.map(lesson => {
+      if (lesson.id === lessonId) return { ...lesson, order: newOrder };
+      if (newOrder > oldOrder && lesson.order <= newOrder && lesson.order > oldOrder) {
+        return { ...lesson, order: lesson.order - 1 };
+      }
+      if (newOrder < oldOrder && lesson.order >= newOrder && lesson.order < oldOrder) {
+        return { ...lesson, order: lesson.order + 1 };
+      }
+      return lesson;
+    });
+
+    handleInputChange('selectedLessons', reorderedLessons);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      const moduleData = {
+        ...formData,
+        slug: formData.title.toLowerCase().replace(/\s+/g, '-'),
+        points: 0
+      };
+
+      const response = await fetch('http://localhost:5000/api/modules', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(moduleData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to create module');
+      }
+
+      onModuleCreated();
+      setFormData({
+        title: '',
+        description: '',
+        topic: '',
+        difficulty: 'Novice',
+        objectives: [''],
+        duration: 30,
+        prerequisites: [],
+        contentSections: [],
+        selectedLessons: []
+      });
+      setStep(1);
+    } catch (error) {
+      console.error('Error creating module:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -211,11 +346,11 @@ const CreateModuleDialog = () => {
               Objectives
             </TabsTrigger>
             <TabsTrigger 
-              value="content"
+              value="lessons"
               className={step === 3 ? 'bg-blue-500/30 text-blue-400' : ''}
               onClick={() => setStep(3)}
             >
-              Content
+              Lessons
             </TabsTrigger>
             <TabsTrigger 
               value="review"
@@ -257,9 +392,9 @@ const CreateModuleDialog = () => {
                       <SelectValue placeholder="Select topic" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Security Awareness">Security Awareness</SelectItem>
-                      <SelectItem value="Security Fundamentals">Security Fundamentals</SelectItem>
-                      <SelectItem value="Advanced Security">Advanced Security</SelectItem>
+                      {topics.map((topic) => (
+                        <SelectItem key={topic} value={topic}>{topic}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -318,18 +453,208 @@ const CreateModuleDialog = () => {
             </div>
             <div className="flex justify-between">
               <Button variant="outline" onClick={() => setStep(1)}>Previous</Button>
-              <Button onClick={() => setStep(3)}>Next: Content</Button>
+              <Button onClick={() => setStep(3)}>Next: Lessons</Button>
             </div>
           </TabsContent>
 
-          {/* Additional tabs will be implemented in the next iteration */}
+          <TabsContent value="lessons" className="space-y-4">
+            <div className="grid gap-4 py-4">
+              <div className="space-y-4">
+                {availableLessons.map((lesson) => (
+                  <div key={lesson.id} className="flex items-center gap-4 bg-[#0f1117] p-4 rounded-lg border border-gray-800">
+                    <input
+                      type="checkbox"
+                      checked={formData.selectedLessons.some(l => l.id === lesson.id)}
+                      onChange={(e) => handleLessonSelection(lesson.id, e.target.checked)}
+                      className="w-4 h-4"
+                    />
+                    <div className="flex-grow">
+                      <h3 className="text-sm font-medium">{lesson.title}</h3>
+                      <p className="text-sm text-gray-400">{lesson.description}</p>
+                    </div>
+                    {formData.selectedLessons.some(l => l.id === lesson.id) && (
+                      <input
+                        type="number"
+                        min="1"
+                        max={formData.selectedLessons.length}
+                        value={formData.selectedLessons.find(l => l.id === lesson.id)?.order || 1}
+                        onChange={(e) => handleLessonReorder(lesson.id, parseInt(e.target.value))}
+                        className="w-16 bg-[#181b24] border border-gray-800 rounded px-2 py-1"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button variant="outline" onClick={() => setStep(2)}>Previous</Button>
+              <Button onClick={() => setStep(4)}>Next: Review</Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="review" className="space-y-4">
+            <div className="grid gap-4 py-4">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Review Module Details</h3>
+                <div className="space-y-2">
+                  <p><strong>Title:</strong> {formData.title}</p>
+                  <p><strong>Description:</strong> {formData.description}</p>
+                  <p><strong>Topic:</strong> {formData.topic}</p>
+                  <p><strong>Difficulty:</strong> {formData.difficulty}</p>
+                  <p><strong>Duration:</strong> {formData.duration} minutes</p>
+                  <div>
+                    <strong>Objectives:</strong>
+                    <ul className="list-disc list-inside">
+                      {formData.objectives.map((obj, idx) => (
+                        <li key={idx}>{obj}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <strong>Selected Lessons:</strong>
+                    <ul className="list-disc list-inside">
+                      {formData.selectedLessons
+                        .sort((a, b) => a.order - b.order)
+                        .map((lesson) => {
+                          const lessonDetails = availableLessons.find(l => l.id === lesson.id);
+                          return (
+                            <li key={lesson.id}>
+                              {lessonDetails?.title} (Order: {lesson.order})
+                            </li>
+                          );
+                        })}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button variant="outline" onClick={() => setStep(3)} disabled={isSubmitting}>Previous</Button>
+              <Button onClick={handleSubmit} disabled={isSubmitting}>
+                {isSubmitting ? 'Creating...' : 'Create Module'}
+              </Button>
+            </div>
+          </TabsContent>
         </Tabs>
       </DialogContent>
     </Dialog>
   );
 };
 
+const ModuleList = () => {
+  const [modules, setModules] = useState<Module[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [sortColumn, setSortColumn] = useState<SortableColumn>('title');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  const fetchModules = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/api/modules');
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to fetch modules');
+      }
+      
+      const data = await response.json();
+      setModules(data);
+    } catch (error) {
+      console.error('Error fetching modules:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchModules();
+  }, []);
+
+  const handleSort = (column: SortableColumn) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  const sortedModules = useMemo(() => {
+    if (!modules) return [];
+    return [...modules].sort((a: Module, b: Module) => {
+      const direction = sortDirection === 'asc' ? 1 : -1;
+      
+      switch (sortColumn) {
+        case 'enrollments':
+          return direction * (a.analytics.totalEnrollments - b.analytics.totalEnrollments);
+        case 'points':
+          return direction * (a.points - b.points);
+        case 'tags':
+          const aValue = a.tags[0] || '';
+          const bValue = b.tags[0] || '';
+          return direction * aValue.localeCompare(bValue);
+        case 'title':
+          return direction * (a.title || '').localeCompare(b.title || '');
+        default:
+          return 0;
+      }
+    });
+  }, [modules, sortColumn, sortDirection]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-2">
+          {sortOptions.map((option) => (
+            <Button
+              key={option.value}
+              variant={sortColumn === option.value ? 'default' : 'outline'}
+              onClick={() => handleSort(option.value)}
+            >
+              {option.label}
+              {sortColumn === option.value && (
+                <ArrowUpDown className={`ml-2 h-4 w-4 ${sortDirection === 'desc' ? 'rotate-180' : ''}`} />
+              )}
+            </Button>
+          ))}
+        </div>
+        <CreateModuleDialog onModuleCreated={fetchModules} />
+      </div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead key={column.id || String(column.accessorKey)}>
+                  {typeof column.header === 'string' ? column.header : null}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sortedModules.map((module) => (
+              <TableRow key={module.id}>
+                {columns.map((column) => (
+                  <TableCell key={column.id || String(column.accessorKey)}>
+                    {column.cell ? column.cell({ row: { original: module } }) : 
+                     column.accessorKey ? String(module[column.accessorKey as keyof Module] || '') : null}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
+};
+
 const TrainingsPage = () => {
+  const router = useRouter();
   const engagementData = [
     { month: 'Jan', value: 75 },
     { month: 'Feb', value: 78 },
@@ -348,123 +673,45 @@ const TrainingsPage = () => {
     { month: 'Jun', value: 85 },
   ];
 
-  const [modules, setModules] = useState<Module[]>([
-    {
-      id: 1,
-      title: "Phishing Awareness Basics",
-      description: "Learn to identify and avoid phishing attempts",
-      topic: "Security Awareness",
-      duration: 45,
-      completionRate: 88,
-      averageScore: 92,
-      difficulty: "Novice",
-      status: 'active',
-      lastUpdated: "2024-11-01",
-      ratings: 4.8,
-      thumbnail: "https://example.com/phishing-awareness.jpg",
-      prerequisites: ["Basic Security Concepts"],
-      objectives: ["Identify phishing attempts", "Avoid phishing attempts"],
-      contentSections: [
-        { id: 1, type: 'text', title: 'Introduction to Phishing', content: 'This section introduces the concept of phishing', order: 1 },
-        { id: 2, type: 'video', title: 'Phishing Example', content: 'https://example.com/phishing-example.mp4', order: 2 },
-        { id: 3, type: 'exercise', title: 'Phishing Quiz', content: 'https://example.com/phishing-quiz.html', order: 3 },
-        { id: 4, type: 'case-study', title: 'Phishing Case Study', content: 'https://example.com/phishing-case-study.pdf', order: 4 },
-        { id: 5, type: 'simulation', title: 'Phishing Simulation', content: 'https://example.com/phishing-simulation.html', order: 5 }
-      ],
-      settings: {
-        minScore: 80,
-        requireAllSections: true,
-        notifications: { onStart: true, onComplete: true, onDue: true }
-      },
-      analytics: {
-        totalAttempts: 0,
-        averageTimeSpent: 0,
-        completionsByDepartment: {},
-        questionStats: {},
-        feedback: { average: 0, total: 0, comments: [] }
-      },
-      version: { number: "1.0.0", changes: [] }
-    },
-    {
-      id: 2,
-      title: "Password Security",
-      description: "Best practices for password management",
-      topic: "Security Fundamentals",
-      duration: 30,
-      completionRate: 92,
-      averageScore: 88,
-      difficulty: "Novice",
-      status: 'active',
-      lastUpdated: "2024-11-05",
-      ratings: 4.6,
-      thumbnail: "https://example.com/password-security.jpg",
-      prerequisites: ["Basic Security Concepts"],
-      objectives: ["Manage passwords effectively", "Implement password policies"],
-      contentSections: [
-        { id: 1, type: 'text', title: 'Password Basics', content: 'This section covers the basics of password management', order: 1 },
-        { id: 2, type: 'video', title: 'Password Best Practices', content: 'https://example.com/password-best-practices.mp4', order: 2 },
-        { id: 3, type: 'exercise', title: 'Password Quiz', content: 'https://example.com/password-quiz.html', order: 3 },
-        { id: 4, type: 'case-study', title: 'Password Case Study', content: 'https://example.com/password-case-study.pdf', order: 4 },
-        { id: 5, type: 'simulation', title: 'Password Simulation', content: 'https://example.com/password-simulation.html', order: 5 }
-      ],
-      settings: {
-        minScore: 80,
-        requireAllSections: true,
-        notifications: { onStart: true, onComplete: true, onDue: true }
-      },
-      analytics: {
-        totalAttempts: 0,
-        averageTimeSpent: 0,
-        completionsByDepartment: {},
-        questionStats: {},
-        feedback: { average: 0, total: 0, comments: [] }
-      },
-      version: { number: "1.0.0", changes: [] }
-    },
-    {
-      id: 3,
-      title: "Advanced Social Engineering",
-      description: "Deep dive into social engineering tactics",
-      topic: "Advanced Security",
-      duration: 60,
-      completionRate: 75,
-      averageScore: 85,
-      difficulty: "Proficient",
-      status: 'active',
-      lastUpdated: "2024-11-10",
-      ratings: 4.9,
-      thumbnail: "https://example.com/social-engineering.jpg",
-      prerequisites: ["Social Engineering Basics"],
-      objectives: ["Understand social engineering tactics", "Implement social engineering countermeasures"],
-      contentSections: [
-        { id: 1, type: 'text', title: 'Introduction to Social Engineering', content: 'This section introduces the concept of social engineering', order: 1 },
-        { id: 2, type: 'video', title: 'Social Engineering Example', content: 'https://example.com/social-engineering-example.mp4', order: 2 },
-        { id: 3, type: 'exercise', title: 'Social Engineering Quiz', content: 'https://example.com/social-engineering-quiz.html', order: 3 },
-        { id: 4, type: 'case-study', title: 'Social Engineering Case Study', content: 'https://example.com/social-engineering-case-study.pdf', order: 4 },
-        { id: 5, type: 'simulation', title: 'Social Engineering Simulation', content: 'https://example.com/social-engineering-simulation.html', order: 5 }
-      ],
-      settings: {
-        minScore: 80,
-        requireAllSections: true,
-        notifications: { onStart: true, onComplete: true, onDue: true }
-      },
-      analytics: {
-        totalAttempts: 0,
-        averageTimeSpent: 0,
-        completionsByDepartment: {},
-        questionStats: {},
-        feedback: { average: 0, total: 0, comments: [] }
-      },
-      version: { number: "1.0.0", changes: [] }
-    }
-  ]);
-
+  const [modules, setModules] = useState<Module[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterDifficulty, setFilterDifficulty] = useState('all');
   const [filterTopic, setFilterTopic] = useState('all');
   const [sortColumn, setSortColumn] = useState<SortableColumn>('title');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  const fetchModules = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/api/modules');
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to fetch modules');
+      }
+      
+      const data = await response.json();
+      setModules(data);
+    } catch (error) {
+      console.error('Error fetching modules:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchModules();
+  }, []);
+
+  const handleModuleCreated = () => {
+    fetchModules();
+  };
+
+  const handleModuleClick = (module: Module) => {
+    router.push(`/trainings/modules/${module.id}`);
+  };
 
   const filteredModules = modules
     .filter(module => {
@@ -531,12 +778,106 @@ const TrainingsPage = () => {
     return <span className={`${styles[difficulty]} text-xs px-2 py-1 rounded`}>{difficulty}</span>;
   };
 
+  const columns: ColumnDef<Module>[] = [
+    {
+      accessorKey: 'title',
+      header: 'Title',
+    },
+    {
+      accessorKey: 'tags',
+      header: 'Tags',
+      cell: ({ row }) => (
+        <div className="flex gap-1">
+          {row.original.tags.map((tag, index) => (
+            <Badge key={index} variant="secondary">{tag}</Badge>
+          ))}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'points',
+      header: 'Points',
+    },
+    {
+      accessorKey: 'analytics.totalEnrollments',
+      header: 'Enrollments',
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const module = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(module.id)}>
+                Copy ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Edit Module</DropdownMenuItem>
+              <DropdownMenuItem>View Analytics</DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600">Delete Module</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+
+  const sortOptions: { label: string; value: SortableColumn }[] = [
+    { label: 'Title', value: 'title' },
+    { label: 'Tags', value: 'tags' },
+    { label: 'Points', value: 'points' },
+    { label: 'Enrollments', value: 'enrollments' },
+  ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-2 px-10">
+        <div className="flex justify-between items-center mb-7 mt-1">
+          <h1 className="text-xl font-base text-white">Trainings</h1>
+          <CreateModuleDialog onModuleCreated={handleModuleCreated} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {/* Loading skeletons for stats */}
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-[#181b24] border border-gray-800 rounded-lg p-6 animate-pulse">
+              <div className="h-4 bg-gray-700 rounded w-1/3 mb-4"></div>
+              <div className="h-8 bg-gray-700 rounded w-1/2 mb-2"></div>
+              <div className="h-4 bg-gray-700 rounded w-1/4"></div>
+            </div>
+          ))}
+        </div>
+        <div className="bg-[#050607] border border-gray-300/10 rounded-lg overflow-hidden">
+          {/* Loading skeletons for modules */}
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="border-b border-gray-800 p-6 animate-pulse">
+              <div className="flex items-center space-x-4">
+                <div className="h-12 w-12 bg-gray-700 rounded"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-700 rounded w-1/4 mb-2"></div>
+                  <div className="h-3 bg-gray-700 rounded w-1/2"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-2 px-10">
       <div>
         <div className="flex justify-between items-center mb-7 mt-1">
           <h1 className="text-xl font-base text-white">Trainings</h1>
-          <CreateModuleDialog />
+          <CreateModuleDialog onModuleCreated={handleModuleCreated} />
         </div>
 
         {/* Stats Grid */}
@@ -590,7 +931,11 @@ const TrainingsPage = () => {
             </thead>
             <tbody className="divide-y divide-gray-800">
               {filteredModules.map((module) => (
-                <tr key={module.id} className="hover:bg-gray-900/50 transition-colors">
+                <tr 
+                  key={module.id} 
+                  className="hover:bg-gray-900/50 transition-colors cursor-pointer" 
+                  onClick={() => handleModuleClick(module)}
+                >
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       <BookOpen size={20} className="text-gray-400 mr-3" />
@@ -611,7 +956,7 @@ const TrainingsPage = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    {getDifficultyBadge(module.difficulty)}
+                    {getDifficultyBadge(module.difficulty as 'Novice' | 'Proficient' | 'Master')}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center">
@@ -621,13 +966,31 @@ const TrainingsPage = () => {
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <div className="flex space-x-3">
-                      <button className="text-gray-400 hover:text-green-400 transition-colors">
+                      <button 
+                        className="text-gray-400 hover:text-green-400 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleModuleClick(module);
+                        }}
+                      >
                         <Play size={20} />
                       </button>
-                      <button className="text-gray-400 hover:text-blue-400 transition-colors">
+                      <button 
+                        className="text-gray-400 hover:text-blue-400 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Add edit functionality
+                        }}
+                      >
                         <Edit size={20} />
                       </button>
-                      <button className="text-gray-400 hover:text-red-400 transition-colors">
+                      <button 
+                        className="text-gray-400 hover:text-red-400 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Add delete functionality
+                        }}
+                      >
                         <Trash2 size={20} />
                       </button>
                     </div>

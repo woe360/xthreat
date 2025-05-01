@@ -1,17 +1,14 @@
+'use client'
+
 import React from 'react';
-import Navbar from '@/app/(landing-page)/navigation/navbar';
-import Footer from '@/app/(landing-page)/navigation/footer';
-import { Metadata } from 'next';
+import { motion } from 'framer-motion';
+import Navbar from '../navigation/navbar';
+import Footer from '../navigation/footer';
 
 interface PrivacySection {
   title: string;
   content: string | string[] | { text: string; list?: string[] };
 }
-
-export const metadata: Metadata = {
-  title: 'Privacy Policy - XThreat',
-  description: 'XThreat Privacy Policy',
-};
 
 const LAST_UPDATED_DATE = '2024-09-19';
 
@@ -84,15 +81,13 @@ const PRIVACY_SECTIONS: PrivacySection[] = [
   }
 ];
 
-const BackgroundGradient = ({ direction }: { direction: 'left' | 'right' }) => (
-  <div 
-    className={`absolute top-0 ${direction}-0 w-1/4 h-full bg-gradient-to-${direction === 'left' ? 'r' : 'l'} from-gray-800 to-transparent opacity-20`} 
-  />
-);
-
 const PolicySection = ({ index, section }: { index: number; section: PrivacySection }) => (
-  <div>
-    <h2 className="text-2xl font-bold text-white mt-8 mb-4">
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4, delay: index * 0.1 }}
+  >
+    <h2 className="text-2xl font-semibold text-white mt-8 mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400">
       {`${index + 1}. ${section.title}`}
     </h2>
     {typeof section.content === 'string' ? (
@@ -113,23 +108,40 @@ const PolicySection = ({ index, section }: { index: number; section: PrivacySect
         </p>
       ))
     )}
-  </div>
+  </motion.div>
 );
 
 export default function PrivacyPolicy() {
   return (
-    <main className="bg-black min-h-screen text-white relative overflow-hidden pt-20 font-sans">
+    <main className="relative">
+      <div className="absolute inset-0 min-h-screen w-full bg-[#0b0b0b] [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)] z-[-1]"></div>
       <Navbar/>
       
-      <div className="max-w-[1330px] mx-auto py-12 px-6 sm:px-6 lg:py-16 relative z-10">
-        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b pb-2 from-white to-neutral-600 sm:text-5xl sm:tracking-tight lg:text-6xl mb-8 pb-4 border-b-2 border-gray-700">
+      <div className="max-w-[1330px] mx-auto py-12 px-6 sm:px-6 lg:py-16 relative z-10 pt-24">
+        <motion.h1 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 sm:text-5xl sm:tracking-tight lg:text-6xl mb-8 pb-4 border-b border-gray-800"
+        >
           Privacy Policy
-        </h1>
+        </motion.h1>
         
-        <p className="text-sm text-gray-400 mb-8">
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-sm text-gray-400 mb-8"
+        >
           Last Updated: {LAST_UPDATED_DATE}
-        </p>
-        <div className="text-gray-300">
+        </motion.p>
+        
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="text-gray-300"
+        >
           <p className="mb-8">
             At XThreat, we are committed to protecting your privacy and ensuring the security of your personal information. 
             This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our 
@@ -142,7 +154,7 @@ export default function PrivacyPolicy() {
               section={section}
             />
           ))}
-        </div>
+        </motion.div>
       </div>
       <Footer />
     </main>

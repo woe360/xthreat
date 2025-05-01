@@ -1,18 +1,16 @@
 'use client'
 
 import React, { useState } from 'react';
-import Footer from '@/app/(landing-page)/navigation/footer';
-import Navbar from '@/app/(landing-page)/navigation/navbar';
+import Footer from '@/app/(marketing)/navigation/footer';
+import Navbar from '@/app/(marketing)/navigation/navbar';
 import { Check } from 'lucide-react';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
 import { Select } from '@/components/select';
 import { motion } from 'framer-motion';
-import { cn } from "@/lib/utils";
+import Link from 'next/link';
 
 interface FeatureItemProps {
-  icon: React.ReactNode;
   text: string;
-  delay: number;
 }
 
 interface FormData {
@@ -24,22 +22,11 @@ interface FormData {
   additionalDetails?: string;
 }
 
-interface AnimationProps {
-  initial: { opacity: number; y?: number; scale?: number };
-  animate: { opacity: number; y?: number; scale?: number };
-  transition: { delay?: number; duration: number };
-}
-
-const FeatureItem: React.FC<FeatureItemProps> = ({ icon, text, delay }) => (
-  <motion.div 
-    initial={{ opacity: 0, x: -20 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay, duration: 0.5 }}
-    className="flex items-center space-x-3"
-  >
-    {icon}
-    <p className="text-gray-300">{text}</p>
-  </motion.div>
+const FeatureItem: React.FC<FeatureItemProps> = ({ text }) => (
+  <div className="flex items-start">
+    <Check className="h-5 w-5 mr-3 text-white/60 mt-0.5 flex-shrink-0" />
+    <span className="text-neutral-400">{text}</span>
+  </div>
 );
 
 const ContactPage: React.FC = () => {
@@ -72,179 +59,159 @@ const ContactPage: React.FC = () => {
     }
   };
 
-  const fadeInUp: AnimationProps = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 }
-  };
-
   return (
-    <div className="min-h-screen font-sans bg-black text-white flex flex-col">
+    <div className="min-h-screen font-sans text-white flex flex-col">
       <Navbar />
-      <div className="flex-grow flex items-center justify-center py-52 px-6 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black" />
-        <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
-          {/* Info Section */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col justify-center space-y-8"
-          >
-            <motion.h1 
-              {...fadeInUp}
-              className="text-4xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold"
-            >
-              Maximize Your Defense
-            </motion.h1>
-            <motion.p 
-              {...fadeInUp}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="text-lg font-serif italic text-gray-300"
-            >
-              Revolutionize your security awareness and phishing training with our cutting-edge, automated solutions.
-            </motion.p>
-            <div className="space-y-4">
-              <FeatureItem 
-                icon={<Check className="w-4 h-4 text-gray-200" />}
-                text="Tailored, hands-on training for enhanced learning"
-                delay={0.3}
-              />
-              <FeatureItem 
-                icon={<Check className="w-4 h-4 text-gray-200" />}
-                text="Gamified real-world scenarios for increased engagement"
-                delay={0.4}
-              />
-              <FeatureItem 
-                icon={<Check className="w-4 h-4 text-gray-200" />}
-                text="Continuous, practice-based learning for lasting impact"
-                delay={0.5}
-              />
+      <main className="flex-grow flex justify-center items-center py-32 mt-28 px-4 relative">
+        <div className="absolute inset-0  pointer-events-none" />
+        <div className="max-w-7xl w-full relative">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-20">
+            {/* Left side with heading and info */}
+            <div className="lg:col-span-2">
+              <div className="text-start mb-20">
+                <h1 className="text-5xl font-normal mb-6">
+                  Contact
+                </h1>
+
+                <div className="pt-12 border-white/10">
+                  <div className="grid grid-cols-1 sm:grid-cols-1 gap-6">
+                    <div className="p-6  transition-all group">
+                      <div className="h-10 w-10 mb-4">
+                        <svg viewBox="0 0 24 24" className="w-full h-full fill-current opacity-60 group-hover:opacity-100 transition-opacity">
+                          <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+                          <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-normal mb-2">Technical Support</h3>
+                      <p className="text-sm text-neutral-400 mb-4">Technical issues & product related questions.</p>
+                      <Link 
+                        href="mailto:support@xthreat.com"
+                        className="inline-flex items-center px-6 py-2.5 border border-white/20 rounded-full hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-blue-500/10 transition-all"
+                      >
+                        Email Support
+                      </Link>
+                    </div>
+
+                    <div className="p-6  border-t border-white/10   transition-all group">
+                      <div className="h-10 w-10 mb-4">
+                        <svg viewBox="0 0 24 24" className="w-full h-full fill-current opacity-60 group-hover:opacity-100 transition-opacity">
+                          <path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 00-1.032-.211 50.89 50.89 0 00-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 002.433 3.984L7.28 21.53A.75.75 0 016 21v-4.03a48.527 48.527 0 01-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979z" />
+                          <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-normal mb-2">Sales Inquiries</h3>
+                      <p className="text-sm text-neutral-400 mb-4">How our solutions fit your business needs.</p>
+                      <div className="flex gap-3">
+                        <Link 
+                          href="mailto:sales@xthreat.com"
+                          className="inline-flex items-center px-6 py-2.5 border border-white/20 rounded-full hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-blue-500/10 transition-all"
+                        >
+                          Email Sales
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </motion.div>
-
-          {/* Form Section */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="bg-gray-900/30 [box-shadow:0_-20px_70px_-20px_#ffffff1f_inset] border border-gray-800 p-8 rounded-lg"
-          >
-            <motion.h1 
-              {...fadeInUp}
-              className="text-3xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-semibold pb-1 mb-8 text-center"
-            >
-              Contact
-            </motion.h1>
-
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <motion.div {...fadeInUp} transition={{ delay: 0.1 }}>
+            {/* Form Section */}
+            <div className="lg:col-span-3 mt-28">
+              <form className="space-y-8" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                   <input
                     type="text"
                     id="firstName"
                     name="firstName"
-                    placeholder="First name"
-                    className="w-full px-4 py-3 rounded-lg bg-neutral-900/30 text-gray-300 focus:outline-none border border-gray-800"
+                    placeholder="First Name"
+                    className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full"
                     required
                   />
-                </motion.div>
-                <motion.div {...fadeInUp} transition={{ delay: 0.2 }}>
                   <input
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="Work email*"
-                    className="w-full px-4 py-3 rounded-lg bg-neutral-900/30 text-gray-300 focus:outline-none border border-gray-800"
+                    placeholder="Work Email"
+                    className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full"
                     required
                   />
-                </motion.div>
-              </div>
-              <motion.div {...fadeInUp} transition={{ delay: 0.3 }}>
-                <input
-                  type="text"
-                  id="companyName"
-                  name="companyName"
-                  placeholder="Company name*"
-                  className="w-full px-4 py-3 rounded-lg bg-neutral-900/30 text-gray-300 focus:outline-none border border-gray-800"
-                  required
-                />
-              </motion.div>
+                </div>
 
-              {/* Select inputs */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <motion.div {...fadeInUp} transition={{ delay: 0.4 }}>
+                <div className="mt-10">
+                  <input
+                    type="text"
+                    id="companyName"
+                    name="companyName"
+                    placeholder="Company Name"
+                    className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mt-10">
                   <Select name="numberOfEmployees" required>
-                    <SelectTrigger className={cn(
-                      "w-full px-5 py-6 rounded-lg text-base bg-neutral-900/30  text-gray-400 border border-gray-800",
-                      "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                    )}>
-                      <SelectValue placeholder="Company size*" />
+                    <SelectTrigger className="bg-transparent border-0 border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full">
+                      <span className="text-start w-full">Company Size</span>
                     </SelectTrigger>
-                    <SelectContent className="bg-neutral-950 border border-gray-800 text-gray-300">
-                      <SelectItem value="1-50" className="hover:bg-neutral-800">1-50</SelectItem>
-                      <SelectItem value="51-250" className="hover:bg-neutral-800">51-250</SelectItem>
-                      <SelectItem value="251-500" className="hover:bg-neutral-800">251-500</SelectItem>
-                      <SelectItem value="501-1000" className="hover:bg-neutral-800">501-1000</SelectItem>
-                      <SelectItem value="1000+" className="hover:bg-neutral-800">1000+</SelectItem>
+                    <SelectContent className="bg-black border border-white/20">
+                      <SelectItem value="1-50">1-50 employees</SelectItem>
+                      <SelectItem value="51-250">51-250 employees</SelectItem>
+                      <SelectItem value="251-500">251-500 employees</SelectItem>
+                      <SelectItem value="501-1000">501-1000 employees</SelectItem>
+                      <SelectItem value="1000+">1000+ employees</SelectItem>
                     </SelectContent>
                   </Select>
-                </motion.div>
-                <motion.div {...fadeInUp} transition={{ delay: 0.5 }}>
+
                   <Select name="reason" required>
-                    <SelectTrigger className={cn(
-                      "w-full px-4 py-6 rounded-lg text-base bg-neutral-900/30 text-gray-400 border border-gray-800",
-                      "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                    )}>
-                      <SelectValue placeholder="Select your reason*" />
+                    <SelectTrigger className="bg-transparent border-0 border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full">
+                      <span className="text-start w-full">Reason for Contact</span>
                     </SelectTrigger>
-                    <SelectContent className="bg-neutral-950 border border-gray-800 text-gray-300">
-                      <SelectItem value="Get a Quote" className="hover:bg-neutral-800">Get a custom quote</SelectItem>
-                      <SelectItem value="More information about the products" className="hover:bg-neutral-800">To know more about products</SelectItem>
-                      <SelectItem value="General Inquiry" className="hover:bg-neutral-800">General inquiry</SelectItem>
+                    <SelectContent className="bg-transparent border border-white/20">
+                      <SelectItem value="Get a Quote">Get a custom quote</SelectItem>
+                      <SelectItem value="More information about the products">Learn more about our products</SelectItem>
+                      <SelectItem value="General Inquiry">General inquiry</SelectItem>
                     </SelectContent>
                   </Select>
-                </motion.div>
-              </div>
+                </div>
 
-              <motion.div {...fadeInUp} transition={{ delay: 0.6 }}>
-                <textarea
-                  id="additional"
-                  name="additionalDetails"
-                  placeholder="Any additional details you'd like to share with us?"
-                  className="w-full px-4 py-3 rounded-lg bg-neutral-900/30 text-gray-300 focus:outline-none border border-gray-800 h-24"
-                />
-                <p className="text-xs text-gray-400 mt-2 text-center">
-                  By submitting this form, you agree to our <a href="/privacy" className="text-gray-200 hover:underline">Privacy Policy</a>.
+                <div className="mt-10">
+                  <textarea
+                    id="additional"
+                    name="additionalDetails"
+                    placeholder="Additional Details"
+                    className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full min-h-32 resize-none"
+                  />
+                </div>
+
+                <p className="text-neutral-400 text-center">
+                  By submitting this form, you agree to our{' '}
+                  <Link href="/privacy" className="text-white underline hover:no-underline">Privacy Policy</Link>.
                 </p>
-              </motion.div>
-              
-              <motion.div 
-                className="flex justify-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.5 }}
-              >
-                <motion.button
-                  type="submit"
-                  disabled={isSubmitting}
-                  whileHover={!isSubmitting ? { scale: 1.05 } : {}}
-                  whileTap={!isSubmitting ? { scale: 0.95 } : {}}
-                  className={`bg-gray-200 hover:bg-gray-300 text-black px-10 py-3 rounded-xl font-normal transition duration-300 ${isSubmitting ? 'opacity-50' : ''}`}
-                >
-                  {isSubmitting ? 'Submitting...' : 'Submit'}
-                </motion.button>
-              </motion.div>
-            </form>
 
-            {formStatus && (
-              <div className="text-center mt-4 text-base text-green-500">
-                {formStatus}
-              </div>
-            )}
-          </motion.div>
+                {formStatus && (
+                  <div className={`mt-4 ${formStatus.includes('Thank you') ? 'text-green-400' : 'text-red-400'}`}>
+                    {formStatus}
+                  </div>
+                )}
+
+                <div className="!mt-12 flex flex-col items-end space-y-4">
+                  <motion.button
+                    type="submit"
+                    disabled={isSubmitting}
+                    whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+                    whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                    className={`rounded-full border border-white/40 py-3 px-8 hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-blue-500/10 transition-all ${
+                      isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                  </motion.button>
+                </div>
+              </form>
+            </div>
+
+          </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

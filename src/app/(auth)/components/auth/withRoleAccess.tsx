@@ -2,8 +2,10 @@ import { ComponentType } from 'react';
 import { useRoleAccess } from '@/hooks/useRoleAccess';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
+type UserRole = 'admin' | 'manager' | 'user';
+
 interface WithRoleAccessProps {
-  requiredRole?: string | string[];
+  requiredRole?: UserRole | UserRole[];
   redirectTo?: string;
 }
 
@@ -13,7 +15,7 @@ export function withRoleAccess<P extends object>(
 ) {
   return function WithRoleAccessWrapper(props: P) {
     const { hasAccess, loading } = useRoleAccess({
-      requiredRole: requiredRole as any,
+      requiredRole,
       redirectTo,
     });
 

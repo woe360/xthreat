@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ModuleSkeleton } from '@/app/(dashboard)/(shared)/modules/moduleSkeleton'
-
+import { Search } from 'lucide-react';
+import TimeTrackingDashboard from '@/components/streakTracker/StreakTracker';
+import { subMonths, startOfDay, format } from 'date-fns';
 
 interface TagColors {
   border: string;
@@ -26,20 +28,21 @@ interface HeaderTab {
 }
 
 const tagColors: Record<string, TagColors> = {
-  All: { border: 'border-gray-500', bg: 'bg-gray-200/70 text-gray-900' },
-  Threats: { border: 'border-blue-500', bg: 'bg-blue-500/20 text-blue-400' },
-  "Security Best Practices": { border: 'border-green-500', bg: 'bg-green-500/20 text-green-400' },
-  "Compliance & Regulations": { border: 'border-yellow-500', bg: 'bg-yellow-500/20 text-yellow-400' },
-  "Incident Response": { border: 'border-red-500', bg: 'bg-red-500/20 text-red-400' },
-  "Risk Management": { border: 'border-purple-500', bg: 'bg-purple-500/20 text-purple-400' },
-  "Role-Based": { border: 'border-indigo-500', bg: 'bg-indigo-500/20 text-indigo-400' },
+  All: { border: 'border-gray-500', bg: 'bg-white/10 text-white' },
+  Threats: { border: 'border-blue-500', bg: 'bg-blue-500/10 text-blue-300' },
+  "Security Best Practices": { border: 'border-green-500', bg: 'bg-green-500/10 text-green-300' },
+  "Compliance & Regulations": { border: 'border-yellow-500', bg: 'bg-yellow-500/10 text-yellow-300' },
+  "Incident Response": { border: 'border-red-500', bg: 'bg-red-500/10 text-red-300' },
+  "Risk Management": { border: 'border-purple-500', bg: 'bg-purple-500/10 text-purple-300' },
+  "Role-Based": { border: 'border-indigo-500', bg: 'bg-indigo-500/10 text-indigo-300' },
 };
 
 const Modules: React.FC = () => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [modules, setModules] = useState<Module[]>([]);
   const [activeTab, setActiveTab] = useState('browse');
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   
   const tabs: HeaderTab[] = [
     { id: 'browse', label: 'Browse', count: 3 },
@@ -51,7 +54,7 @@ const Modules: React.FC = () => {
     const fetchModules = async (): Promise<void> => {
       try {
         setLoading(true)
-        const response = await fetch('http://localhost:5000/api/modules');
+        const response = await fetch('/api/modules');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -71,9 +74,15 @@ const Modules: React.FC = () => {
     setSelectedTag(tag === 'All' ? null : tag);
   };
 
-  const filteredModules = selectedTag
-    ? modules.filter((module) => module.tags.includes(selectedTag))
-    : modules;
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredModules = modules
+    .filter(module => 
+      (!selectedTag || module.tags.includes(selectedTag)) && 
+      (searchQuery === '' || module.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
 
   const tags: string[] = Object.keys(tagColors);
 
@@ -84,58 +93,57 @@ const Modules: React.FC = () => {
   return (
     <main className="bg-[#050607] font-sans text-gray-100 min-h-screen">
       {/* Header Section */}
-        <div className="mx-10">
-          <div className="border-b border-gray-800">
-            <div className=" py-4">
-              <h1 className="text-xl font-medium mb-4 mt-3">Modules</h1>
-              <p className="text-gray-400 w-3/5 text-sm mb-8">
-                Master cybersecurity essentials with our comprehensive learning paths. From threat detection and incident response
-                to compliance frameworks and security best practices - enhance your organization's security posture with
-                practical, industry-aligned courses designed for modern security challenges.
-              </p>
-            </div>
-          </div>
-        </div>
+      <div className="max-w-[1400px] mx-auto pb-2 px-4">
+        <TimeTrackingDashboard />
+      </div>
 
-        {/* Sticky Tags Section */}
-        <div className="sticky top-0 bg-[#050607] z-[50]">
-          <div className="border-b border-gray-800 shadow-lg mx-10">
-            <div className="py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex justify-start items-center gap-3 flex-grow">
-                  {tags.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => handleTagClick(tag)}
-                      className={`px-3 py-1 rounded-lg ${
-                        selectedTag === tag || (tag === 'All' && !selectedTag)
-                          ? tagColors[tag].bg
-                          : 'bg-[#050607] border border-gray-800 hover:border-gray-700 text-gray-400'
-                      }`}
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
+      {/* Sticky Tags Section */}
+      <div className="sticky top-0 bg-[#050607]/80 backdrop-blur-md z-10 border-b border-gray-600/30 py-4 px-4">
+        <div className="max-w-[1400px] mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex flex-wrap gap-2 w-full md:w-auto">
+              {tags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => handleTagClick(tag)}
+                  className={`px-3 py-1.5 rounded-full text-sm ${
+                    selectedTag === tag || (tag === 'All' && !selectedTag)
+                      ? tagColors[tag].bg
+                      : 'bg-[#0a0a0a] border border-gray-600/30 hover:border-gray-700 text-gray-400'
+                  } transition-all`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+            <div className="relative w-full md:w-80">
+              <input
+                type="text"
+                placeholder="Search modules..."
+                value={searchQuery}
+                onChange={handleSearch}
+                className="w-full bg-[#0a0a0a] border border-gray-600/30 focus:border-gray-400/30 rounded-full px-4 py-1.5 pl-9 text-white text-sm outline-none"
+              />
+              <Search className="absolute left-3 top-2 h-4 w-4 text-gray-500" />
             </div>
           </div>
         </div>
+      </div>
 
       {/* Modules Content */}
-      <div className="px-10 pt-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <div className="max-w-[1400px] mx-auto py-8 px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredModules.map((module) => (
-            <Link href={`/modules/${module.slug}`} key={module.id} className="h-[220px]">
-              <div className="bg-[#181b24] hover:bg-[#181b24]/80 border border-transparent hover:border-gray-800  mb-6 rounded-lg p-6 cursor-pointer h-full"> 
+            <Link href={`/modules/${module.slug}`} key={module.id} className="group">
+              <div className="bg-black/20 border border-gray-600/20 hover:border-gray-500/30 rounded-lg p-6 h-full transition-all hover:shadow-lg hover:shadow-black/40"> 
                 <div className="flex flex-col h-full">
-                  <h2 className="text-xl font-base mb-2 text-gray-100">{module.title}</h2>
-                  <p className="text-gray-400 text-sm mb-4 flex-grow line-clamp-2">{module.description}</p>
-                  <div className="flex justify-end flex-wrap gap-2 mt-auto">
+                  <h2 className="text-md md:text-xl font-light text-white mb-2 group-hover:text-white/90">{module.title}</h2>
+                  <p className="text-gray-400 text-sm md:text-base mb-4 flex-grow line-clamp-2 group-hover:text-gray-300">{module.description}</p>
+                  <div className="flex flex-wrap gap-2 mt-auto">
                     {module.tags.map((tag, tagIndex) => (
                       <span
                         key={`${module.id}-${tagIndex}`}
-                        className={`text-sm rounded-lg px-3 py-1 ${tagColors[tag]?.bg || 'bg-gray-500/20 text-gray-400'}`}
+                        className={`text-xs md:text-sm rounded-full px-2.5 py-1 ${tagColors[tag]?.bg || 'bg-gray-500/10 text-gray-400'}`}
                       >
                         {tag}
                       </span>
@@ -147,7 +155,6 @@ const Modules: React.FC = () => {
           ))}
         </div>
       </div>
-      
     </main>
   );
 };

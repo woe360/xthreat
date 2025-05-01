@@ -4,6 +4,7 @@ import { Search, Users, AlertTriangle, BarChart2, Plus, Filter, Calendar, Activi
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation'
 
 interface RoleChange {
   date: string;
@@ -46,6 +47,7 @@ interface StatCardProps {
 }
 
 const UserManagementDashboard = () => {
+  const router = useRouter()
   // Initialize Supabase client
   const supabase = createClientComponentClient();
 
@@ -150,18 +152,18 @@ const UserManagementDashboard = () => {
   const [formError, setFormError] = useState<string | null>(null);
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    setSearchTerm(event.target.value.toLowerCase());
   };
 
   const filteredUsers = users.filter(user => {
-    // Add null checks for all properties
-    const matchesSearch = searchTerm === '' || (
-      (user.full_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-      (user.email?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-      (user.company?.toLowerCase() || '').includes(searchTerm.toLowerCase())
-    );
+    const searchValue = searchTerm.toLowerCase();
+    const matchesSearch = 
+      searchTerm === '' || 
+      user.full_name?.toLowerCase().includes(searchValue) ||
+      user.email?.toLowerCase().includes(searchValue) ||
+      user.company?.toLowerCase().includes(searchValue);
     
-    const matchesRole = filterRole === 'all' || user.role === filterRole;
+    const matchesRole = filterRole === 'all' || (user.role?.toLowerCase() || '') === filterRole.toLowerCase();
     const matchesCompany = filterCompany === 'all' || user.company === filterCompany;
     
     let matchesActivity = true;
@@ -279,18 +281,18 @@ const UserManagementDashboard = () => {
 
   // Add this inside your JSX, before the Users Table
   const roleManagementSection = (
-    <div className="mb-8 mt-10">
-      <h2 className="text-lg font-semibold mb-4">Role Management</h2>
-      <div className="bg-[#050607] border border-gray-800 rounded-lg p-4">
+    <div className="px-10 mb-8">
+      <h2 className="text-lg font-base mb-8 mt-6">Role Management</h2>
+      <div className="bg-[#181b24] border border-gray-800 rounded-lg p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Pending Role Requests */}
           <div>
             <h3 className="text-sm font-medium text-gray-400 mb-3">Pending Role Requests</h3>
             {users.filter(user => user.pendingRoleRequest?.status === 'pending').map(user => (
-              <div key={user.id} className="bg-gray-900/50 p-4 rounded-lg mb-3">
+              <div key={user.id} className="bg-[#050607] border border-gray-800 p-4 rounded-lg mb-3">
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <p className="text-sm font-medium">{user.full_name}</p>
+                    <p className="text-sm font-medium text-white">{user.full_name}</p>
                     <p className="text-xs text-gray-400">
                       Requesting: {user.pendingRoleRequest?.requestedRole}
                     </p>
@@ -306,26 +308,56 @@ const UserManagementDashboard = () => {
                 </div>
               </div>
             ))}
+            {users.filter(user => user.pendingRoleRequest?.status === 'pending').length === 0 && (
+              <div className="bg-[#050607] border border-gray-800 rounded-lg p-4 text-sm text-gray-400">
+                No pending requests
+              </div>
+            )}
           </div>
 
           {/* Recent Role Changes */}
           <div>
             <h3 className="text-sm font-medium text-gray-400 mb-3">Recent Role Changes</h3>
             {users
-              .filter(user => user.roleChangeHistory?.length)
+              .flatMap(user => 
+                (user.roleChangeHistory || []).map(change => ({
+                  ...change,
+                  userName: user.full_name,
+                  userId: user.id
+                }))
+              )
+              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
               .slice(0, 5)
-              .map(user => (
-                <div key={user.id} className="bg-gray-900/50 p-4 rounded-lg mb-3">
-                  <p className="text-sm font-medium">{user.full_name}</p>
-                  {user.roleChangeHistory?.slice(-1).map((change: RoleChange, idx: number) => (
-                    <div key={idx} className="text-xs text-gray-400">
-                      Changed from {change.from} to {change.to}
-                      <br />
-                      {new Date(change.date).toLocaleDateString()} by {change.changedBy}
+              .map((change, idx) => (
+                <div key={`${change.userId}-${idx}`} className="bg-[#050607] border border-gray-800 p-4 rounded-lg mb-3">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-white mb-1">{change.userName}</p>
+                      <div className="flex items-center gap-2 text-xs text-gray-400">
+                        <span className="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">{change.from}</span>
+                        <span className="text-gray-500">→</span>
+                        <span className="bg-green-500/20 text-green-400 px-2 py-0.5 rounded">{change.to}</span>
+                      </div>
+                      <div className="mt-2 text-xs text-gray-500">
+                        {new Date(change.date).toLocaleDateString()} at {new Date(change.date).toLocaleTimeString()}
+                      </div>
+                      <div className="mt-1 text-xs text-gray-400">
+                        Changed by: {change.changedBy}
+                      </div>
+                      {change.reason && (
+                        <div className="mt-2 text-xs text-gray-400">
+                          Reason: {change.reason}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  </div>
                 </div>
               ))}
+            {users.filter(user => user.roleChangeHistory?.length).length === 0 && (
+              <div className="bg-[#050607] border border-gray-800 rounded-lg p-4 text-sm text-gray-400">
+                No recent role changes
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -664,9 +696,9 @@ const UserManagementDashboard = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Roles</SelectItem>
-                    <SelectItem value="Admin">Admin</SelectItem>
-                    <SelectItem value="Manager">Manager</SelectItem>
-                    <SelectItem value="User">User</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="manager">Manager</SelectItem>
+                    <SelectItem value="user">User</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -741,7 +773,11 @@ const UserManagementDashboard = () => {
               </thead>
               <tbody className="divide-y divide-gray-800">
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-900/50 transition-colors">
+                  <tr 
+                    key={user.id} 
+                    className="hover:bg-gray-900/50 transition-colors cursor-pointer"
+                    onClick={() => router.push(`/users/${user.id}`)}
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div className="w-8 h-8 rounded-full bg-blue-500/30 text-blue-400 flex items-center justify-center mr-3">
@@ -789,7 +825,10 @@ const UserManagementDashboard = () => {
                         <button 
                           className="text-gray-400 hover:text-blue-400 transition-colors" 
                           title="Change Role"
-                          onClick={() => handleRoleChange(user)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRoleChange(user);
+                          }}
                         >
                           <Users size={20} />
                         </button>

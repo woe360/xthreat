@@ -132,7 +132,7 @@ const Navbar = () => {
           </motion.div>
         </div>
         {active === title && (
-          <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-black backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
+          <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-[#101010] backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
             {content}
           </div>
         )}
@@ -186,7 +186,7 @@ const Navbar = () => {
             animate={{ y: 0 }}
             exit={{ y: -100 }}
             transition={{ duration: 0.3 }}
-            className="fixed right-0 font-sans text-sm left-0 top-0 py-4 px-5 bg-black/40 backdrop-blur-lg z-[100]"
+            className="fixed right-0 font-sans text-sm left-0 top-0 py-4 px-5 bg-[#101010]/20 backdrop-blur-lg z-[100]"
           >
             <div className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
               <div className="flex items-center gap-1 md:gap-[2px]">
@@ -251,10 +251,10 @@ const Navbar = () => {
                       setIsDemoOpen(true);
                       setIsLoading(true);
                     }} 
-                    className="p-4 h-9 w-full sm:w-fit rounded-xl bg-gray-100/90 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4"
+                    className="p-4 h-9 w-full sm:w-fit rounded-full border border-white/70 hover:bg-white/5 group transition-all flex items-center justify-center gap-4"
                   >
-                    <span className="bg-clip-text flex text-transparent bg-gradient-to-r from-neutral-800 to-neutral-900 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
-                      Book a demo <ChevronRight className="text-black mt-[3px]" size={15}/>
+                    <span className="text-neutral-400 flex md:text-center">
+                      Book a demo <ChevronRight className="text-neutral-400 mt-[3px]" size={15}/>
                     </span>
                   </button>
                 </div>

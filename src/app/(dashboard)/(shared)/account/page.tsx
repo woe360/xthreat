@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { User, Bell, Globe, Upload } from 'lucide-react'
+import { User, Bell, Globe, Upload, ChevronRight, CheckCircle, Settings, Shield } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Switch } from '@/components/switch'
 import { Label } from "@/components/label"
@@ -65,6 +65,7 @@ const AccountPage = () => {
     documents: []
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [activeTab, setActiveTab] = useState('profile')
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -193,21 +194,21 @@ const AccountPage = () => {
 
   const RoleRequestDialog = () => (
     <Dialog open={showRoleRequest} onOpenChange={setShowRoleRequest}>
-      <DialogContent className="bg-[#181b24] border border-gray-800 text-gray-100">
+      <DialogContent className="bg-[#050607] border border-gray-800/40 text-gray-100 rounded-xl max-w-md mx-auto">
         <DialogHeader>
-          <DialogTitle>Request Manager Access</DialogTitle>
+          <DialogTitle className="text-xl font-light text-white">Request Manager Access</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleRoleRequest} className="space-y-4">
+        <form onSubmit={handleRoleRequest} className="space-y-4 mt-4">
           <div>
-            <Label htmlFor="company-size">Company Size</Label>
+            <Label htmlFor="company-size" className="text-gray-400">Company Size</Label>
             <Select
               value={roleRequest.companySize}
               onValueChange={(value) => setRoleRequest(prev => ({ ...prev, companySize: value }))}
             >
-              <SelectTrigger className="w-full bg-[#050607] border-gray-800">
+              <SelectTrigger className="w-full bg-black/20 border-gray-800/40 mt-1">
                 <SelectValue placeholder="Select company size" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#050607] border border-gray-800/40">
                 <SelectItem value="1-10">1-10 employees</SelectItem>
                 <SelectItem value="11-50">11-50 employees</SelectItem>
                 <SelectItem value="51-200">51-200 employees</SelectItem>
@@ -218,30 +219,30 @@ const AccountPage = () => {
           </div>
 
           <div>
-            <Label htmlFor="industry">Industry</Label>
+            <Label htmlFor="industry" className="text-gray-400">Industry</Label>
             <Select
               value={roleRequest.industry}
               onValueChange={(value) => setRoleRequest(prev => ({ ...prev, industry: value }))}
             >
-              <SelectTrigger className="w-full bg-[#181b24] border-gray-800">
+              <SelectTrigger className="w-full bg-black/20 border-gray-800/40 mt-1">
                 <SelectValue placeholder="Select industry" />
               </SelectTrigger>
-              <SelectContent className="bg-[#181b24] text-white">
-                <SelectItem className="bg-[#181b24] text-white" value="technology">Technology</SelectItem>
-                <SelectItem className="bg-[#181b24] text-white" value="finance">Finance</SelectItem>
-                <SelectItem className="bg-[#181b24] text-white" value="healthcare">Healthcare</SelectItem>
-                <SelectItem className="bg-[#181b24] text-white" value="manufacturing">Manufacturing</SelectItem>
-                <SelectItem className="bg-[#181b24] text-white" value="retail">Retail</SelectItem>
-                <SelectItem className="bg-[#181b24] text-white" value="other">Other</SelectItem>
+              <SelectContent className="bg-[#050607] border border-gray-800/40">
+                <SelectItem value="technology">Technology</SelectItem>
+                <SelectItem value="finance">Finance</SelectItem>
+                <SelectItem value="healthcare">Healthcare</SelectItem>
+                <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                <SelectItem value="retail">Retail</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
-            <Label htmlFor="reason">Reason for Request</Label>
+            <Label htmlFor="reason" className="text-gray-400">Reason for Request</Label>
             <textarea
               id="reason"
-              className="w-full bg-[#050607] border border-gray-800 rounded-lg p-2 text-gray-100"
+              className="w-full bg-black/20 border border-gray-800/40 rounded-lg p-2 text-gray-100 mt-1"
               rows={4}
               value={roleRequest.reason}
               onChange={(e) => setRoleRequest(prev => ({ ...prev, reason: e.target.value }))}
@@ -249,7 +250,7 @@ const AccountPage = () => {
           </div>
 
           <div>
-            <Label htmlFor="documents">Business Verification Documents</Label>
+            <Label htmlFor="documents" className="text-gray-400">Business Verification Documents</Label>
             <div className="mt-2">
               <input
                 type="file"
@@ -263,7 +264,7 @@ const AccountPage = () => {
               />
               <label
                 htmlFor="documents"
-                className="flex items-center justify-center w-full h-32 border-2 border-dashed border-gray-800 rounded-lg cursor-pointer hover:border-gray-700"
+                className="flex items-center justify-center w-full h-32 border border-dashed border-gray-800/60 rounded-lg cursor-pointer hover:border-gray-700/70 transition-all"
               >
                 <div className="text-center">
                   <Upload className="mx-auto h-12 w-12 text-gray-400" />
@@ -280,14 +281,14 @@ const AccountPage = () => {
           <div className="flex justify-end space-x-3 mt-6">
             <button
               type="button"
-              className="px-4 py-2 text-gray-400 hover:text-gray-300"
+              className="px-4 py-2 text-gray-400 hover:text-gray-300 transition-colors"
               onClick={() => setShowRoleRequest(false)}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500/30 text-blue-400 rounded-lg hover:bg-blue-500/50"
+              className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Submitting...' : 'Submit Request'}
@@ -301,152 +302,190 @@ const AccountPage = () => {
   const requestManagerButton = user.role === 'user' && (
     <button
       onClick={() => setShowRoleRequest(true)}
-      className="mt-4 w-full px-4 py-2 bg-blue-500/30 text-blue-400 rounded-lg hover:bg-blue-500/50 transition-colors"
+      className="mt-4 px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors"
     >
       Request Manager Access
     </button>
   )
 
-  return (
-    <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-2 px-10">
-      {user.isLoading ? (
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
-        </div>
-      ) : (
-        <div>
-          <div className="flex justify-between items-center mb-8 mt-1">
-            <h1 className="text-xl font-base text-white">Account</h1>
-            <button className="px-4 py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 hover:text-green-200 rounded-lg transition-colors">
-              Save
-            </button>
-          </div>
+  const SettingsTabButton = ({ id, label, icon: Icon }: { id: string, label: string, icon: React.ElementType }) => (
+    <button
+      onClick={() => setActiveTab(id)}
+      className={`flex items-center space-x-2 py-3 px-4 rounded-lg w-full text-left transition-colors ${
+        activeTab === id
+          ? 'bg-black/30 text-white'
+          : 'text-gray-400 hover:text-gray-300 hover:bg-black/20'
+      }`}
+    >
+      <Icon className="h-5 w-5" />
+      <span>{label}</span>
+    </button>
+  )
 
-          {/* 2x2 Grid Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Profile Information Card */}
-            <div className="bg-[#181b24] border border-gray-800 rounded-lg p-6">
-              <h2 className="text-lg font-base mb-6 flex items-center text-gray-100">
-                Profile Information
-              </h2>
-              <div className="space-y-4">
-                <div className="flex items-center pb-4">
-                  <label className="w-1/3 text-sm font-medium text-gray-400">First Name</label>
-                  <p className="w-2/3 text-gray-100">{user.firstName}</p>
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'profile':
+        return (
+          <div className="space-y-6">
+            <div className="bg-black/20 border border-gray-800/40 rounded-lg overflow-hidden">
+              <div className="p-6">
+                <h2 className="text-xl font-light text-white mb-4">Personal Information</h2>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-gray-400">First Name</Label>
+                      <p className="text-white mt-1">{user.firstName}</p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-400">Last Name</Label>
+                      <p className="text-white mt-1">{user.lastName}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-gray-400">Email Address</Label>
+                    <p className="text-white mt-1">{user.email}</p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-400">Account Type</Label>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <p className="text-white capitalize">{user.role}</p>
+                      {requestManagerButton}
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-gray-400">Member Since</Label>
+                    <p className="text-white mt-1">{user.joinDate}</p>
+                  </div>
                 </div>
-                <div className="flex items-center pb-4">
-                  <label className="w-1/3 text-sm font-medium text-gray-400">Last Name</label>
-                  <p className="w-2/3 text-gray-100">{user.lastName}</p>
-                </div>
-                <div className="flex items-center pb-4">
-                  <label className="w-1/3 text-sm font-medium text-gray-400">Work Email</label>
-                  <p className="w-2/3 text-gray-100">{user.email}</p>
-                </div>
-                <div className="flex items-center pb-4">
-                  <label className="w-1/3 text-sm font-medium text-gray-400">Role</label>
-                  <p className="w-2/3 text-gray-100 capitalize">{user.role}</p>
-                </div>
-                {requestManagerButton}
               </div>
             </div>
-
-            {/* Notifications Card */}
-            <div className="bg-[#181b24] border border-gray-800 rounded-lg p-6">
-              <h2 className="text-lg font-base mb-6 flex items-center text-gray-100">
-                Notifications
-              </h2>
-              <CardContent className="space-y-6 p-0">
-                <div className="flex items-center justify-between py-2">
-                  <div>
-                    <Label htmlFor="email-notifications" className="text-gray-100 font-medium">
-                      Email Notifications
-                    </Label>
-                    <p className="text-sm text-gray-400 mt-1">Receive updates via email</p>
+          </div>
+        )
+      case 'notifications':
+        return (
+          <div className="space-y-6">
+            <div className="bg-black/20 border border-gray-800/40 rounded-lg overflow-hidden">
+              <div className="p-6">
+                <h2 className="text-xl font-light text-white mb-4">Notification Preferences</h2>
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between py-3 border-b border-gray-800/40">
+                    <div>
+                      <p className="text-white font-light">Email Notifications</p>
+                      <p className="text-sm text-gray-400 mt-0.5">Receive security updates and course completions</p>
+                    </div>
+                    <Switch 
+                      checked={user.notifications.email}
+                      onCheckedChange={() => handleNotificationChange('email')}
+                    />
                   </div>
-                  <Switch 
-                    id="email-notifications"
-                    checked={user.notifications.email}
-                    onCheckedChange={() => handleNotificationChange('email')}
-                  />
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <div>
-                    <Label htmlFor="push-notifications" className="text-gray-100 font-medium">
-                      Push Notifications
-                    </Label>
-                    <p className="text-sm text-gray-400 mt-1">Receive browser notifications</p>
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="text-white font-light">Push Notifications</p>
+                      <p className="text-sm text-gray-400 mt-0.5">Receive alerts in your browser</p>
+                    </div>
+                    <Switch 
+                      checked={user.notifications.push}
+                      onCheckedChange={() => handleNotificationChange('push')}
+                    />
                   </div>
-                  <Switch 
-                    id="push-notifications"
-                    checked={user.notifications.push}
-                    onCheckedChange={() => handleNotificationChange('push')}
-                  />
                 </div>
-              </CardContent>
-            </div>
-
-            {/* Language Card */}
-            <div className="bg-[#181b24] border border-gray-800 rounded-lg p-6">
-              <h2 className="text-lg font-base mb-6 flex items-center text-gray-100">
-                Language
-              </h2>
-              <CardContent className="space-y-6 p-0">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="language-select" className="text-gray-100 font-medium">
-                      Language
-                    </Label>
-                    <p className="text-sm text-gray-400 mt-1">Select your preferred language</p>
-                  </div>
-                  <Select 
-                    value={user.language}
-                    onValueChange={handleLanguageChange}
-                  >
-                    <SelectTrigger className="w-[180px] bg-[#050607] border-gray-800">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="english">English</SelectItem>
-                      <SelectItem value="lithuanian">Lithuanian</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </div>
-
-            {/* Country Card */}
-            <div className="bg-[#181b24] border border-gray-800 rounded-lg p-6">
-              <h2 className="text-lg font-base mb-6 flex items-center text-gray-100">
-                Country
-              </h2>
-              <CardContent className="space-y-6 p-0">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="country-select" className="text-gray-100 font-medium">
-                      Country
-                    </Label>
-                    <p className="text-sm text-gray-400 mt-1">Select your country</p>
-                  </div>
-                  <Select
-                    value={user.country}
-                    onValueChange={handleCountryChange}
-                  >
-                    <SelectTrigger className="w-[180px] bg-[#050607] border-gray-800">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {europeanCountries.map((country) => (
-                        <SelectItem key={country} value={country.toLowerCase()}>{country}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
+              </div>
             </div>
           </div>
-          <RoleRequestDialog />
+        )
+      case 'preferences':
+        return (
+          <div className="space-y-6">
+            <div className="bg-black/20 border border-gray-800/40 rounded-lg overflow-hidden">
+              <div className="p-6">
+                <h2 className="text-xl font-light text-white mb-4">Regional Settings</h2>
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between py-3 border-b border-gray-800/40">
+                    <div>
+                      <p className="text-white font-light">Language</p>
+                      <p className="text-sm text-gray-400 mt-0.5">Select your preferred language</p>
+                    </div>
+                    <Select 
+                      value={user.language}
+                      onValueChange={handleLanguageChange}
+                    >
+                      <SelectTrigger className="w-[180px] bg-black/20 border-gray-800/40">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#050607] border border-gray-800/40">
+                        <SelectItem value="english">English</SelectItem>
+                        <SelectItem value="lithuanian">Lithuanian</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="text-white font-light">Country</p>
+                      <p className="text-sm text-gray-400 mt-0.5">Select your country</p>
+                    </div>
+                    <Select
+                      value={user.country}
+                      onValueChange={handleCountryChange}
+                    >
+                      <SelectTrigger className="w-[180px] bg-black/20 border-gray-800/40">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#050607] border border-gray-800/40 max-h-60">
+                        {europeanCountries.map((country) => (
+                          <SelectItem key={country} value={country.toLowerCase()}>{country}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      default:
+        return null
+    }
+  }
+
+  if (user.isLoading) {
+    return (
+      <div className="min-h-screen bg-[#050607] flex justify-center items-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen font-sans bg-[#050607] text-gray-100">
+      <div className="max-w-[1400px] mx-auto px-6 py-12">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-light bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-2">
+            Account Settings
+          </h1>
+          <p className="text-gray-400 max-w-3xl">
+            Manage your profile information, notification preferences, and regional settings.
+          </p>
         </div>
-      )}
+
+        {/* Main Content */}
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Sidebar */}
+          <div className="w-full md:w-64 flex-shrink-0">
+            <div className="space-y-1 sticky top-4">
+              <SettingsTabButton id="profile" label="Profile" icon={User} />
+              <SettingsTabButton id="notifications" label="Notifications" icon={Bell} />
+              <SettingsTabButton id="preferences" label="Preferences" icon={Settings} />
+            </div>
+          </div>
+          
+          {/* Content */}
+          <div className="flex-1">
+            {renderTabContent()}
+          </div>
+        </div>
+      </div>
+      <RoleRequestDialog />
     </div>
   )
 }

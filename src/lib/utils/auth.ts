@@ -1,4 +1,4 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { getTabSpecificSupabaseClient } from '@/lib/supabase/client'
 
 // export const checkAuthStatus = async () => {
 //   const supabase = createClientComponentClient()
@@ -24,7 +24,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 // }
 
 export const checkAuthStatus = async () => {
-  const supabase = createClientComponentClient()
+  const supabase = getTabSpecificSupabaseClient()
   
   try {
     const { data: { user }, error } = await supabase.auth.getUser()
@@ -65,7 +65,7 @@ export const checkAuthStatus = async () => {
 }
 
 export const signOut = async () => {
-  const supabase = createClientComponentClient()
+  const supabase = getTabSpecificSupabaseClient()
   
   try {
     await supabase.auth.signOut()

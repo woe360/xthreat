@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { motion, useAnimation, Variant, Variants } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { motion, useAnimation, Variants } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 interface StatisticItem {
@@ -41,60 +41,11 @@ const statisticsData: StatisticItem[] = [
   },
 ];
 
-const useGlitchingCountUp = (end: number, duration: number = 2, specialCount: boolean = false): number => {
-  const [count, setCount] = useState<number>(0);
-
-  useEffect(() => {
-    let startTime: number | null = null;
-    let animationFrameId: number;
-    const animationDuration = duration * 1000;
-
-    const animate = (timestamp: number): void => {
-      if (!startTime) startTime = timestamp;
-      const progress = timestamp - startTime;
-      const percentage = Math.min(progress / animationDuration, 1);
-      
-      let currentValue: number;
-      if (specialCount && end % 1 !== 0) {
-        currentValue = Number((percentage * end).toFixed(2));
-      } else {
-        currentValue = Math.floor(percentage * end);
-      }
-
-      // Add glitching effect
-      if (Math.random() < 0.1) {
-        currentValue = Math.floor(Math.random() * end);
-      }
-
-      setCount(currentValue);
-
-      if (percentage < 1) {
-        animationFrameId = requestAnimationFrame(animate);
-      } else {
-        setCount(end); // Ensure we end up at the exact target value
-      }
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, [end, duration, specialCount]);
-
-  return count;
-};
-
 interface StatisticItemContentProps {
   stat: StatisticItem;
 }
 
 const StatisticItemContent: React.FC<StatisticItemContentProps> = ({ stat }) => {
-  const count = useGlitchingCountUp(stat.value, 3, stat.specialCount);
-  const divisorValue = useGlitchingCountUp(3, 3);
-
   const variants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -109,16 +60,16 @@ const StatisticItemContent: React.FC<StatisticItemContentProps> = ({ stat }) => 
   return (
     <motion.span
       variants={variants}
-      className="text-5xl font-light text-gray-300 flex items-baseline"
+      className="text-7xl font-light text-white flex items-baseline"
     >
-      {stat.unit === 'M' && <span className="text-3xl mr-1">€</span>}
-      <span>{count}</span>
+      {stat.unit === 'M' && <span className="text-4xl mr-1">€</span>}
+      <span>{stat.value}</span>
       {stat.unit && (
-        <span className={`ml-1 ${stat.unit === '/ 3' ? 'text-5xl' : 'text-3xl'}`}>
+        <span className={`ml-1 ${stat.unit === '/ 3' ? 'text-6xl' : 'text-4xl'}`}>
           {stat.unit === '/ 3' ? (
             <>
               <span>&nbsp;</span>/
-              <span className="inline-block ml-2">{divisorValue}</span>
+              <span className="inline-block ml-2">3</span>
             </>
           ) : stat.unit}
         </span>
@@ -142,13 +93,16 @@ const StatisticItem: React.FC<StatisticItemProps> = ({ stat, index, totalItems }
   return (
     <motion.div
       variants={variants}
-      className={`flex flex-col items-center w-full md:w-1/4 p-6
-                ${index !== 0 ? 'md:border-l border-gray-800' : ''}
-                ${index !== totalItems - 1 ? 'border-b md:border-b-0 border-gray-700' : ''}`}
+      className="flex flex-col w-full py-8"
     >
+      <div className="text-gray-500 uppercase text-xs tracking-wider mb-6">
+        {stat.text === "of data breaches involve human error" && "HUMAN ERROR CAUSED BREACHES"}
+        {stat.text === "Share of breaches that involved shadow data" && "SHADOW DATA"}
+        {stat.text === "of cyberattacks happen with stolen credentials" && "STOLEN CREDENTIALS"}
+        {stat.text === "the global average cost of a data breach in 2024" && "AVERAGE COST OF BREACH"}
+      </div>
       <StatisticItemContent stat={stat} />
-      <p className="text-lg text-gray-400 mt-2">{stat.text}</p>
-      <p className="text-xs text-gray-500 mt-3">{stat.source}</p>
+      <p className="text-xs text-gray-500 mt-4">{stat.source}</p>
     </motion.div>
   );
 };
@@ -177,24 +131,34 @@ const StatisticsHack: React.FC = () => {
   };
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={containerVariants}
-      className="max-w-7xl mx-auto text-center"
-    >
-      <div className="flex flex-col md:flex-row justify-center items-stretch">
-        {statisticsData.map((stat, index) => (
-          <StatisticItem
-            key={index}
-            stat={stat}
-            index={index}
-            totalItems={statisticsData.length}
-          />
-        ))}
+    <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-start">
+      <div className="lg:w-2/5 order-1 flex flex-col justify-center">
+        <h2 className="text-5xl ml-10 font-sans font-normal mb-6 hidden lg:block">
+          Reality
+        </h2>
+        {/* <p className="text-xl ml-10 text-white/80 mb-6">
+          Human error is cybersecurity's greatest vulnerability—we fix that.
+        </p> */}
       </div>
-    </motion.div>
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={controls}
+        variants={containerVariants}
+        className="flex-1 order-2"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          {statisticsData.map((stat, index) => (
+            <StatisticItem
+              key={index}
+              stat={stat}
+              index={index}
+              totalItems={statisticsData.length}
+            />
+          ))}
+        </div>
+      </motion.div>
+    </div>
   );
 };
 

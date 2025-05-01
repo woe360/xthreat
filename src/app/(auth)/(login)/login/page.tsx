@@ -3,20 +3,11 @@ import { useState, FormEvent, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import XLogo from '../../../(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg'
 import Link from 'next/link';
-import { Copy, Loader2 } from 'lucide-react';
+import { Copy, Loader2, ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { setAuthToken } from '@/lib/utils/jwt';
 import { getClientIP, getDeviceInfo } from '@/lib/utils/session';
 import { getTabSpecificSupabaseClient } from '@/lib/supabase/client';
-
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-    </>
-  );
-};
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -33,9 +24,8 @@ export default function SignIn() {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
-  // Use tab-specific Supabase client
-  const supabase = getTabSpecificSupabaseClient();
-  const supabaseClient = useRef(supabase);
+  // Use Supabase client
+  const supabaseClient = useRef(getTabSpecificSupabaseClient());
 
   const resetOtp = () => {
     setOtp(['', '', '', '', '', '']);
@@ -112,15 +102,10 @@ export default function SignIn() {
 
   // Initialize the client when component loads
   useEffect(() => {
-    // Clear all auth cookies on load to prevent cross-tab contamination
-    document.cookie = 'sb-access-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
-    document.cookie = 'sb-refresh-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
-    document.cookie = 'supabase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
-    
-    // Force a re-initialization of the Supabase client for this tab
+    // Force a re-initialization of the Supabase client
     supabaseClient.current = getTabSpecificSupabaseClient();
     
-    console.log("Login page initialized with tab-specific Supabase client");
+    console.log("Login page initialized with session-specific Supabase client");
   }, []);
 
   const handleRequestOTP = async (e: FormEvent<HTMLFormElement>) => {
@@ -202,11 +187,6 @@ export default function SignIn() {
 
     setVerifying(true);
     try {
-      // Clear all auth cookies again before verification
-      document.cookie = 'sb-access-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
-      document.cookie = 'sb-refresh-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
-      document.cookie = 'supabase-auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
-
       const { data, error } = await supabaseClient.current.auth.verifyOtp({
         email: email.toLowerCase(),
         token: otpString,
@@ -313,123 +293,122 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r font-sans bg-black flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="mt-8 bg-gray-900/30 [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] border border-gray-800 py-8 px-4 shadow rounded-xl sm:px-10">
-          <div className="bg-transparent mb-6">
-            <div className="flex justify-center">
-              <Link href="/" className="inline-flex">
-                <Image
-                  src={XLogo}
-                  alt="X Logo"
-                  width={16}
-                  height={16}
-                  className="w-8 h-8 md:w-[30px] md:h-[30px]"
-                  priority
-                />
-              </Link>
-            </div>
-          </div>
+    <div className="min-h-screen font-sans bg-[#0b0b0b] [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)] flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full">
+        <div className="flex justify-center mb-12">
+          <Link href="/" className="inline-flex">
+            <Image
+              src={XLogo}
+              alt="X Logo"
+              width={24}
+              height={24}
+              className="w-8 h-8"
+              priority
+            />
+          </Link>
+        </div>
 
-          {error && !loading && (
-            <div className="p-3 bg-red-500/10 border mb-5 border-red-500/50 rounded-md">
-              <p className="text-red-500 text-sm text-center font-medium">
-                {error}
-              </p>
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-normal mb-6">
+            {showOtpInput ? 'Verification' : ''}
+          </h1>
+          <p className="text-lg text-neutral-400">
+            {showOtpInput 
+              ? `Enter the verification code sent to ${email}`
+              : ''}
+          </p>
+        </div>
+
+        {error && (
+          <div className="mb-8 text-red-400 text-center">
+            {error}
+          </div>
+        )}
+
+        {showOtpInput && (
+          <button 
+            onClick={() => setShowOtpInput(false)}
+            className="flex text-sm items-center mb-10 text-neutral-400 hover:text-white transition-colors"
+          >
+            <ChevronLeft className="mr-1" size={16}/> Back to login
+          </button>
+        )}
+
+        <form ref={formRef} onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP} className="space-y-8">
+          {!showOtpInput ? (
+            <div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className="bg-black border-b border-white/20 rounded-none px-0 py-3 h-auto text-lg font-normal focus:outline-none w-full text-center placeholder:text-neutral-400"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          ) : (
+            <div>
+              <div 
+                ref={containerRef}
+                tabIndex={-1}
+                className="flex justify-between focus:outline-none"
+              >
+                {otp.map((digit, index) => (
+                  <input
+                    key={index}
+                    ref={(el) => inputRefs.current[index] = el}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="\d*"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(index, e)}
+                    className="w-11 h-16 text-center border-b border-white/20 bg-black text-xl font-normal focus:outline-none focus:border-white/50"
+                  />
+                ))}
+              </div>
             </div>
           )}
 
-          <form ref={formRef} onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP} className="space-y-6">
-            {!showOtpInput ? (
-              <div>
-                <label htmlFor="email" className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="appearance-none rounded-md text-center relative block w-full px-3 py-3 border border-gray-700 placeholder-gray-500 text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] focus:z-10 sm:text-sm"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <BottomGradient />
-              </div>
-            ) : (
-              <div>
-                <div className="text-sm text-gray-400 text-center mb-4">
-                  Enter the code sent to {email}
+          <div>
+            <button
+              type="submit"
+              disabled={loading || verifying}
+              className="rounded-full border border-white/40 py-3 px-8 w-full hover:bg-white/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading || verifying ? (
+                <div className="flex items-center justify-center">
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  {loading ? 'Sending code...' : 'Verifying...'}
                 </div>
-                <div 
-                  ref={containerRef}
-                  tabIndex={-1}
-                  className="flex gap-2 justify-center focus:outline-none"
-                >
-                  {otp.map((digit, index) => (
-                    <input
-                      key={index}
-                      ref={(el) => inputRefs.current[index] = el}
-                      type="text"
-                      inputMode="numeric"
-                      pattern="\d*"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(index, e)}
-                      className="w-12 h-12 text-center border border-gray-700 rounded-md text-white bg-gray-900/30 focus:outline-none focus:ring-[#d1d0d0] focus:border-[#d1d0d0] text-xl"
-                    />
-                  ))}
-                </div>
-                {verifying && (
-                  <div className="flex justify-center mt-4">
-                    <Loader2 className="w-6 h-6 text-white animate-spin" />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {!showOtpInput && (
-              <div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <div className="flex items-center">
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Sending code...
-                    </div>
-                  ) : (
-                    'Continue'
-                  )}
-                </button>
-              </div>
-            )}
-          </form>
-
-          <div className="relative">
-            <div className="relative flex flex-col items-center justify-center text-sm mt-6 h-[28px]">
-              <div className="flex flex-row items-center">
-                <span className="text-gray-400">support@xthreat.eu</span>
-                <button
-                  onClick={copyToClipboard}
-                  className="ml-2 mt-[2px] text-gray-400 hover:text-gray-300 focus:outline-none"
-                  aria-label="Copy email"
-                >
-                  <Copy size={14} />
-                </button>
-              </div>
-              <div className="h-2">
-                {copied && (
-                  <span className="text-green-500 text-xs">Copied!</span>
-                )}
-              </div>
-            </div>
+              ) : (
+                <>{showOtpInput ? 'Verify' : 'Continue'}</>
+              )}
+            </button>
           </div>
+        </form>
+
+        <div className="flex flex-col items-center mt-12">
+          <div className="flex items-center">
+            <span className="text-neutral-400">Need help? </span>
+            <span className="text-white ml-1">support@xthreat.eu</span>
+            <button
+              onClick={copyToClipboard}
+              className="ml-2 text-neutral-400 hover:text-white"
+              aria-label="Copy email"
+            >
+              <Copy size={14} />
+            </button>
+          </div>
+          {copied && (
+            <div className="text-green-400 text-sm mt-1">
+              Copied to clipboard
+            </div>
+          )}
         </div>
       </div>
     </div>

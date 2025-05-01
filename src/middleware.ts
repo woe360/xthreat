@@ -75,13 +75,18 @@ const roleBasedRoutes: RoleBasedRoutes = {
       '/financials',
       '/analytics',
       '/trainings',
-      '/sessions'
+      '/trainings/modules',
+      '/trainings/modules/(.*)',
+      '/api/trainings',
+      '/sessions',
+      '/modules',
+      '/modules/(.*)'  // This will allow all paths under modules
     ]
   },
   manager: {
-    dashboard: '/dashboard',
+    dashboard: '/new-dashboard',
     allowedPaths: [
-      '/dashboard',
+      '/new-dashboard',
       '/modules',
       '/role-based',
       '/account',
@@ -94,9 +99,9 @@ const roleBasedRoutes: RoleBasedRoutes = {
     ]
   },
   user: {
-    dashboard: '/dashboard',
+    dashboard: '/new-dashboard',
     allowedPaths: [
-      '/dashboard',
+      '/new-dashboard',
       '/modules',
       '/role-based',
       '/account',
@@ -110,6 +115,7 @@ const roleBasedRoutes: RoleBasedRoutes = {
 const publicRoutes = [
   '/',
   '/pricing',
+  '/solutions',
   '/about',
   '/contact',
   '/cookies',
@@ -118,13 +124,14 @@ const publicRoutes = [
   '/login',
   '/api/auth',
   '/free-trial',
+  '/try-app',
 ];
 
 const sharedProtectedRoutes = [
   '/profile',
   '/settings',
   '/account',
-  '/dashboard'
+  '/new-dashboard'
 ];
 
 export async function middleware(req: NextRequest) {
@@ -175,7 +182,7 @@ export async function middleware(req: NextRequest) {
     });
     
     if (!hasAccess) {
-      const redirectPath = userRole === 'admin' ? '/overview' : '/dashboard';
+      const redirectPath = userRole === 'admin' ? '/overview' : '/new-dashboard';
       return NextResponse.redirect(new URL(redirectPath, req.url));
     }
 
