@@ -14,6 +14,7 @@ import CaseStudy from '@/app/(dashboard)/(shared)/modules/components/lessons/Cas
 import URLInspectorChallenge from '@/app/(dashboard)/(shared)/modules/components/lessons/Inspector'
 import SecurityStory from '@/app/(dashboard)/(shared)/modules/components/lessons/Story'
 import EmailComparison from '@/app/(dashboard)/(shared)/modules/components/lessons/EmailComparison'
+import ConceptOverview from '../../components/lessons/ConceptOverview'
 
 const LessonPage = () => {
   const router = useRouter()
@@ -135,15 +136,20 @@ const LessonPage = () => {
     }
 
     fetchData()
-  }, [params.lesson, currentSubLessonIndex])
+  }, [params.lesson])
 
   const handleSubLessonComplete = () => {
     console.log('Sub-lesson complete. Current index:', currentSubLessonIndex, 'Total:', subLessons.length)
+    
+    // Advancement Logic:
     if (currentSubLessonIndex < subLessons.length - 1) {
+      console.log('Moving to next sub-lesson');
       setCurrentSubLessonIndex(prev => prev + 1)
     } else if (nextLesson) {
+      console.log('Moving to next main lesson');
       router.push(`/modules/${params.module}/${nextLesson.id}`)
     } else {
+      console.log('Last sub-lesson, returning to module overview');
       router.push(`/modules/${params.module}`)
     }
   }
@@ -160,7 +166,10 @@ const LessonPage = () => {
       console.log('All questions:', questions)
       console.log('All answers:', answers)
    
-      let lessonQuestions, questionIds, lessonAnswers;
+      // Define types explicitly
+      let lessonQuestions: any[] = [];
+      let questionIds: number[] = []; // Assuming IDs are numbers
+      let lessonAnswers: any[] = [];
    
       switch (currentSubLesson.content_type) {
         case 'email_inspector':
@@ -171,14 +180,11 @@ const LessonPage = () => {
             a.sub_lesson_id === currentSubLesson.id
           )
           
+          // Pass questions and answers directly, not nested
           return (
             <EmailInspector 
               moduleId={params.module as string}
               onComplete={handleSubLessonComplete}
-              quizData={{
-                questions: lessonQuestions,
-                answers: lessonAnswers
-              }}
             />
           )
         case 'vendor_portal':
@@ -193,6 +199,8 @@ const LessonPage = () => {
           return <CaseStudy onComplete={handleSubLessonComplete} />
         case 'url_inspector':
           return <URLInspectorChallenge moduleId={params.module as string} onComplete={handleSubLessonComplete} lessonId={currentSubLesson.id} />
+        case 'concept_overview':
+          return <ConceptOverview onComplete={handleSubLessonComplete} />
         case 'quiz':
           lessonQuestions = questions.filter(q => q.sub_lesson_id === currentSubLesson.id)
           
@@ -203,16 +211,12 @@ const LessonPage = () => {
               a.sub_lesson_id === currentSubLesson.id
             )
             
-            // Patikriname, ar tai paskutinė sub-pamoka
-            const isLastSubLesson = currentSubLessonIndex === subLessons.length - 1
-            
             return (
               <Quiz 
                 questions={lessonQuestions}
                 answers={lessonAnswers}
                 moduleId={params.module as string}
                 onComplete={handleSubLessonComplete}
-                isLastSubLesson={isLastSubLesson}
               />
             )
           }
@@ -244,12 +248,12 @@ const LessonPage = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push(`/modules/${params.module}`)}
-              className="text-gray-400 justify-center hover:bg-gray-800 border border-gray-700 w-8 h-8 rounded-lg hover:text-gray-200 transition-colors flex items-center"
+              className="text-gray-400 justify-center hover:bg-gray-800 border border-gray-600/30 w-8 h-8 rounded-full hover:text-gray-200 transition-colors flex items-center "
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-5 w-5 " />
             </button>
             <div>
-              <h1 className="text-xl font-medium">{lesson.title}</h1>
+              <h1 className="text-xl font-light">{lesson.title}</h1>
             </div>
           </div>
         </div>

@@ -131,24 +131,26 @@ interface EmailComparisonProps {
 
 export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) {
   const router = useRouter()
-  const [selectedDifference, setSelectedDifference] = useState<string | null>(null)
   const [foundDifferences, setFoundDifferences] = useState<string[]>([])
   const [showHeaders, setShowHeaders] = useState(false)
   const [hoveredLink, setHoveredLink] = useState<EmailLink | null>(null)
   const [isComplete, setIsComplete] = useState(false)
   const [currentHintIndex, setCurrentHintIndex] = useState(-1)
+  const [showHintWarning, setShowHintWarning] = useState(false)
+  const [showHintConfirm, setShowHintConfirm] = useState(false)
+  const [currentHint, setCurrentHint] = useState<string | null>(null)
 
   const totalDifferences = differences.length
   const progress = (foundDifferences.length / totalDifferences) * 100
 
   const handleElementClick = (element: string) => {
     if (!foundDifferences.includes(element)) {
-      setSelectedDifference(element)
       setFoundDifferences([...foundDifferences, element])
     }
   }
 
   const handleComplete = () => {
+    console.log('handleComplete called!');
     setIsComplete(true)
     if (onComplete) {
       onComplete()
@@ -165,228 +167,217 @@ export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) 
   }
 
   const handleShowHint = () => {
+    if (currentHintIndex === -1) {
+      setShowHintWarning(true);
+      return;
+    }
+    
     const remainingHints = getRemainingHints()
     if (currentHintIndex < remainingHints.length - 1) {
-      setCurrentHintIndex(prev => prev + 1)
+      const nextHint = remainingHints[currentHintIndex + 1];
+      setCurrentHint(nextHint.hint);
+      setShowHintConfirm(true);
     }
   }
 
+  const handleConfirmFirstHint = () => {
+    setShowHintWarning(false);
+    const remainingHints = getRemainingHints();
+    if (remainingHints.length > 0) {
+      setCurrentHint(remainingHints[0].hint);
+      setShowHintConfirm(true);
+    }
+  };
+
+  const handleConfirmHint = () => {
+    setCurrentHintIndex(prev => prev + 1);
+    setShowHintConfirm(false);
+    setCurrentHint(null);
+  };
+
   const getHighlightClass = (element: string) => {
     return foundDifferences.includes(element) 
-      ? 'ring-2 ring-green-500/50 ring-offset-2 ring-offset-[#181b24] rounded-lg transition-all duration-300'
+      ? 'ring-1 ring-green-500/40 ring-offset-2 ring-offset-[#0d0d0d] rounded-lg transition-all duration-300'
       : ''
   }
 
   const EmailView = ({ email, type }: { email: Email, type: 'legitimate' | 'phishing' }) => (
-    <div className="flex-1 bg-[#181b24] border border-gray-800/40 rounded-lg overflow-hidden">
-      {/* <div className="border-b border-gray-800 p-2 flex items-center justify-between">
-        <button 
-          onClick={() => setShowHeaders(!showHeaders)}
-          className="flex items-center gap-1 px-3 py-1 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm text-gray-300"
-        >
-          <Eye size={16} />
-          {showHeaders ? 'Hide' : 'Show'} Headers
-        </button>
-        <span className="text-sm text-gray-400">{type === 'legitimate' ? 'Legitimate Email' : 'Suspicious Email'}</span>
-      </div> */}
+    <div className="flex-1 rounded-lg overflow-hidden pr-2 pl-1 pb-1 space-y-6 bg-black/20">
+      <div className="border-b border-gray-800/60 pb-3 mb-4">
+        <span className={`text-sm font-medium ${type === 'legitimate' ? 'text-green-400' : 'text-red-400'}`}>
+          {type === 'legitimate' ? 'Legitimate Example' : 'Phishing Example'}
+        </span>
+      </div>
 
-      <div className="p-6 space-y-6">
-        <button 
-          onClick={() => handleElementClick('sender')}
-          className={`flex items-center gap-3 group w-full p-2 ${getHighlightClass('sender')}`}
-        >
-          <Mail className="text-gray-400" size={20} />
-          <div className="text-left">
-            <div className="font-medium text-gray-200">
-              {email.from}
-            </div>
-            <div className="text-sm text-gray-400">to: {email.to}</div>
+      <button 
+        onClick={() => handleElementClick('sender')}
+        className={`flex items-center gap-3 group w-full p-2 ${getHighlightClass('sender')}`}
+      >
+        <Mail className="text-gray-400" size={20} />
+        <div className="text-left">
+          <div className="font-medium text-gray-200">
+            {email.from}
           </div>
-          <div className="ml-auto text-gray-400">
-            <span className="text-sm">{email.date}</span>
-          </div>
-        </button>
-
-        <button 
-          onClick={() => handleElementClick('content')}
-          className={`text-left w-full p-2 ${getHighlightClass('content')}`}
-        >
-          <div className="text-xl font-medium mb-4">{email.subject}</div>
-          <div className="text-gray-300 whitespace-pre-line">{email.content}</div>
-        </button>
-
-        <div className="space-y-4">
-          {email.links.map((link, index) => (
-            <div 
-              key={index}
-              className="relative inline-block"
-              onMouseEnter={() => setHoveredLink(link)}
-              onMouseLeave={() => setHoveredLink(null)}
-            >
-              <button
-                onClick={() => handleElementClick('links')}
-                className={`text-blue-400 hover:underline flex items-center gap-1 p-2 ${getHighlightClass('links')}`}
-              >
-                {link.text} <ExternalLink size={16} />
-              </button>
-              {hoveredLink === link && (
-                <div className="absolute left-0 bottom-full mb-2 bg-gray-950 text-xs p-2 rounded-lg">
-                  {link.url}
-                </div>
-              )}
-            </div>
-          ))}
+          <div className="text-sm text-gray-400">to: {email.to}</div>
         </div>
+        <div className="ml-auto text-gray-400">
+          <span className="text-sm">{email.date}</span>
+        </div>
+      </button>
 
-        {email.attachments.map((attachment, index) => (
-          <button 
+      <button 
+        onClick={() => handleElementClick('content')}
+        className={`text-left w-full p-2 ${getHighlightClass('content')}`}
+      >
+        <div className="text-xl font-medium mb-4">{email.subject}</div>
+        <div className="text-gray-300 whitespace-pre-line">{email.content}</div>
+      </button>
+
+      <div className="space-y-4">
+        {email.links.map((link, index) => (
+          <div 
             key={index}
-            onClick={() => handleElementClick('attachments')}
-            className={`flex items-center gap-2 text-gray-300 hover:text-gray-200 p-2 ${getHighlightClass('attachments')}`}
+            className="relative inline-block"
+            onMouseEnter={() => setHoveredLink(link)}
+            onMouseLeave={() => setHoveredLink(null)}
           >
-            <Paperclip size={20} />
-            <span>{attachment.name}</span>
-            <span className="text-sm text-gray-400">({attachment.size})</span>
-          </button>
+            <button
+              onClick={() => handleElementClick('links')}
+              className={`text-blue-400 hover:underline flex items-center gap-1 p-2 ${getHighlightClass('links')}`}
+            >
+              {link.text} <ExternalLink size={16} />
+            </button>
+            {hoveredLink === link && (
+              <div className="absolute left-0 bottom-full mb-2 bg-gray-950 text-xs p-2 rounded-lg">
+                {link.url}
+              </div>
+            )}
+          </div>
         ))}
       </div>
+
+      {email.attachments.map((attachment, index) => (
+        <button 
+          key={index}
+          onClick={() => handleElementClick('attachments')}
+          className={`flex items-center gap-2 text-gray-300 hover:text-gray-200 p-2 ${getHighlightClass('attachments')}`}
+        >
+          <Paperclip size={20} />
+          <span>{attachment.name}</span>
+          <span className="text-sm text-gray-400">({attachment.size})</span>
+        </button>
+      ))}
     </div>
   )
 
   if (isComplete) {
     return (
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="bg-[#181b24] border border-gray-800/40 rounded-lg p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-medium text-white mb-2">Exercise Complete!</h2>
-            <div className="flex flex-col items-center justify-center mt-8 mb-6">
-              <div className="relative">
-                <div className="w-32 h-32 rounded-full bg-blue-500/10 border-4 border-blue-500/20 flex items-center justify-center">
-                  <span className="text-4xl font-bold text-blue-400">
-                    {Math.round((foundDifferences.length / totalDifferences) * 100)}%
-                  </span>
-                </div>
-              </div>
-              <div className="mt-4 text-gray-400">
-                <span className="text-xl font-medium text-blue-400">{foundDifferences.length}</span>
-                <span className="mx-2">/</span>
-                <span className="text-xl">{totalDifferences}</span>
-                <p className="text-sm mt-1">Differences Found</p>
-              </div>
-            </div>
+      <div className="max-w-3xl w-full mx-auto py-12 px-4 text-center">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 font-normal mb-6">
+          Exercise Complete!
+        </h1>
+        
+        <div className="relative w-full max-w-md mx-auto mb-12 py-8">
+          <div className="absolute inset-0 flex items-center justify-center"></div>
+          <div className="relative z-10 text-center">
+            <div className="text-4xl font-light text-white mb-2">{foundDifferences.length}/{totalDifferences}</div>
+            <p className="text-neutral-400">
+              Differences Identified
+            </p>
+          </div>
+        </div>
 
-            <div className="max-w-lg mx-auto text-left mb-8">
-              <h3 className="text-gray-300 font-medium mb-3">You identified:</h3>
+        <div className="max-w-lg mx-auto text-left mb-8 text-sm">
+          <h3 className="text-gray-300 font-medium mb-3">Review:</h3>
+          <div className="space-y-2">
+            {foundDifferences.map((id) => (
+              <div key={id} className="flex items-center gap-2 text-green-400">
+                <Check size={16} />
+                <span>{differences.find(d => d.id === id)?.explanation}</span>
+              </div>
+            ))}
+          </div>
+
+          {foundDifferences.length < totalDifferences && (
+            <div className="mt-4">
+              <h3 className="text-gray-300 font-medium mb-3">You missed:</h3>
               <div className="space-y-2">
-                {foundDifferences.map((id) => (
-                  <div key={id} className="flex items-center gap-2 text-green-400">
-                    <Check size={16} />
-                    <span>{differences.find(d => d.id === id)?.explanation}</span>
-                  </div>
-                ))}
+                {differences
+                  .filter(diff => !foundDifferences.includes(diff.id))
+                  .map(diff => (
+                    <div key={diff.id} className="flex items-center gap-2 text-red-400">
+                      <AlertTriangle size={16} />
+                      <span>{diff.explanation}</span>
+                    </div>
+                  ))
+                }
               </div>
-
-              {foundDifferences.length < totalDifferences && (
-                <div className="mt-4">
-                  <h3 className="text-gray-300 font-medium mb-3">You missed:</h3>
-                  <div className="space-y-2">
-                    {differences
-                      .filter(diff => !foundDifferences.includes(diff.id))
-                      .map(diff => (
-                        <div key={diff.id} className="flex items-center gap-2 text-red-400">
-                          <AlertTriangle size={16} />
-                          <span>{diff.explanation}</span>
-                        </div>
-                      ))
-                    }
-                  </div>
-                </div>
-              )}
             </div>
-          </div>
-          
-          <div className="flex justify-center gap-4">
-            <button 
-              onClick={() => router.push(`/modules/${moduleId}`)}
-              className="border border-gray-500 hover:border-gray-400 text-gray-200 px-6 py-3 rounded-lg flex items-center gap-2 font-medium"
-            >
-              Return to Module
-            </button>
-            <button 
-              onClick={() => router.push(`/modules/${moduleId}/next`)}
-              className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-colors px-6 py-3 rounded-lg flex items-center gap-2 font-medium"
-            >
-              Next Lesson <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+          )}
+        </div>
+
+        <div className="border-t border-gray-800/40 pt-8 mt-8 max-w-md mx-auto flex justify-center gap-4">
+          <button
+            onClick={() => router.push(`/modules/${moduleId}`)}
+            className="inline-flex items-center px-6 py-3 border border-white/50 bg-white/20 text-white hover:bg-white/20 rounded-lg transition"
+          >
+            Continue <ChevronRight size={16} className="ml-1" />
+          </button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="w-[90vw] mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-sm text-gray-400">
-          {foundDifferences.length} of {totalDifferences} differences found
-        </span>
-        <div className="flex items-center gap-4">
+    <div className="w-full mx-auto py-12">
+      <div className="flex justify-between items-center mb-8 text-sm text-neutral-500">
+        <span>Identify {totalDifferences} key differences</span>
+        <div className="flex items-center gap-3">
           {foundDifferences.length < totalDifferences && (
             <button
               onClick={handleShowHint}
-              className="bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2 rounded-lg flex items-center gap-2"
+              className="px-3 py-1.5 border border-gray-800 rounded-full text-xs text-neutral-400 hover:border-gray-700 hover:text-neutral-300 transition-colors flex items-center gap-1"
               disabled={currentHintIndex >= getRemainingHints().length - 1}
             >
-              <HelpCircle size={16} />
-              {currentHintIndex === -1 ? 'Show Hint' : 'Next Hint'}
+              <HelpCircle size={14} /> Hint
             </button>
           )}
           <button 
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 font-medium"
+            className={`px-4 py-1.5 rounded-full flex items-center gap-1.5 text-sm transition-all ${ 
+                foundDifferences.length === totalDifferences 
+                ? "bg-white/70 text-black hover:bg-white/60" 
+                : "bg-neutral-800/50 text-neutral-500 cursor-not-allowed" 
+            }`}
             onClick={handleComplete}
+            disabled={foundDifferences.length < totalDifferences}
           >
-            Complete Exercise
+            I'm Done <ChevronRight size={14} />
           </button>
         </div>
       </div>
 
-      <div className="flex gap-4">
-        <div className="flex-[3] flex gap-4">
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex-[3] flex flex-col md:flex-row gap-4">
           <EmailView email={legitimateEmail} type="legitimate" />
           <EmailView email={phishingEmail} type="phishing" />
         </div>
 
-        <div className="flex-1 space-y-4">
-          {selectedDifference && (
-            <Alert className="bg-blue-900/20 border-blue-900/50">
-              <ArrowLeftRight className="h-4 w-4 text-blue-400" />
-              <AlertDescription className="text-blue-200">
-                {differences.find(d => d.id === selectedDifference)?.explanation}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {currentHintIndex >= 0 && (
-            <Alert className="bg-gray-800/50 border-gray-700">
-              <HelpCircle className="h-4 w-4 text-gray-400" />
-              <AlertDescription className="text-gray-300 text-sm">
-                Hint {currentHintIndex + 1}: {getRemainingHints()[currentHintIndex]?.hint}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <div className="bg-[#181b24] border border-gray-800/40 rounded-lg p-4">
+        <div className="flex-1 space-y-4 lg:max-w-sm">
+          <div className="">
             <h3 className="text-lg font-medium text-gray-200 mb-3">Key Differences Found:</h3>
             <div className="space-y-2">
               {foundDifferences.map((id) => {
                 const diff = differences.find(d => d.id === id)
                 return (
-                  <div key={id} className="p-3 bg-gray-800/50 rounded-lg">
-                    <div className="flex items-center gap-2 text-green-400 mb-2">
+                  <div 
+                    key={id} 
+                    className="p-3 rounded-lg border border-green-500/50 bg-green-500/10"
+                  >
+                    <div className="flex items-center gap-2 text-green-400 mb-1.5">
                       <Check size={16} />
-                      <span className="font-medium capitalize">{id}</span>
+                      <span className="font-medium capitalize text-sm text-white">{id}</span>
                     </div>
-                    <div className="text-sm text-gray-300">
+                    <div className="text-xs text-green-300/90 pl-6">
                       {diff?.explanation}
                     </div>
                   </div>
@@ -396,6 +387,51 @@ export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) 
           </div>
         </div>
       </div>
+
+      {showHintWarning && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[200] p-4">
+          <div className="bg-black border border-gray-700/50 rounded-xl p-6 max-w-md w-full mx-auto shadow-xl">
+            <h3 className="text-lg font-medium text-gray-100 mb-2">Show Hint?</h3>
+            <p className="text-sm text-neutral-300 mb-6">
+              Are you sure you want to see a hint? Compare the elements between the two emails first!
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowHintWarning(false)}
+                className="px-4 py-2 rounded-lg text-gray-300 hover:bg-white/10 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmFirstHint}
+                className="border border-white/50 bg-white/10 text-white hover:bg-white/20 
+                  transition-colors px-4 py-2 rounded-lg font-medium"
+              >
+                Show Hint
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showHintConfirm && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[200] p-4">
+          <div className="bg-black border border-gray-700/50 rounded-xl p-6 max-w-md w-full mx-auto shadow-xl">
+            <h3 className="text-lg font-medium text-gray-100 mb-2">Hint {currentHintIndex + 2}</h3>
+            <p className="text-sm text-neutral-300 mb-6">
+              {currentHint}
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={handleConfirmHint}
+                className="border border-white/50 bg-white/10 text-white hover:bg-white/20 
+                  transition-colors px-4 py-2 rounded-lg font-medium"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

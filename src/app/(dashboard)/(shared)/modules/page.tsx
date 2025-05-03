@@ -98,7 +98,7 @@ const Modules: React.FC = () => {
       </div>
 
       {/* Sticky Tags Section */}
-      <div className="sticky top-0 bg-[#050607]/80 backdrop-blur-md z-10 border-b border-gray-600/30 py-4 px-4">
+      <div className="sticky top-0 bg-[#050607]/80 backdrop-blur-md z-10 border-b border-white/15 py-4 px-4">
         <div className="max-w-[1400px] mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex flex-wrap gap-2 w-full md:w-auto">
@@ -109,7 +109,7 @@ const Modules: React.FC = () => {
                   className={`px-3 py-1.5 rounded-full text-sm ${
                     selectedTag === tag || (tag === 'All' && !selectedTag)
                       ? tagColors[tag].bg
-                      : 'bg-[#0a0a0a] border border-gray-600/30 hover:border-gray-700 text-gray-400'
+                      : 'bg-[#0a0a0a] border border-white/15 hover:border-white/30 text-gray-400'
                   } transition-all`}
                 >
                   {tag}
@@ -122,7 +122,7 @@ const Modules: React.FC = () => {
                 placeholder="Search modules..."
                 value={searchQuery}
                 onChange={handleSearch}
-                className="w-full bg-[#0a0a0a] border border-gray-600/30 focus:border-gray-400/30 rounded-full px-4 py-1.5 pl-9 text-white text-sm outline-none"
+                className="w-full bg-[#0a0a0a] border border-white/15 focus:border-white/30 rounded-full px-4 py-1.5 pl-9 text-white text-sm outline-none"
               />
               <Search className="absolute left-3 top-2 h-4 w-4 text-gray-500" />
             </div>
@@ -135,7 +135,7 @@ const Modules: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredModules.map((module) => (
             <Link href={`/modules/${module.slug}`} key={module.id} className="group">
-              <div className="bg-black/20 border border-gray-600/20 hover:border-gray-500/30 rounded-lg p-6 h-full transition-all hover:shadow-lg hover:shadow-black/40"> 
+              <div className="bg-black/20 border border-white/15 hover:border-gray-500/30 rounded-md p-6 h-full transition-all hover:shadow-lg hover:shadow-black/40"> 
                 <div className="flex flex-col h-full">
                   <h2 className="text-md md:text-xl font-light text-white mb-2 group-hover:text-white/90">{module.title}</h2>
                   <p className="text-gray-400 text-sm md:text-base mb-4 flex-grow line-clamp-2 group-hover:text-gray-300">{module.description}</p>

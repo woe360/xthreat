@@ -456,7 +456,7 @@ const PricingPage = () => {
         </div> */}
 
         {/* Calculator Section */}
-        <div className="w-full border-t border-b border-gray-800/50 py-36">
+        <div className="w-full border-t border-b border-white/20 py-36">
           <div className="max-w-[1360px] mx-auto">
             <div className="flex justify-between items-center mb-16">
               <h3 className="text-5xl font-normal">
@@ -464,7 +464,7 @@ const PricingPage = () => {
               </h3>
               <button 
                 onClick={() => handleCTAClick('/contact')}
-                className="text-sm rounded-full border border-white/40 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
+                className="text-sm rounded-full border border-white/20 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
               >
                 REQUEST CUSTOM PRICING <span className="text-xl">→</span>
               </button>
@@ -599,7 +599,7 @@ const PricingPage = () => {
                 <h4 className="text-2xl text-neutral-400 mb-6 md:mb-0">Still have questions?</h4>
                 <button
                   onClick={() => handleCTAClick('/contact')}
-                  className="rounded-full border border-white/40 py-3 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
+                  className="rounded-full border text-sm border-white/20 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
                 >
                   GET IN TOUCH <span className="text-xl">→</span>
                 </button>
@@ -626,7 +626,7 @@ const PricingPage = () => {
               </Link>
               <Link
                 href="/try-app"
-                className="rounded-full border border-white/40 py-3 px-8 hover:bg-white/5 transition-colors"
+                className="rounded-full border border-white/20 py-3 px-8 hover:bg-white/5 transition-colors"
               >
                 Try App
               </Link>

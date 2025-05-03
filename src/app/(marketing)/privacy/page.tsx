@@ -87,23 +87,23 @@ const PolicySection = ({ index, section }: { index: number; section: PrivacySect
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4, delay: index * 0.1 }}
   >
-    <h2 className="text-2xl font-semibold text-white mt-8 mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400">
+    <h2 className="text-xl font-medium text-white mt-10 mb-4">
       {`${index + 1}. ${section.title}`}
     </h2>
     {typeof section.content === 'string' ? (
-      <p className="text-gray-300 mb-8">{section.content}</p>
+      <p className="text-neutral-300 leading-relaxed mb-6">{section.content}</p>
     ) : 'text' in section.content ? (
       <>
-        <p className="text-gray-300 mb-4">{section.content.text}</p>
-        <ul className="list-disc pl-5 mb-8 text-gray-300">
+        <p className="text-neutral-300 leading-relaxed mb-3">{section.content.text}</p>
+        <ul className="list-disc list-inside space-y-2 pl-4 mb-6 text-neutral-300">
           {section.content.list?.map((item, i) => (
-            <li key={i} className="mb-2">{item}</li>
+            <li key={i}>{item}</li>
           ))}
         </ul>
       </>
     ) : (
       section.content.map((paragraph, i) => (
-        <p key={i} className="text-gray-300 mb-4">
+        <p key={i} className="text-neutral-300 leading-relaxed mb-4">
           {paragraph}
         </p>
       ))
@@ -113,50 +113,51 @@ const PolicySection = ({ index, section }: { index: number; section: PrivacySect
 
 export default function PrivacyPolicy() {
   return (
-    <main className="relative">
-      <div className="absolute inset-0 min-h-screen w-full bg-[#0b0b0b] [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)] z-[-1]"></div>
+    <div className="min-h-screen flex flex-col bg-black">
       <Navbar/>
       
-      <div className="max-w-[1330px] mx-auto py-12 px-6 sm:px-6 lg:py-16 relative z-10 pt-24">
-        <motion.h1 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 sm:text-5xl sm:tracking-tight lg:text-6xl mb-8 pb-4 border-b border-gray-800"
-        >
-          Privacy Policy
-        </motion.h1>
-        
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-sm text-gray-400 mb-8"
-        >
-          Last Updated: {LAST_UPDATED_DATE}
-        </motion.p>
-        
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-gray-300"
-        >
-          <p className="mb-8">
-            At XThreat, we are committed to protecting your privacy and ensuring the security of your personal information. 
-            This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our 
-            services or visit our website. By using our services, you consent to the data practices described in this policy.
-          </p>
-          {PRIVACY_SECTIONS.map((section, index) => (
-            <PolicySection 
-              key={section.title}
-              index={index}
-              section={section}
-            />
-          ))}
-        </motion.div>
-      </div>
+      <main className="flex-grow py-16 sm:py-24 pt-32">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl font-semibold text-white mb-6 mt-24"
+          >
+            Privacy Policy
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-sm text-neutral-400 mb-10"
+          >
+            Last Updated: {LAST_UPDATED_DATE}
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-neutral-300 text-base leading-relaxed"
+          >
+            <p className="mb-6">
+              At XThreat, we are committed to protecting your privacy and ensuring the security of your personal information. 
+              This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our 
+              services or visit our website. By using our services, you consent to the data practices described in this policy.
+            </p>
+            {PRIVACY_SECTIONS.map((section, index) => (
+              <PolicySection 
+                key={section.title}
+                index={index}
+                section={section}
+              />
+            ))}
+          </motion.div>
+        </div>
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }

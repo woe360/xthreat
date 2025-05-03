@@ -1,8 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { motion, useAnimation, Variants } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
+import React from 'react';
 
 interface StatisticItem {
   value: number;
@@ -46,20 +44,8 @@ interface StatisticItemContentProps {
 }
 
 const StatisticItemContent: React.FC<StatisticItemContentProps> = ({ stat }) => {
-  const variants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 1.5,
-        ease: 'easeInOut',
-      },
-    },
-  };
-
   return (
-    <motion.span
-      variants={variants}
+    <span
       className="text-7xl font-light text-white flex items-baseline"
     >
       {stat.unit === 'M' && <span className="text-4xl mr-1">€</span>}
@@ -74,7 +60,7 @@ const StatisticItemContent: React.FC<StatisticItemContentProps> = ({ stat }) => 
           ) : stat.unit}
         </span>
       )}
-    </motion.span>
+    </span>
   );
 };
 
@@ -85,81 +71,51 @@ interface StatisticItemProps {
 }
 
 const StatisticItem: React.FC<StatisticItemProps> = ({ stat, index, totalItems }) => {
-  const variants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
+  let headingText = "";
+  if (stat.text === "of data breaches involve human error") headingText = "HUMAN ERROR CAUSED BREACHES";
+  if (stat.text === "Share of breaches that involved shadow data") headingText = "SHADOW DATA";
+  if (stat.text === "of cyberattacks happen with stolen credentials") headingText = "STOLEN CREDENTIALS";
+  if (stat.text === "the global average cost of a data breach in 2024") headingText = "AVERAGE COST OF BREACH";
 
   return (
-    <motion.div
-      variants={variants}
-      className="flex flex-col w-full py-8"
+    <div
+      className="flex flex-col items-center py-8"
     >
-      <div className="text-gray-500 uppercase text-xs tracking-wider mb-6">
-        {stat.text === "of data breaches involve human error" && "HUMAN ERROR CAUSED BREACHES"}
-        {stat.text === "Share of breaches that involved shadow data" && "SHADOW DATA"}
-        {stat.text === "of cyberattacks happen with stolen credentials" && "STOLEN CREDENTIALS"}
-        {stat.text === "the global average cost of a data breach in 2024" && "AVERAGE COST OF BREACH"}
-      </div>
       <StatisticItemContent stat={stat} />
-      <p className="text-xs text-gray-500 mt-4">{stat.source}</p>
-    </motion.div>
+      
+      <div className="text-gray-500 uppercase text-xs tracking-wider mt-4 mb-1 text-center">
+        {headingText}
+      </div>
+
+      <p className="text-xs text-gray-500 text-center">{stat.source}</p>
+    </div>
   );
 };
 
 const StatisticsHack: React.FC = () => {
-  const controls = useAnimation();
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  useEffect(() => {
-    if (inView) {
-      controls.start('visible');
-    }
-  }, [controls, inView]);
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-      },
-    },
-  };
-
   return (
-    <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-start">
-      <div className="lg:w-2/5 order-1 flex flex-col justify-center">
-        <h2 className="text-5xl ml-10 font-sans font-normal mb-6 hidden lg:block">
+    <div className="w-full">
+      <div className="w-full mb-10 lg:mb-16 px-4 lg:px-10">
+        <h2 className="text-5xl font-sans font-normal">
           Reality
         </h2>
-        {/* <p className="text-xl ml-10 text-white/80 mb-6">
-          Human error is cybersecurity's greatest vulnerability—we fix that.
-        </p> */}
       </div>
-      <motion.div
-        ref={ref}
-        initial="hidden"
-        animate={controls}
-        variants={containerVariants}
-        className="flex-1 order-2"
+      <div
+        className="w-full flex flex-row flex-wrap justify-around gap-x-10 gap-y-8 px-4 lg:px-10"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {statisticsData.map((stat, index) => (
-            <StatisticItem
-              key={index}
-              stat={stat}
-              index={index}
-              totalItems={statisticsData.length}
-            />
-          ))}
-        </div>
-      </motion.div>
+        {statisticsData.map((stat, index) => (
+          <StatisticItem
+            key={index}
+            stat={stat}
+            index={index}
+            totalItems={statisticsData.length}
+          />
+        ))}
+      </div>
     </div>
   );
 };
 
 export default StatisticsHack;
+
+// galima ideati ir https://vasturiano.github.io/react-globe.gl/example/submarine-cables/

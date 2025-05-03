@@ -1,178 +1,8 @@
-// 'use client'
-
-// import React from 'react'
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-// import { Button } from "@/components/ui/button"
-// import { ChevronRight, ChevronLeft } from 'lucide-react'
-// import { useRouter } from 'next/navigation'
-
-// interface QuizProps {
-//   questions: any[]
-//   answers: any[]
-//   moduleId: string
-// }
-
-// export const Quiz = ({ questions, answers, moduleId }: QuizProps) => {
-//   const router = useRouter()
-//   const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0)
-//   const [selectedAnswers, setSelectedAnswers] = React.useState<{[key: number]: number[]}>({})
-//   const [isComplete, setIsComplete] = React.useState(false)
-//   const [score, setScore] = React.useState<{correct: number, total: number} | null>(null)
-
-//   const currentQuestion = questions[currentQuestionIndex]
-//   const currentAnswers = answers.filter(a => a.question_id === currentQuestion?.id)
-  
-//   const handleAnswerSelect = (answerId: number) => {
-//     setSelectedAnswers(prev => {
-//       const current = prev[currentQuestion.id] || []
-//       return {
-//         ...prev,
-//         [currentQuestion.id]: current.includes(answerId)
-//           ? current.filter(id => id !== answerId)
-//           : [...current, answerId]
-//       }
-//     })
-//   }
-
-//   const calculateScore = () => {
-//     let correctCount = 0
-//     questions.forEach(question => {
-//       const selectedIds = selectedAnswers[question.id] || []
-//       const correctAnswers = answers
-//         .filter(a => a.question_id === question.id && a.is_correct)
-//         .map(a => a.id)
-      
-//       const isCorrect = 
-//         selectedIds.length === correctAnswers.length &&
-//         selectedIds.every(id => correctAnswers.includes(id))
-      
-//       if (isCorrect) correctCount++
-//     })
-//     return {
-//       correct: correctCount,
-//       total: questions.length
-//     }
-//   }
-
-//   const handleNextQuestion = () => {
-//     if (currentQuestionIndex < questions.length - 1) {
-//       setCurrentQuestionIndex(prev => prev + 1)
-//     } else {
-//       const finalScore = calculateScore()
-//       setScore(finalScore)
-//       setIsComplete(true)
-//     }
-//   }
-
-//   if (isComplete && score) {
-//     return (
-//       <div className="max-w-3xl mx-auto px-4">
-//         <div className="bg-[#181b24] border border-gray-800/40 rounded-lg p-8">
-//           <div className="text-center mb-8">
-//             <h2 className="text-2xl font-medium text-white mb-2">Quiz Complete!</h2>
-//             <div className="flex flex-col items-center justify-center mt-8 mb-6">
-//               <div className="relative">
-//                 <div className="w-32 h-32 rounded-full bg-blue-500/10 border-4 border-blue-500/20 flex items-center justify-center">
-//                   <span className="text-4xl font-bold text-blue-400">
-//                     {Math.round((score.correct / score.total) * 100)}%
-//                   </span>
-//                 </div>
-//               </div>
-//               <div className="mt-4 text-gray-400">
-//                 <span className="text-xl font-medium text-blue-400">{score.correct}</span>
-//                 <span className="mx-2">/</span>
-//                 <span className="text-xl">{score.total}</span>
-//                 <p className="text-sm mt-1">Correct Answers</p>
-//               </div>
-//             </div>
-//           </div>
-          
-//           <div className="flex justify-center">
-//             <button 
-//               onClick={() => router.push(`/modules/${moduleId}`)}
-//               className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-colors px-6 py-2 rounded-lg flex items-center gap-2"
-//             >
-//               Return to Module <ChevronRight className="w-4 h-4" />
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     )
-//   }
-
-//   return (
-//     <div className="max-w-3xl mx-auto px-4">
-//       <div className="flex justify-center mb-4">
-//         <span className="text-sm text-gray-400">
-//           Question {currentQuestionIndex + 1} of {questions.length}
-//         </span>
-//       </div>
-
-//       <div className="bg-[#181b24] border border-gray-800/40 rounded-lg overflow-hidden">
-//         <div className="h-1 bg-gray-800">
-//           <div 
-//             className="h-full bg-blue-500 transition-all duration-300" 
-//             style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
-//           />
-//         </div>
-
-//         <div className="p-6">
-//           <div className="mb-8">
-//             <h3 className="text-xl font-medium text-white mb-2">
-//               {currentQuestion.question_text}
-//             </h3>
-//             <p className="text-sm text-gray-400">Select all that apply</p>
-//           </div>
-
-//           <div className="space-y-3">
-//             {currentAnswers.map((answer) => (
-//               <button
-//                 key={answer.id}
-//                 onClick={() => handleAnswerSelect(answer.id)}
-//                 className={`w-full text-left p-4 rounded-lg border transition-all duration-200 ${
-//                   selectedAnswers[currentQuestion.id]?.includes(answer.id)
-//                     ? 'bg-blue-500/10 border-blue-500/40 text-blue-400'
-//                     : 'border-transparent bg-gray-800/30 hover:bg-gray-800/50 text-gray-300 hover:text-white'
-//                 }`}
-//               >
-//                 {answer.answer_text}
-//               </button>
-//             ))}
-//           </div>
-          
-//           <div className="flex justify-between mt-8 pt-6 border-t border-gray-800/40">
-//             {currentQuestionIndex > 0 ? (
-//               <button
-//                 onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
-//                 className="text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-2"
-//               >
-//                 <ChevronLeft className="w-4 h-4" /> Previous
-//               </button>
-//             ) : (
-//               <div />
-//             )}
-            
-//             <button
-//               onClick={handleNextQuestion}
-//               className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-colors px-4 py-2 rounded-lg flex items-center gap-2"
-//             >
-//               {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
-//               <ChevronRight className="w-4 h-4" />
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default Quiz
-
 'use client'
 
 import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/card"
-import { Button } from "@/components/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -181,54 +11,70 @@ interface QuizProps {
   answers: any[]
   moduleId: string
   onComplete?: () => void
-  isLastSubLesson?: boolean
 }
 
-export const Quiz = ({ questions, answers, moduleId, onComplete, isLastSubLesson }: QuizProps) => {
+export const Quiz = ({ questions, answers, moduleId, onComplete }: QuizProps) => {
   const router = useRouter()
   const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0)
   const [selectedAnswers, setSelectedAnswers] = React.useState<{[key: number]: number[]}>({})
   const [isComplete, setIsComplete] = React.useState(false)
   const [score, setScore] = React.useState<{correct: number, total: number} | null>(null)
+  const [shuffledOptions, setShuffledOptions] = React.useState<any[]>([]);
 
-  if (!questions.length || !answers.length) {
+  const currentQuestion = questions[currentQuestionIndex];
+
+  React.useEffect(() => {
+    if (currentQuestion) {
+      const currentAns = answers.filter(a => a.question_id === currentQuestion.id);
+      setShuffledOptions(currentAns.sort(() => Math.random() - 0.5));
+    }
+  }, [currentQuestion, answers]);
+
+  if (!questions.length) {
     return <div className="text-center p-6">Loading quiz...</div>
   }
 
-  const currentQuestion = questions[currentQuestionIndex]
-  const currentAnswers = answers.filter(a => a.question_id === currentQuestion?.id)
-  
   const handleAnswerSelect = (answerId: number) => {
     setSelectedAnswers(prev => {
-      const current = prev[currentQuestion.id] || []
+      const currentQuestionId = currentQuestion.id;
+      const currentSelection = prev[currentQuestionId] || [];
+      const newSelection = currentSelection.includes(answerId)
+        ? currentSelection.filter(id => id !== answerId)
+        : [...currentSelection, answerId];
+      
       return {
         ...prev,
-        [currentQuestion.id]: current.includes(answerId)
-          ? current.filter(id => id !== answerId)
-          : [...current, answerId]
-      }
-    })
-  }
+        [currentQuestionId]: newSelection
+      };
+    });
+  };
 
   const calculateScore = () => {
     let correctCount = 0
     questions.forEach(question => {
-      const selectedIds = selectedAnswers[question.id] || []
+      const selectedIds = selectedAnswers[question.id] || [];
       const correctAnswers = answers
         .filter(a => a.question_id === question.id && a.is_correct)
-        .map(a => a.id)
+        .map(a => a.id);
+
+      // Sort both arrays to ensure order doesn't affect comparison
+      const sortedSelectedIds = [...selectedIds].sort();
+      const sortedCorrectAnswers = [...correctAnswers].sort();
       
+      // Check if the selected answers exactly match the correct answers
       const isCorrect = 
-        selectedIds.length === correctAnswers.length &&
-        selectedIds.every(id => correctAnswers.includes(id))
-      
-      if (isCorrect) correctCount++
-    })
+        sortedSelectedIds.length === sortedCorrectAnswers.length &&
+        sortedSelectedIds.every((id, index) => id === sortedCorrectAnswers[index]);
+
+      if (isCorrect) {
+        correctCount++;
+      }
+    });
     return {
       correct: correctCount,
       total: questions.length
-    }
-  }
+    };
+  };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -240,110 +86,92 @@ export const Quiz = ({ questions, answers, moduleId, onComplete, isLastSubLesson
     }
   }
 
-  if (isComplete && score) {
+  const isQuizFinished = currentQuestionIndex >= questions.length || isComplete;
+  const selectedOptionIds = selectedAnswers[currentQuestion?.id] || [];
+
+  if (isQuizFinished && score) {
     return (
-      <div className="max-w-3xl mx-auto px-4">
-        <div className="bg-[#181b24] border border-gray-800/40 rounded-lg p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-medium text-white mb-2">Quiz Complete!</h2>
-            <div className="flex flex-col items-center justify-center mt-8 mb-6">
-              <div className="relative">
-                <div className="w-32 h-32 rounded-full bg-blue-500/10 border-4 border-blue-500/20 flex items-center justify-center">
-                  <span className="text-4xl font-bold text-blue-400">
-                    {Math.round((score.correct / score.total) * 100)}%
-                  </span>
-                </div>
-              </div>
-              <div className="mt-4 text-gray-400">
-                <span className="text-xl font-medium text-blue-400">{score.correct}</span>
-                <span className="mx-2">/</span>
-                <span className="text-xl">{score.total}</span>
-                <p className="text-sm mt-1">Correct Answers</p>
-              </div>
-            </div>
+      <div className="max-w-3xl w-full mx-auto py-12 px-4 text-center">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 font-normal mb-6">
+          Quiz Completed
+        </h1>
+        
+        <div className="relative w-full max-w-md mx-auto mb-12 py-8">
+          <div className="absolute inset-0 flex items-center justify-center">
           </div>
-          
-          <div className="flex justify-center">
-            <button 
-              onClick={() => {
-                if (isLastSubLesson) {
-                  router.push(`/modules/${moduleId}`)
-                } else if (onComplete) {
-                  onComplete()
-                }
-              }}
-              className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-colors px-6 py-2 rounded-lg flex items-center gap-2"
-            >
-              {isLastSubLesson ? 'Return to Module' : 'Next Lesson'} <ChevronRight className="w-4 h-4" />
-            </button>
+          <div className="relative z-10 text-center">
+            <div className="text-4xl font-light text-white mb-2">{score.correct}/{score.total}</div>
+            <p className="text-neutral-400">
+              Your score: {Math.round((score.correct / score.total) * 100)}%
+            </p>
           </div>
         </div>
+
+        <div className="border-t border-gray-800/40 pt-8 mt-8 max-w-md mx-auto flex justify-center gap-4">
+           <button
+             onClick={() => router.push(`/modules/${moduleId}`)} 
+             className="inline-flex items-center px-6 py-3 border border-gray-800 rounded-lg text-white hover:bg-white/5 transition"
+           >
+             Return to Module
+           </button>
+           <button
+             onClick={onComplete} 
+             className="inline-flex items-center px-6 py-3 border border-white/50 bg-white/20 text-white hover:bg-white/20 rounded-lg transition"
+           >
+              Continue <ChevronRight size={16} className="ml-1" />
+           </button>
+        </div>
+
       </div>
     )
   }
 
+  if (!currentQuestion) {
+    return <div className="text-center p-6">Loading question...</div>; 
+  }
+  
   return (
-    <div className="max-w-3xl mx-auto px-4">
-      <div className="flex justify-center mb-4">
-        <span className="text-sm text-gray-400">
-          Question {currentQuestionIndex + 1} of {questions.length}
-        </span>
+    <div className="max-w-3xl w-full mx-auto py-12 px-4">
+      
+      <div className="flex justify-between items-center mb-8 text-sm text-neutral-500">
+        <span>Question {currentQuestionIndex + 1}/{questions.length}</span>
       </div>
-
-      <div className="bg-[#181b24] border border-gray-800/40 rounded-lg overflow-hidden">
-        <div className="h-1 bg-gray-800">
-          <div 
-            className="h-full bg-blue-500 transition-all duration-300" 
-            style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
-          />
-        </div>
-
-        <div className="p-6">
-          <div className="mb-8">
-            <h3 className="text-xl font-medium text-white mb-2">
-              {currentQuestion.question_text}
-            </h3>
-            <p className="text-sm text-gray-400">Select all that apply</p>
-          </div>
-
-          <div className="space-y-3">
-            {currentAnswers.map((answer) => (
-              <button
-                key={answer.id}
-                onClick={() => handleAnswerSelect(answer.id)}
-                className={`w-full text-left p-4 rounded-lg border transition-all duration-200 ${
-                  selectedAnswers[currentQuestion.id]?.includes(answer.id)
-                    ? 'bg-blue-500/10 border-blue-500/40 text-blue-400'
-                    : 'border-transparent bg-gray-800/30 hover:bg-gray-800/50 text-gray-300 hover:text-white'
-                }`}
-              >
-                {answer.answer_text}
-              </button>
-            ))}
-          </div>
-          
-          <div className="flex justify-between mt-8 pt-6 border-t border-gray-800/40">
-            {currentQuestionIndex > 0 ? (
-              <button
-                onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
-                className="text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-2"
-              >
-                <ChevronLeft className="w-4 h-4" /> Previous
-              </button>
-            ) : (
-              <div />
-            )}
-            
-            <button
-              onClick={handleNextQuestion}
-              className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-colors px-4 py-2 rounded-lg flex items-center gap-2"
-            >
-              {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+      
+      <div className="mb-8">
+        <h2 className="text-xl font-light text-white mb-2">
+          {currentQuestion.question_text}
+        </h2>
       </div>
+      
+      <div className="space-y-3 mb-8">
+        {shuffledOptions.map((option) => (
+          <button
+            key={option.id}
+            className={`w-full p-4 text-left border rounded-lg transition-all ${ 
+              selectedOptionIds.includes(option.id) // Check if ID is in the array
+              ? "border-purple-500/50 bg-purple-500/10 text-white" 
+              : "border-gray-800 bg-black/20 text-neutral-300 hover:border-gray-700 hover:bg-black/40"
+            }`}
+            onClick={() => handleAnswerSelect(option.id)}
+          >
+            {option.answer_text}
+          </button>
+        ))}
+      </div>
+      
+      <button
+        onClick={handleNextQuestion}
+        disabled={selectedOptionIds.length === 0}
+        className={`w-full py-3 rounded-lg flex items-center justify-center transition-all ${ 
+          selectedOptionIds.length === 0
+          ? "bg-neutral-800/50 text-neutral-600 cursor-not-allowed"
+          : "border border-white/50 bg-white/20 text-white hover:bg-white/20"
+        }`}
+      >
+        {currentQuestionIndex === questions.length - 1 ? 'Complete Quiz' : 'Next Question'} 
+        <ChevronRight size={16} className="ml-1" />
+      </button>
+
     </div>
   )
 }

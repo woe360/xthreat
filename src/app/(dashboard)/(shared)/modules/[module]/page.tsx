@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, ArrowRight, ChevronDown, ChevronUp, CheckCircle2 } from 'lucide-react'
+import { ChevronLeft, ArrowRight, ChevronDown, ChevronUp, CheckCircle2, Check } from 'lucide-react'
 import ModuleSkeleton from './skeleton'
 
 interface Lesson {
@@ -158,6 +158,19 @@ const ModulePage = () => {
     fetchData()
   }, [params.module])
 
+  // Effect to scroll the expanded lesson into view
+  useEffect(() => {
+    if (expandedLesson !== null) {
+      // Use setTimeout to ensure the element has rendered and height is calculated
+      setTimeout(() => {
+        const element = document.getElementById(`lesson-${expandedLesson}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 160); // Small delay might be needed for transition
+    }
+  }, [expandedLesson]);
+
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'E':
@@ -295,22 +308,25 @@ const ModulePage = () => {
   const moduleCompletionPercent = getModuleCompletionPercent();
 
   return (
-    <div className="min-h-screen font-sans bg-[#050607] text-gray-100 px-6 py-6">
+    <div className="min-h-screen font-sans bg-[#050607] text-gray-100 px-8 py-6">
       <div className="max-w-[1400px] mx-auto">
-        <div className="border-b border-gray-800/40 pb-6 mb-8">
+        <div className="border-b border-white/15 pb-6 mb-8">
           <Link
-            className="text-gray-400 inline-flex items-center hover:text-white mb-6"
+            className="text-gray-400 border text-sm border-white/20 rounded-full px-4 py-2 inline-flex items-center hover:text-white mb-6"
             href="/modules"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
-            Back to Modules
+            Back
           </Link>
           
           <div className="flex flex-col md:flex-row justify-between">
             <div>
-              <h1 className="text-3xl md:text-4xl font-light text-white mb-4">{moduleData.title}</h1>
+              <h1 className="text-xl md:text-3xl font-light text-white mb-4">{moduleData.title}</h1>
+              <p className="text-gray-400 max-w-2xl text-base md:text-md">
+                {moduleData.description}
+              </p>
               
-              <div className="flex flex-wrap gap-3 mb-4">
+              <div className="flex flex-wrap gap-3 mt-4">
                 <span className="bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full text-sm">
                   {totalPoints} Total Points
                 </span>
@@ -323,28 +339,44 @@ const ModulePage = () => {
                 </span>
               </div>
         
-              <p className="text-gray-400 max-w-3xl text-base md:text-lg">
-                {moduleData.description}
-              </p>
+              
             </div>
             
-            <div className="flex flex-col justify-center mt-4 md:mt-0">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-400 text-sm">Overall progress</span>
-                <span className="text-white text-sm font-medium">{moduleCompletionPercent}%</span>
-              </div>
-              <div className="w-48 h-2 bg-gray-800 rounded-full mt-2 overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                  style={{ width: `${moduleCompletionPercent}%` }}
-                ></div>
-              </div>
-            </div>
+            <div className="flex flex-col items-center">
+                  <div className="relative w-24 h-24 flex items-center justify-center">
+                    <svg className="w-full h-full" viewBox="0 0 100 100">
+                      {/* Background circle */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="none"
+                        stroke="#1f2937"
+                        strokeWidth="8"
+                      />
+                      {/* Progress circle - only show if there's progress */}
+                      {moduleCompletionPercent > 0 && (
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="40"
+                          fill="none"
+                          stroke={moduleCompletionPercent === 100 ? "#10b981" : "#3b82f6"}
+                          strokeWidth="8"
+                          strokeDasharray={`${2 * Math.PI * 40 * moduleCompletionPercent / 100} ${2 * Math.PI * 40 * (1 - moduleCompletionPercent / 100)}`}
+                          strokeDashoffset={2 * Math.PI * 40 * 0.25}
+                          strokeLinecap="round"
+                        />
+                      )}
+                    </svg>
+                    <span className="absolute text-xl font-semibold">{moduleCompletionPercent}%</span>
+                  </div>
+                </div>
           </div>
         </div>
 
         {lessons.length === 0 ? (
-          <div className="text-center p-8 border border-gray-800/40 rounded-lg bg-black/20">
+          <div className="text-center p-8 border border-white/15 rounded-lg bg-black/20">
             <p className="text-gray-400">No lessons available for this module yet.</p>
           </div>
         ) : (
@@ -356,7 +388,11 @@ const ModulePage = () => {
               const completedCount = subLessons.filter(sub => sub.completed).length;
               
               return (
-                <div key={lesson.id} className="border border-gray-800/40 rounded-xl overflow-hidden">
+                <div 
+                  key={lesson.id} 
+                  id={`lesson-${lesson.id}`}
+                  className="border border-white/15 rounded-md overflow-hidden"
+                >
                   {/* Lesson header - always visible */}
                   <div 
                     className={`p-5 cursor-pointer transition-colors hover:bg-gray-900/30 ${isExpanded ? 'bg-gray-900/20' : 'bg-black/20'}`}
@@ -364,11 +400,8 @@ const ModulePage = () => {
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex items-start gap-3">
-                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-900 text-white border border-gray-700 font-light mt-1">
-                          {index + 1}
-                        </div>
                         <div>
-                          <h3 className="text-xl md:text-2xl font-light text-white group-hover:text-white/90">
+                          <h3 className="text-xl md:text-xl font-light text-white group-hover:text-white/90">
                             {lesson.title}
                           </h3>
                           <p className="text-gray-400 text-sm md:text-base mt-1">
@@ -382,19 +415,9 @@ const ModulePage = () => {
                             <span className={`${getLevelColor(lesson.level)} px-3 py-1 rounded-full text-xs`}>
                               {getLevelText(lesson.level)}
                             </span>
-                            <span className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-xs">
+                            <span className="bg-blue-500/15 text-blue-400 px-3 py-1 rounded-full text-xs">
                               {completedCount}/{subLessons.length} complete
                             </span>
-                          </div>
-                          <div className="w-full h-1 bg-gray-800 rounded-full mt-2 overflow-hidden">
-                            <div 
-                              className={`h-full rounded-full ${
-                                completionPercent === 100 
-                                  ? 'bg-green-500' 
-                                  : 'bg-blue-500'
-                              }`}
-                              style={{ width: `${completionPercent}%` }}
-                            ></div>
                           </div>
                         </div>
                         {isExpanded ? <ChevronUp className="h-5 w-5 text-gray-400" /> : <ChevronDown className="h-5 w-5 text-gray-400" />}
@@ -426,86 +449,50 @@ const ModulePage = () => {
                   </div>
                   
                   {/* Sub-lessons - visible when expanded */}
-                  {isExpanded && (
-                    <div className="border-t border-gray-800/40 bg-black/10">
-                      {subLessons.map((subLesson, i) => (
-                        <Link 
-                          href={`/modules/${params.module}/${lesson.id}?sub=${subLesson.id}`}
-                          key={subLesson.id}
-                          className="group flex items-center justify-between p-4 border-b border-gray-800/20 last:border-0 hover:bg-gray-900/20 transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className={`w-8 h-8 flex items-center justify-center text-sm rounded-full
-                              ${subLesson.completed 
-                                ? 'bg-green-500/10 text-green-500 border border-green-500/30' 
-                                : 'text-gray-400'}`
-                            }>
-                              {subLesson.completed 
-                                ? <CheckCircle2 className="h-4 w-4" /> 
-                                : i + 1
-                              }
-                            </div>
-                            <span className={`text-base md:text-lg font-light group-hover:text-white
-                              ${subLesson.completed ? 'text-white' : 'text-gray-200'}`
-                            }>
-                              {subLesson.title}
-                            </span>
+                  <div 
+                    className={`
+                      overflow-hidden transition-all duration-300 ease-in-out
+                      ${isExpanded ? 'max-h-[500px] opacity-100 border-t border-gray-800/40 bg-black/10' : 'max-h-0 opacity-0'}
+                    `}
+                  >
+                    {subLessons.map((subLesson, i) => (
+                      <Link 
+                        href={`/modules/${params.module}/${lesson.id}/${subLesson.id}`}
+                        key={subLesson.id}
+                        className="group flex items-center ml-2 justify-between p-4 border-b border-gray-800/20 last:border-0 hover:bg-gray-900/20 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 flex items-center justify-center text-sm rounded-full
+                            ${subLesson.completed 
+                              ? 'bg-green-500/10 text-green-500 border border-green-500/30' 
+                              : 'border border-gray-600 text-gray-400'}`
+                          }>
+                            {subLesson.completed 
+                              ? <Check className="h-4 w-4" /> 
+                              : null
+                            }
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-gray-400 text-sm">
-                              {subLesson.duration}
-                            </span>
-                            <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-white transition-all group-hover:translate-x-0.5" />
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                          <span className={`text-base md:text-lg font-light group-hover:text-white
+                            ${subLesson.completed ? 'text-white' : 'text-gray-200'}`
+                          }>
+                            {subLesson.title}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-gray-400 text-sm">
+                            {subLesson.duration}
+                          </span>
+                          <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-white transition-all group-hover:translate-x-0.5" />
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               );
             })}
             
             {/* Module completion indicator */}
-            <div className="border border-gray-800/40 rounded-xl p-6 bg-black/20">
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <div className="text-center md:text-left mb-4 md:mb-0">
-                  <h3 className="text-xl font-light text-white mb-2">Module Completion</h3>
-                  <p className="text-gray-400">
-                    Complete all lessons to earn {totalPoints} points and unlock your certification
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="relative w-24 h-24 flex items-center justify-center">
-                    <svg className="w-full h-full" viewBox="0 0 100 100">
-                      {/* Background circle */}
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        fill="none"
-                        stroke="#1f2937"
-                        strokeWidth="8"
-                      />
-                      {/* Progress circle - only show if there's progress */}
-                      {moduleCompletionPercent > 0 && (
-                        <circle
-                          cx="50"
-                          cy="50"
-                          r="40"
-                          fill="none"
-                          stroke={moduleCompletionPercent === 100 ? "#10b981" : "#3b82f6"}
-                          strokeWidth="8"
-                          strokeDasharray={`${2 * Math.PI * 40 * moduleCompletionPercent / 100} ${2 * Math.PI * 40 * (1 - moduleCompletionPercent / 100)}`}
-                          strokeDashoffset={2 * Math.PI * 40 * 0.25}
-                          strokeLinecap="round"
-                        />
-                      )}
-                    </svg>
-                    <span className="absolute text-xl font-semibold">{moduleCompletionPercent}%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
         )}
       </div>

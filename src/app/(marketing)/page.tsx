@@ -245,7 +245,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section className="min-h-screen flex flex-col relative z-20 justify-center py-32">
+      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/20">
         <h2 className="text-5xl md:text-6xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 font-normal lg:hidden">
           Reality
         </h2>
@@ -254,9 +254,13 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <DemoSection />
+      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/20  py-32">
+        <DemoSection />
+      </section>
 
-      <section className="min-h-screen flex flex-col relative z-20 justify-center py-32">
+      {/* <DemoSection /> */}
+
+      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/20 py-32">
         <div className="container mx-auto px-0 sm:px-6 lg:px-8 max-w-[1400px]">
           {/* <h2 className="text-4xl text-start px-7 mb-16 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-normal">
             Solutions
@@ -283,7 +287,7 @@ const Home: React.FC = () => {
         </div>
       </section>    */}
 
-      <section className="pt-28 font-sans overflow-hidden">
+      <section className="pt-28 font-sans border-b border-white/20 overflow-hidden">
         <div className="container mx-auto px-2 max-w-[1400px]">
           <FAQSection />
         </div>
@@ -291,7 +295,7 @@ const Home: React.FC = () => {
 
       {/* CTA Section */}
       <div className="py-20 px-6 sm:px-6 lg:px-8 mb-40 text-center">
-        <div className="border-t border-gray-800 pt-16 max-w-3xl mx-auto">
+        <div className="pt-16 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-normal mb-8">
             Prepare for Tomorrow
           </h2>

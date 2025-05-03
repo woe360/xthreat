@@ -14,7 +14,7 @@ const Footer: React.FC = () => (
           <span className="text-gray-400 block font-medium mb-5">Company</span>
           <div className="flex space-y-2 flex-col">
             <Link href="/about" className="text-gray-500 hover:text-white transition-colors">About</Link>
-            <Link href="/solutions" className="text-gray-500 hover:text-white transition-colors">Solutions</Link>
+            {/* <Link href="/solutions" className="text-gray-500 hover:text-white transition-colors">Solutions</Link> */}
             <a href="mailto:careers@xthreat.com" className="text-gray-500 hover:text-white transition-colors">Careers</a>
             <Link href="/pricing" className="text-gray-500 hover:text-white transition-colors">Pricing</Link>
             <Link href="/contact" className="text-gray-500 hover:text-white transition-colors">Contact</Link>
@@ -40,21 +40,19 @@ const Footer: React.FC = () => (
           </div>
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <span className="text-gray-400 block font-medium mb-5">Offices</span>
           <div className="flex space-y-2 flex-col">
             <div className="text-gray-500">Madrid, Spain</div>
             <div className="text-gray-500">Vilnius, Lithuania</div>
           </div>
-        </div>
+        </div> */}
 
         <div className="space-y-2 lg:w-[200px]">
-          <span className="text-gray-400 block font-medium mb-5">© 2024 XThreat</span>
+          <span className="text-gray-400 block font-medium mb-5">© 2025 XThreat</span>
           <p className="text-gray-500 leading-loose">
-      All Rights Reserved. Training materials, content, and methodologies<br />
-      are proprietary. Unauthorized use or distribution is prohibited<br />
-      and subject to legal action.
-    </p>
+          Training content & methodologies are proprietary. Unauthorized use or distribution is prohibited & subject to legal action.
+          </p>
         </div>
       </nav>
 
@@ -89,16 +87,16 @@ const Footer: React.FC = () => (
           </div>
         </div>
 
-        <div className="contents">
+        {/* <div className="contents">
           <div className="text-gray-400 font-medium">Offices</div>
           <div className="text-gray-500">
             Madrid, Spain<br />
             Vilnius, Lithuania
           </div>
-        </div>
+        </div> */}
 
         <div className="col-span-2 mt-4">
-          <div className="text-gray-400 font-medium mb-2">© 2024 XThreat</div>
+          <div className="text-gray-400 font-medium mb-2">© 2025 XThreat</div>
           <div className="text-gray-500">
             All Rights Reserved. Training materials, content, and methodologies
             are proprietary. Unauthorized use or distribution is prohibited

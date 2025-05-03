@@ -172,24 +172,24 @@ export default function TimeTrackingDashboard() {
     <div className="text-white mt-5 px-6">
       <div className="mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <div className="flex gap-8">
-            <div>
-              <div className="text-gray-400">Lessons completed</div>
-              <div className="text-2xl font-light">{lessonsCompleted}</div>
+          <div className="flex gap-3">
+            <div className="flex items-center gap-2   rounded-full px-3 py-1.5">
+              <span className="text-gray-400 text-base">Lessons completed</span>
+              <span className="text-base font-light text-white">{lessonsCompleted}</span>
             </div>
-            <div>
-              <div className="text-gray-400">Modules completed</div>
-              <div className="text-2xl font-light">{modulesCompleted}</div>
+            <div className="flex items-center gap-2  rounded-full px-3 py-1.5">
+              <span className="text-gray-400 text-base">Modules completed</span>
+              <span className="text-base font-light text-white">{modulesCompleted}</span>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={handlePrevMonth} className="p-2 rounded-full hover:bg-gray-800">
+            <button onClick={handlePrevMonth} className="p-2 text-gray-400 rounded-full hover:bg-gray-800">
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <span>
+            <span className="text-gray-400 text-base">
               {monthsData[0].name} {monthsData[0].year} - {monthsData[4].name} {monthsData[4].year}
             </span>
-            <button onClick={handleNextMonth} className="p-2 rounded-full hover:bg-gray-800">
+            <button onClick={handleNextMonth} className="p-2 text-gray-400 rounded-full hover:bg-gray-800">
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
@@ -321,7 +321,7 @@ export default function TimeTrackingDashboard() {
                                 firstDayColOfMonth = effectiveColumnIndex;
                             }
 
-                            let dotClass = "w-4 h-4 rounded-full";
+                            let dotClass = "w-3.5 h-3.5 rounded-full";
                             if (hasLesson) {
                                 dotClass += " bg-white";
                             } else {

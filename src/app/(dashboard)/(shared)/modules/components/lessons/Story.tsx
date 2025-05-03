@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { AlertCircle, CheckCircle2, ChevronRight, ChevronLeft, RotateCcw, Mail } from 'lucide-react';
+import { AlertCircle, CheckCircle2, ChevronRight, ChevronLeft, RotateCcw, Mail, Globe } from 'lucide-react';
 import { Card, CardContent } from '@/components/card';
 
-const SecurityStory = ({ onComplete }: { onComplete: () => void }) => {
+const SecurityStory = ({ onComplete }: { onComplete?: () => void }) => {
   const storyData = {
     title: "Email Security Scenario",
     scenarios: [
@@ -12,14 +12,7 @@ const SecurityStory = ({ onComplete }: { onComplete: () => void }) => {
         content: {
           from: 'IT-Support@company-systems.net',
           subject: 'Urgent: Password Reset Required',
-          body: `Dear Employee,
-
-Due to a recent security breach, all employees must verify their credentials immediately. Your account will be locked in 24 hours if not verified.
-
-Click here to reset your password: https://company-systems.verification.net
-
-Best regards,
-IT Support Team`
+          body: `Dear Employee,\n\nDue to a recent security breach, all employees must verify their credentials immediately. Your account will be locked in 24 hours if not verified.\n\nClick here to reset your password: https://company-systems.verification.net\n\nBest regards,\nIT Support Team`
         },
         question: "You receive this email in your inbox. What do you do?",
         options: [
@@ -69,180 +62,217 @@ IT Support Team`
     ]
   };
 
-  const [currentScenario, setCurrentScenario] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [showFeedback, setShowFeedback] = useState(false);
+  const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState<Record<number, number>>({});
+  const [showFeedbackFor, setShowFeedbackFor] = useState<number | null>(null);
   const [completed, setCompleted] = useState(false);
+
+  const currentScenario = storyData.scenarios[currentScenarioIndex];
+  const scenarioId = currentScenario.id;
+  const selectedOptionIndex = selectedOptions[scenarioId];
+  const showFeedback = showFeedbackFor === scenarioId;
 
   const handleOptionSelect = (optionIndex: number) => {
     if (showFeedback) return;
     
-    setSelectedAnswers({
-      ...selectedAnswers,
-      [currentScenario]: optionIndex
-    });
-    setShowFeedback(true);
+    setSelectedOptions(prev => ({
+      ...prev,
+      [scenarioId]: optionIndex
+    }));
+    setShowFeedbackFor(scenarioId);
   };
 
   const handleNext = () => {
-    setShowFeedback(false);
-    if (currentScenario < storyData.scenarios.length - 1) {
-      setCurrentScenario(currentScenario + 1);
+    setShowFeedbackFor(null);
+    if (currentScenarioIndex < storyData.scenarios.length - 1) {
+      setCurrentScenarioIndex(currentScenarioIndex + 1);
     } else {
       setCompleted(true);
-      onComplete?.();
+    }
+  };
+
+  const handlePrevious = () => {
+    setShowFeedbackFor(null);
+    if (currentScenarioIndex > 0) {
+      setCurrentScenarioIndex(currentScenarioIndex - 1);
     }
   };
 
   const handleReset = () => {
-    setCurrentScenario(0);
-    setSelectedAnswers({});
-    setShowFeedback(false);
+    setCurrentScenarioIndex(0);
+    setSelectedOptions({});
+    setShowFeedbackFor(null);
     setCompleted(false);
   };
 
+  const handleCompletionAction = () => {
+    if (onComplete) {
+      onComplete();
+    } else {
+      handleReset();
+    }
+  };
+
   const renderContent = (scenario: any) => {
+    const commonClasses = "p-4 mb-6 bg-black/20 border border-gray-800/40 rounded-lg";
+    
     switch (scenario.type) {
       case 'email':
         return (
-          <Card className="bg-gray-800/30 border-gray-700 mb-6">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-blue-400 mt-1" />
-                <div>
-                  <div className="grid gap-1">
-                    <div className="text-sm text-gray-400">From: {scenario.content.from}</div>
-                    <div className="text-sm text-gray-400">Subject: {scenario.content.subject}</div>
-                  </div>
-                  <div className="mt-3 text-gray-300 whitespace-pre-line">{scenario.content.body}</div>
+          <div className={commonClasses}>
+            <div className="flex items-start gap-3">
+              <Mail className="w-5 h-5 text-neutral-500 mt-1 flex-shrink-0" />
+              <div className="flex-grow min-w-0">
+                <div className="grid gap-0.5">
+                  <div className="text-sm text-neutral-400 break-words">From: {scenario.content.from}</div>
+                  <div className="text-sm text-neutral-400 break-words">Subject: {scenario.content.subject}</div>
                 </div>
+                <div className="mt-3 text-sm text-neutral-300 whitespace-pre-line break-words">{scenario.content.body}</div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         );
       case 'webpage':
         return (
-          <Card className="bg-gray-800/30 border-gray-700 mb-6">
-            <CardContent className="p-4">
-              <div className="text-sm text-gray-400 mb-2">URL: {scenario.content.url}</div>
-              <div className="text-gray-300">{scenario.content.description}</div>
-            </CardContent>
-          </Card>
+          <div className={commonClasses}>
+            <div className="flex items-start gap-3">
+              <Globe className="w-5 h-5 text-neutral-500 mt-1 flex-shrink-0" />
+              <div className="flex-grow min-w-0">
+                <div className="text-sm text-neutral-400 mb-2 break-words">URL: {scenario.content.url}</div>
+                <div className="text-sm text-neutral-300 break-words">{scenario.content.description}</div>
+              </div>
+            </div>
+          </div>
         );
       default:
         return null;
     }
   };
 
-  return (
-    <div className="max-w-3xl mx-auto px-4">
-      <div className="flex justify-center mb-4">
-        <span className="text-sm text-gray-400">
-          Scenario {currentScenario + 1} of {storyData.scenarios.length}
-        </span>
-      </div>
+  if (completed) {
+    let score = 0;
+    storyData.scenarios.forEach(scenario => {
+      const selected = selectedOptions[scenario.id];
+      if (selected !== undefined && scenario.options[selected]?.isCorrect) {
+        score++;
+      }
+    });
+    const totalScenarios = storyData.scenarios.length;
 
-      <div className="bg-[#181b24] border border-gray-800/40 rounded-lg overflow-hidden">
-        <div className="h-1 bg-gray-800">
-          <div 
-            className="h-full bg-blue-500 transition-all duration-300" 
-            style={{ width: `${((currentScenario + 1) / storyData.scenarios.length) * 100}%` }}
-          />
+    return (
+      <div className="max-w-3xl w-full mx-auto py-12 px-4 text-center">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 font-normal mb-6">
+          Scenario Complete!
+        </h1>
+        
+        <div className="relative w-full max-w-md mx-auto mb-12 py-8">
+          <div className="absolute inset-0 flex items-center justify-center"></div>
+          <div className="relative z-10 text-center">
+            <div className="text-4xl font-light text-white mb-2">{score}/{totalScenarios}</div>
+            <p className="text-neutral-400">
+              Correct Decisions
+            </p>
+          </div>
         </div>
 
-        <div className="p-6">
-          {!completed ? (
-            <>
-              <div className="mb-8">
-                <h3 className="text-xl font-medium text-white mb-4">{storyData.title}</h3>
-                
-                {renderContent(storyData.scenarios[currentScenario])}
-                
-                <h4 className="text-lg font-medium text-white mb-4">
-                  {storyData.scenarios[currentScenario].question}
-                </h4>
+        <div className="border-t border-gray-800/40 pt-8 mt-8 max-w-md mx-auto flex justify-center gap-4">
+           <button
+             onClick={handleReset}
+             className="inline-flex items-center px-6 py-3 border border-gray-700 bg-gray-800/40 text-neutral-300 hover:bg-gray-700/50 rounded-lg transition"
+           >
+             <RotateCcw size={16} className="mr-1.5" /> Try Again
+           </button>
+           <button
+             onClick={handleCompletionAction}
+             className="inline-flex items-center px-6 py-3 border border-white/50 bg-white/20 text-white hover:bg-white/30 rounded-lg transition"
+           >
+             Continue <ChevronRight size={16} className="ml-1.5" />
+           </button>
+        </div>
+      </div>
+    );
+  }
 
-                <div className="space-y-3">
-                  {storyData.scenarios[currentScenario].options.map((option, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleOptionSelect(index)}
-                      className={`w-full text-left p-4 rounded-lg border transition-all duration-200 
-                        ${selectedAnswers[currentScenario] === index
-                          ? showFeedback
-                            ? option.isCorrect
-                              ? 'bg-green-500/10 border-green-500/40 text-green-400'
-                              : 'bg-red-500/10 border-red-500/40 text-red-400'
-                            : 'bg-blue-500/10 border-blue-500/40 text-blue-400'
-                          : 'border-transparent bg-gray-800/30 hover:bg-gray-800/50 text-gray-300 hover:text-white'
-                        }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        {showFeedback && selectedAnswers[currentScenario] === index && (
-                          option.isCorrect 
-                            ? <CheckCircle2 className="w-5 h-5 text-green-400 mt-0.5" />
-                            : <AlertCircle className="w-5 h-5 text-red-400 mt-0.5" />
-                        )}
-                        <div>
-                          <p>{option.text}</p>
-                          {showFeedback && selectedAnswers[currentScenario] === index && (
-                            <p className={`mt-2 text-sm ${option.isCorrect ? 'text-green-400' : 'text-red-400'}`}>
-                              {option.feedback}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+  return (
+    <div className="max-w-3xl w-full mx-auto py-12 px-4">
+      <div className="flex justify-between items-center mb-8 text-sm text-neutral-500">
+        <span>{storyData.title}</span>
+        <span>Scenario {currentScenarioIndex + 1} of {storyData.scenarios.length}</span>
+      </div>
 
-              <div className="flex justify-between mt-8 pt-6 border-t border-gray-800/40">
-                {currentScenario > 0 ? (
-                  <button
-                    onClick={() => setCurrentScenario(prev => prev - 1)}
-                    className="text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-2"
-                  >
-                    <ChevronLeft className="w-4 h-4" /> Previous
-                  </button>
-                ) : (
-                  <div />
-                )}
-                
-                {showFeedback && (
-                  <button
-                    onClick={handleNext}
-                    className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-colors px-4 py-2 rounded-lg flex items-center gap-2"
-                  >
-                    {currentScenario === storyData.scenarios.length - 1 ? 'Complete Scenario' : 'Next'}
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            </>
-          ) : (
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-medium text-white mb-2">Scenario Complete!</h2>
-              <div className="flex flex-col items-center justify-center mt-8 mb-6">
-                <div className="relative">
-                  <div className="w-32 h-32 rounded-full bg-blue-500/10 border-4 border-blue-500/20 flex items-center justify-center">
-                    <CheckCircle2 className="w-16 h-16 text-blue-400" />
-                  </div>
-                </div>
-                <div className="mt-4 text-gray-400">
-                  <p className="text-lg">You've completed the security awareness scenario!</p>
-                </div>
-              </div>
-              
-              <button 
-                onClick={handleReset}
-                className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-colors px-6 py-2 rounded-lg flex items-center gap-2 mx-auto"
+      <div className="bg-black/20 border border-gray-800/40 rounded-lg p-6">
+        {renderContent(currentScenario)}
+        
+        <h4 className="text-base font-medium text-neutral-200 mb-5">
+          {currentScenario.question}
+        </h4>
+
+        <div className="space-y-3">
+          {currentScenario.options.map((option, index) => {
+            const isSelected = selectedOptionIndex === index;
+            let buttonClass = "border-gray-800 bg-black/20 text-neutral-300 hover:border-gray-700 hover:bg-black/40";
+            let icon = null;
+
+            if (isSelected) {
+              if (showFeedback) {
+                if (option.isCorrect) {
+                  buttonClass = "border-green-500/50 bg-green-500/10 text-white";
+                  icon = <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />;
+                } else {
+                  buttonClass = "border-red-500/50 bg-red-500/10 text-white";
+                  icon = <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />;
+                }
+              } else {
+                buttonClass = "border-purple-500/50 bg-purple-500/10 text-white";
+              }
+            }
+
+            return (
+              <button
+                key={index}
+                onClick={() => handleOptionSelect(index)}
+                disabled={showFeedback}
+                className={`w-full text-left p-4 rounded-lg border transition-all duration-150 flex items-start gap-3 ${buttonClass}`}
               >
-                <RotateCcw className="w-4 h-4" />
-                Try Again
+                {icon}
+                <div className="flex-grow">
+                  <p className="text-sm font-medium">{option.text}</p>
+                  {showFeedback && isSelected && (
+                    <p className={`mt-1.5 text-xs ${option.isCorrect ? 'text-green-400/90' : 'text-red-400/90'}`}>
+                      {option.feedback}
+                    </p>
+                  )}
+                </div>
               </button>
-            </div>
-          )}
+            );
+          })}
+        </div>
+
+        <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-800/40">
+          <button
+            onClick={handlePrevious}
+            disabled={currentScenarioIndex === 0}
+            className={`inline-flex items-center px-4 py-2 border rounded-lg transition text-sm ${ 
+                currentScenarioIndex === 0 
+                ? 'border-gray-800 text-neutral-600 cursor-not-allowed' 
+                : 'border-gray-700 bg-gray-800/40 text-neutral-300 hover:bg-gray-700/50' 
+            }`}
+          >
+            <ChevronLeft size={16} className="mr-1" /> Previous
+          </button>
+          
+          <button
+            onClick={handleNext}
+            disabled={!showFeedback}
+            className={`inline-flex items-center px-4 py-2 border rounded-lg transition text-sm font-medium ${ 
+              !showFeedback 
+              ? 'bg-neutral-800/50 text-neutral-500 cursor-not-allowed border-transparent' 
+              : 'border-white/50 bg-white/20 text-white hover:bg-white/30'
+            }`}
+          >
+            {currentScenarioIndex === storyData.scenarios.length - 1 ? 'Complete Scenario' : 'Next'}
+            <ChevronRight size={16} className="ml-1" />
+          </button>
         </div>
       </div>
     </div>
