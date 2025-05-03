@@ -14,6 +14,7 @@ interface Lesson {
   points: number;
   module_id: number;
   lesson_order: number;
+  slug: string;
 }
 
 interface Module {
@@ -29,6 +30,7 @@ interface SubLesson {
   title: string;
   duration: string;
   completed: boolean;
+  slug: string;
 }
 
 const ModulePage = () => {
@@ -104,35 +106,6 @@ const ModulePage = () => {
           const errorText = await lessonsRes.text().catch(() => 'No error details')
           console.error('Lessons fetch error details:', errorText)
           
-          // If this was phishing-awareness, use our hardcoded lessons
-          if (moduleSlug === 'phishing-awareness') {
-            console.log('Using hardcoded lessons for phishing-awareness')
-            setLessons([
-              {
-                id: 1, title: 'Introduction to Phishing',
-                description: 'An overview of phishing, its impact, and why it matters',
-                lesson_order: 1, module_id: 1, level: 'E', points: 20
-              },
-              {
-                id: 2, title: 'Recognizing Phishing Emails',
-                description: 'Identifying common red flags and suspicious elements',
-                lesson_order: 2, module_id: 1, level: 'E', points: 20
-              },
-              {
-                id: 3, title: 'B2B Phishing Variants',
-                description: 'Understanding different types of targeted business phishing',
-                lesson_order: 3, module_id: 1, level: 'C', points: 20
-              },
-              {
-                id: 4, title: 'Advanced Phishing Channels',
-                description: 'Advanced phishing tactics across different communication channels',
-                lesson_order: 4, module_id: 1, level: 'A', points: 20
-              }
-            ])
-            setLoading(false)
-            return
-          }
-          
           setError('Failed to load lessons')
           setLoading(false)
           return
@@ -205,6 +178,25 @@ const ModulePage = () => {
     }
   };
 
+  // Helper function to generate simple slugs (replace with a robust library if needed)
+  const generateSlug = (title: string) => {
+    // Ensure title is a string before processing
+    if (typeof title !== 'string') {
+      console.error('generateSlug received non-string title:', title);
+      return 'invalid-title'; // Return a fallback slug
+    }
+    
+    return title
+      .toLowerCase()
+      .trim() // Remove leading/trailing whitespace first
+      .replace(/[^a-z0-9\\s-]/g, '') // Remove invalid chars (keeping spaces and hyphens)
+      .replace(/\\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+      // The trim start/end hyphen replacements were correct
+      .replace(/^-+/, '') // Trim - from start of text
+      .replace(/-+$/, ''); // Trim - from end of text
+  };
+
   // Generate sub-lessons with completion status (mock data for demonstration)
   const getSubLessons = (lessonId: number, level: string): SubLesson[] => {
     // Mock completion data - in real app this would come from API/state
@@ -227,19 +219,37 @@ const ModulePage = () => {
       '4-4': false,
     };
     
-    const subLessons = [
-      { id: `${lessonId}-1`, title: 'Overview & Concepts', duration: '10 min', completed: completionMap[`${lessonId}-1`] || false },
-      { id: `${lessonId}-2`, title: 'Practical Examples', duration: '12 min', completed: completionMap[`${lessonId}-2`] || false },
-      { id: `${lessonId}-3`, title: 'Interactive Exercise', duration: '15 min', completed: completionMap[`${lessonId}-3`] || false },
-      { id: `${lessonId}-4`, title: 'Knowledge Check', duration: '8 min', completed: completionMap[`${lessonId}-4`] || false },
+    const subLessonsData = [
+      { id: `${lessonId}-1`, title: 'Overview & Concepts', duration: '10 min' },
+      { id: `${lessonId}-2`, title: 'Practical Examples', duration: '12 min' },
+      { id: `${lessonId}-3`, title: 'Interactive Exercise', duration: '15 min' },
+      { id: `${lessonId}-4`, title: 'Knowledge Check', duration: '8 min' },
     ];
     
+    const subLessons: SubLesson[] = subLessonsData.map(sub => {
+      // --- TEMPORARY HACK for Overview & Concepts slug ---
+      const correctSlug = sub.title === 'Overview & Concepts' 
+                          ? 'overview-and-concepts' 
+                          : generateSlug(sub.title); // Use generator for others
+      // --- END HACK ---
+      
+      return {
+        ...sub,
+        slug: correctSlug, // Use the potentially corrected slug
+        completed: completionMap[sub.id] || false
+      }
+    });
+    
     if (level === 'A') {
-      subLessons.push({ 
+      const advancedSub = {
         id: `${lessonId}-5`, 
         title: 'Advanced Scenario', 
         duration: '20 min',
-        completed: completionMap[`${lessonId}-5`] || false
+      };
+      subLessons.push({
+        ...advancedSub,
+        slug: generateSlug(advancedSub.title), // Generate slug
+        completed: completionMap[advancedSub.id] || false
       });
     }
     
@@ -455,37 +465,47 @@ const ModulePage = () => {
                       ${isExpanded ? 'max-h-[500px] opacity-100 border-t border-gray-800/40 bg-black/10' : 'max-h-0 opacity-0'}
                     `}
                   >
-                    {subLessons.map((subLesson, i) => (
-                      <Link 
-                        href={`/modules/${params.module}/${lesson.id}/${subLesson.id}`}
-                        key={subLesson.id}
-                        className="group flex items-center ml-2 justify-between p-4 border-b border-gray-800/20 last:border-0 hover:bg-gray-900/20 transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 flex items-center justify-center text-sm rounded-full
-                            ${subLesson.completed 
-                              ? 'bg-green-500/10 text-green-500 border border-green-500/30' 
-                              : 'border border-gray-600 text-gray-400'}`
-                          }>
-                            {subLesson.completed 
-                              ? <Check className="h-4 w-4" /> 
-                              : null
-                            }
+                    {subLessons.map((subLesson, i) => {
+                      const href = `/modules/${moduleData.slug}/${lesson.slug}/${subLesson.slug}`;
+                      // Log the actual href being passed to the Link component
+                      console.log(`Link Generation:
+                                    Module: ${moduleData.slug}
+                                    Lesson: ${lesson.title} (Slug: ${lesson.slug})
+                                    SubLesson: ${subLesson.title} (Slug: ${subLesson.slug})
+                                    Generated Href: ${href}`); 
+                      
+                      return (
+                        <Link 
+                          href={href} // Ensure we use the logged href
+                          key={subLesson.id}
+                          className="group flex items-center ml-2 justify-between p-4 border-b border-gray-800/20 last:border-0 hover:bg-gray-900/20 transition-colors"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 flex items-center justify-center text-sm rounded-full
+                              ${subLesson.completed 
+                                ? 'bg-green-500/10 text-green-500 border border-green-500/30' 
+                                : 'border border-gray-600 text-gray-400'}`
+                            }>
+                              {subLesson.completed 
+                                ? <Check className="h-4 w-4" /> 
+                                : null
+                              }
+                            </div>
+                            <span className={`text-base md:text-lg font-light group-hover:text-white
+                              ${subLesson.completed ? 'text-white' : 'text-gray-200'}`
+                            }>
+                              {subLesson.title}
+                            </span>
                           </div>
-                          <span className={`text-base md:text-lg font-light group-hover:text-white
-                            ${subLesson.completed ? 'text-white' : 'text-gray-200'}`
-                          }>
-                            {subLesson.title}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-gray-400 text-sm">
-                            {subLesson.duration}
-                          </span>
-                          <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-white transition-all group-hover:translate-x-0.5" />
-                        </div>
-                      </Link>
-                    ))}
+                          <div className="flex items-center gap-3">
+                            <span className="text-gray-400 text-sm">
+                              {subLesson.duration}
+                            </span>
+                            <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-white transition-all group-hover:translate-x-0.5" />
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               );
