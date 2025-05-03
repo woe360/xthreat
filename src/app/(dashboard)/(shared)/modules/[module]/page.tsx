@@ -3,8 +3,17 @@
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, ArrowRight, ChevronDown, ChevronUp, CheckCircle2, Check } from 'lucide-react'
+import { ChevronLeft, ArrowRight, ChevronDown, ChevronUp, Check } from 'lucide-react'
 import ModuleSkeleton from './skeleton'
+
+interface SubLesson {
+  id: string | number;
+  title: string;
+  slug: string;
+  duration: string;
+  lesson_id: number;
+  order_number: number;
+}
 
 interface Lesson {
   id: number;
@@ -15,6 +24,7 @@ interface Lesson {
   module_id: number;
   lesson_order: number;
   slug: string;
+  subLessons?: SubLesson[];
 }
 
 interface Module {
@@ -23,14 +33,6 @@ interface Module {
   description: string;
   slug: string;
   tags: string[];
-}
-
-interface SubLesson {
-  id: string;
-  title: string;
-  duration: string;
-  completed: boolean;
-  slug: string;
 }
 
 const ModulePage = () => {
@@ -98,7 +100,7 @@ const ModulePage = () => {
           setModuleData(moduleData)
         }
         
-        // Fetch lessons for this module
+        // Fetch lessons for this module (now includes subLessons)
         let lessonsRes = await fetch(`/api/modules/${moduleSlug}/lessons`)
         console.log('Lessons response status:', lessonsRes.status)
         
@@ -111,14 +113,19 @@ const ModulePage = () => {
           return
         }
         
-        const lessonsData = await lessonsRes.json()
-        console.log('Lessons data received:', lessonsData)
+        const lessonsData: Lesson[] = await lessonsRes.json() // Type assertion for clarity
+        console.log('Lessons data received (with subLessons):', lessonsData)
         
         if (!lessonsData || (Array.isArray(lessonsData) && lessonsData.length === 0)) {
           console.log('No lessons found for this module')
           setLessons([])
         } else {
-          setLessons(lessonsData)
+          // Ensure subLessons is always an array, even if null/undefined from API
+          const lessonsWithEnsuredSubLessons = lessonsData.map(lesson => ({
+            ...lesson,
+            subLessons: lesson.subLessons || [] 
+          }));
+          setLessons(lessonsWithEnsuredSubLessons)
         }
       } catch (err) {
         console.error('Error fetching data:', err)
@@ -130,19 +137,6 @@ const ModulePage = () => {
 
     fetchData()
   }, [params.module])
-
-  // Effect to scroll the expanded lesson into view
-  useEffect(() => {
-    if (expandedLesson !== null) {
-      // Use setTimeout to ensure the element has rendered and height is calculated
-      setTimeout(() => {
-        const element = document.getElementById(`lesson-${expandedLesson}`);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }, 160); // Small delay might be needed for transition
-    }
-  }, [expandedLesson]);
 
   const getLevelColor = (level: string) => {
     switch (level) {
@@ -171,112 +165,7 @@ const ModulePage = () => {
   }
   
   const toggleExpand = (lessonId: number) => {
-    if (expandedLesson === lessonId) {
-      setExpandedLesson(null);
-    } else {
-      setExpandedLesson(lessonId);
-    }
-  };
-
-  // Helper function to generate simple slugs (replace with a robust library if needed)
-  const generateSlug = (title: string) => {
-    // Ensure title is a string before processing
-    if (typeof title !== 'string') {
-      console.error('generateSlug received non-string title:', title);
-      return 'invalid-title'; // Return a fallback slug
-    }
-    
-    return title
-      .toLowerCase()
-      .trim() // Remove leading/trailing whitespace first
-      .replace(/[^a-z0-9\\s-]/g, '') // Remove invalid chars (keeping spaces and hyphens)
-      .replace(/\\s+/g, '-') // Replace spaces with hyphens
-      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-      // The trim start/end hyphen replacements were correct
-      .replace(/^-+/, '') // Trim - from start of text
-      .replace(/-+$/, ''); // Trim - from end of text
-  };
-
-  // Generate sub-lessons with completion status (mock data for demonstration)
-  const getSubLessons = (lessonId: number, level: string): SubLesson[] => {
-    // Mock completion data - in real app this would come from API/state
-    const completionMap: Record<string, boolean> = {
-      '1-1': true,
-      '1-2': true,
-      '1-3': false,
-      '1-4': false,
-      '2-1': true,
-      '2-2': true,
-      '2-3': true,
-      '2-4': false,
-      '3-1': true,
-      '3-2': false,
-      '3-3': false,
-      '3-4': false,
-      '4-1': false,
-      '4-2': false,
-      '4-3': false,
-      '4-4': false,
-    };
-    
-    const subLessonsData = [
-      { id: `${lessonId}-1`, title: 'Overview & Concepts', duration: '10 min' },
-      { id: `${lessonId}-2`, title: 'Practical Examples', duration: '12 min' },
-      { id: `${lessonId}-3`, title: 'Interactive Exercise', duration: '15 min' },
-      { id: `${lessonId}-4`, title: 'Knowledge Check', duration: '8 min' },
-    ];
-    
-    const subLessons: SubLesson[] = subLessonsData.map(sub => {
-      // --- TEMPORARY HACK for Overview & Concepts slug ---
-      const correctSlug = sub.title === 'Overview & Concepts' 
-                          ? 'overview-and-concepts' 
-                          : generateSlug(sub.title); // Use generator for others
-      // --- END HACK ---
-      
-      return {
-        ...sub,
-        slug: correctSlug, // Use the potentially corrected slug
-        completed: completionMap[sub.id] || false
-      }
-    });
-    
-    if (level === 'A') {
-      const advancedSub = {
-        id: `${lessonId}-5`, 
-        title: 'Advanced Scenario', 
-        duration: '20 min',
-      };
-      subLessons.push({
-        ...advancedSub,
-        slug: generateSlug(advancedSub.title), // Generate slug
-        completed: completionMap[advancedSub.id] || false
-      });
-    }
-    
-    return subLessons;
-  };
-
-  // Calculate topic completion percentage
-  const getTopicCompletionPercent = (subLessons: SubLesson[]): number => {
-    if (subLessons.length === 0) return 0;
-    const completedCount = subLessons.filter(lesson => lesson.completed).length;
-    return Math.round((completedCount / subLessons.length) * 100);
-  };
-
-  // Get overall module completion percentage
-  const getModuleCompletionPercent = (): number => {
-    if (lessons.length === 0) return 0;
-    
-    let totalSubLessons = 0;
-    let completedSubLessons = 0;
-    
-    lessons.forEach(lesson => {
-      const subs = getSubLessons(lesson.id, lesson.level);
-      totalSubLessons += subs.length;
-      completedSubLessons += subs.filter(sub => sub.completed).length;
-    });
-    
-    return Math.round((completedSubLessons / totalSubLessons) * 100);
+    setExpandedLesson(prev => prev === lessonId ? null : lessonId);
   };
 
   if (loading) {
@@ -313,9 +202,7 @@ const ModulePage = () => {
   }
 
   const totalPoints = lessons.reduce((total, lesson) => total + lesson.points, 0)
-  // Sort lessons by their order
   const sortedLessons = [...lessons].sort((a, b) => a.lesson_order - b.lesson_order)
-  const moduleCompletionPercent = getModuleCompletionPercent();
 
   return (
     <div className="min-h-screen font-sans bg-[#050607] text-gray-100 px-8 py-6">
@@ -345,7 +232,7 @@ const ModulePage = () => {
                 </span>
                 <span className="bg-purple-500/10 text-purple-500 px-3 py-1 rounded-full text-sm">
                   {sortedLessons.reduce((acc, lesson) => 
-                    acc + (lesson.level === 'A' ? 5 : 4), 0)} Lessons
+                    acc + (lesson.subLessons?.length || 0), 0)} Lessons
                 </span>
               </div>
         
@@ -365,7 +252,7 @@ const ModulePage = () => {
                         strokeWidth="8"
                       />
                       {/* Progress circle - only show if there's progress */}
-                      {moduleCompletionPercent > 0 && (
+                      {/* moduleCompletionPercent > 0 && (
                         <circle
                           cx="50"
                           cy="50"
@@ -377,9 +264,9 @@ const ModulePage = () => {
                           strokeDashoffset={2 * Math.PI * 40 * 0.25}
                           strokeLinecap="round"
                         />
-                      )}
+                      ) */}
                     </svg>
-                    <span className="absolute text-xl font-semibold">{moduleCompletionPercent}%</span>
+                    <span className="absolute text-xl font-semibold">{/* moduleCompletionPercent */}%</span>
                   </div>
                 </div>
           </div>
@@ -392,11 +279,12 @@ const ModulePage = () => {
         ) : (
           <div className="space-y-6">
             {sortedLessons.map((lesson, index) => {
-              const subLessons = getSubLessons(lesson.id, lesson.level);
+              const subLessons = lesson.subLessons || [];
               const isExpanded = expandedLesson === lesson.id;
-              const completionPercent = getTopicCompletionPercent(subLessons);
-              const completedCount = subLessons.filter(sub => sub.completed).length;
               
+              // Log subLessons data when component re-renders
+              console.log(`Rendering lesson ${lesson.id}: expanded=${isExpanded}, subLessons data=`, subLessons);
+
               return (
                 <div 
                   key={lesson.id} 
@@ -425,35 +313,9 @@ const ModulePage = () => {
                             <span className={`${getLevelColor(lesson.level)} px-3 py-1 rounded-full text-xs`}>
                               {getLevelText(lesson.level)}
                             </span>
-                            <span className="bg-blue-500/15 text-blue-400 px-3 py-1 rounded-full text-xs">
-                              {completedCount}/{subLessons.length} complete
-                            </span>
                           </div>
                         </div>
                         {isExpanded ? <ChevronUp className="h-5 w-5 text-gray-400" /> : <ChevronDown className="h-5 w-5 text-gray-400" />}
-                      </div>
-                    </div>
-                    <div className="md:hidden mt-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="flex gap-2">
-                          <span className={`${getLevelColor(lesson.level)} px-3 py-1 rounded-full text-xs`}>
-                            {getLevelText(lesson.level)}
-                          </span>
-                          <span className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-xs">
-                            {completedCount}/{subLessons.length}
-                          </span>
-                        </div>
-                        <span className="text-xs text-gray-400">{completionPercent}%</span>
-                      </div>
-                      <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full rounded-full ${
-                            completionPercent === 100 
-                              ? 'bg-green-500' 
-                              : 'bg-blue-500'
-                          }`}
-                          style={{ width: `${completionPercent}%` }}
-                        ></div>
                       </div>
                     </div>
                   </div>
@@ -466,34 +328,25 @@ const ModulePage = () => {
                     `}
                   >
                     {subLessons.map((subLesson, i) => {
-                      const href = `/modules/${moduleData.slug}/${lesson.slug}/${subLesson.slug}`;
+                      const href = `/modules/${moduleData?.slug}/${lesson.slug}/${subLesson.slug}`;
                       // Log the actual href being passed to the Link component
                       console.log(`Link Generation:
-                                    Module: ${moduleData.slug}
+                                    Module: ${moduleData?.slug}
                                     Lesson: ${lesson.title} (Slug: ${lesson.slug})
                                     SubLesson: ${subLesson.title} (Slug: ${subLesson.slug})
                                     Generated Href: ${href}`); 
                       
                       return (
                         <Link 
-                          href={href} // Ensure we use the logged href
+                          href={href} // Use href with fetched slugs
                           key={subLesson.id}
                           className="group flex items-center ml-2 justify-between p-4 border-b border-gray-800/20 last:border-0 hover:bg-gray-900/20 transition-colors"
                         >
                           <div className="flex items-center gap-3">
-                            <div className={`w-8 h-8 flex items-center justify-center text-sm rounded-full
-                              ${subLesson.completed 
-                                ? 'bg-green-500/10 text-green-500 border border-green-500/30' 
-                                : 'border border-gray-600 text-gray-400'}`
-                            }>
-                              {subLesson.completed 
-                                ? <Check className="h-4 w-4" /> 
-                                : null
-                              }
+                            <div className={`w-8 h-8 flex items-center justify-center text-sm rounded-full border border-gray-600 text-gray-400`}>
+                              {/* Display index or icon if needed */}
                             </div>
-                            <span className={`text-base md:text-lg font-light group-hover:text-white
-                              ${subLesson.completed ? 'text-white' : 'text-gray-200'}`
-                            }>
+                            <span className={`text-base md:text-lg font-light group-hover:text-white text-gray-200`}>
                               {subLesson.title}
                             </span>
                           </div>
@@ -510,9 +363,6 @@ const ModulePage = () => {
                 </div>
               );
             })}
-            
-            {/* Module completion indicator */}
-            
           </div>
         )}
       </div>
