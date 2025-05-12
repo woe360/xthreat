@@ -18,7 +18,7 @@ const AboutPage = () => {
       
       <Navbar />
       
-      <main className="max-w-6xl mx-auto px-4 pt-32 pb-20 relative z-10">
+      <main className="max-w-[1360px] mx-auto px-4 pt-72 pb-20 relative z-10">
         {/* Hero Section */}
         <motion.div 
           initial={{ opacity: 0 }}

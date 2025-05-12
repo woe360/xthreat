@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle2, ChevronRight, ChevronLeft, RotateCcw } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface CaseStudyProps {
+  moduleId: string;
   onComplete?: () => void;
 }
 
-const CaseStudy: React.FC<CaseStudyProps> = ({ onComplete }) => {
+const CaseStudy: React.FC<CaseStudyProps> = ({ moduleId, onComplete }) => {
+  const router = useRouter();
   const caseData = {
     title: "Enterprise Email Compromise Incident",
     context: "A large financial firm experienced a sophisticated phishing attack targeting their senior financial analysts. The attack resulted in a potential data breach.",
@@ -61,11 +64,11 @@ const CaseStudy: React.FC<CaseStudyProps> = ({ onComplete }) => {
   };
 
   const [currentDecision, setCurrentDecision] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [showFeedback, setShowFeedback] = useState(false);
   const [completed, setCompleted] = useState(false);
 
-  const handleOptionSelect = (optionIndex) => {
+  const handleOptionSelect = (optionIndex: number) => {
     if (showFeedback) return;
     
     setSelectedAnswers({
@@ -85,78 +88,67 @@ const CaseStudy: React.FC<CaseStudyProps> = ({ onComplete }) => {
     }
   };
 
-  const handleReset = () => {
-    setCurrentDecision(0);
-    setSelectedAnswers({});
-    setShowFeedback(false);
-    setCompleted(false);
-  };
+  const isCurrentDecisionAnswered = selectedAnswers[currentDecision] !== undefined;
 
   return (
-    <div className="max-w-3xl mx-auto px-4">
-      <div className="flex justify-center mb-4">
-        <span className="text-sm text-gray-400">
+    <div className="max-w-3xl w-full mx-auto py-12 px-4">
+      <div className="flex justify-between items-center mb-8 text-sm text-neutral-500">
+        <span>
           Decision {currentDecision + 1} of {caseData.decisions.length}
         </span>
       </div>
 
-      <div className="bg-[#181b24] border border-gray-800/40 rounded-lg overflow-hidden">
-        <div className="h-1 bg-gray-800">
-          <div 
-            className="h-full bg-blue-500 transition-all duration-300" 
-            style={{ width: `${((currentDecision + 1) / caseData.decisions.length) * 100}%` }}
-          />
-        </div>
-
-        <div className="p-6">
           {!completed ? (
             <>
               <div className="mb-8">
-                <h3 className="text-xl font-medium text-white mb-2">{caseData.title}</h3>
+            <h3 className="text-xl font-medium text-white mb-3">{caseData.title}</h3>
                 <p className="text-gray-400 mb-4">{caseData.context}</p>
-                
-                {/* Timeline */}
-                <div className="bg-gray-800/30 p-4 rounded-lg mb-6">
+            <div className="p-4 rounded-lg mt-4">
                   <h4 className="font-medium text-white mb-2">Incident Timeline:</h4>
                   <ul className="space-y-2">
                     {caseData.timeline.map((event, index) => (
-                      <li key={index} className="flex items-start gap-2 text-gray-300">
-                        <ChevronRight className="w-5 h-5 mt-0.5 text-blue-400" />
+                  <li key={index} className="flex items-start gap-2 text-gray-300 text-sm">
+                    <ChevronRight className="w-4 h-4 mt-0.5 text-blue-400 flex-shrink-0" />
                         <span>{event}</span>
                       </li>
                     ))}
                   </ul>
+            </div>
                 </div>
 
-                <h4 className="text-lg font-medium text-white mb-4">
+          <div className="mb-8">
+            <h2 className="text-xl font-light text-white mb-4">
                   {caseData.decisions[currentDecision].question}
-                </h4>
+            </h2>
+          </div>
 
-                <div className="space-y-3">
+          <div className="space-y-3 mb-8">
                   {caseData.decisions[currentDecision].options.map((option, index) => (
                     <button
                       key={index}
                       onClick={() => handleOptionSelect(index)}
-                      className={`w-full text-left p-4 rounded-lg border transition-all duration-200 
-                        ${selectedAnswers[currentDecision] === index
+                className={`w-full text-left p-4 border rounded-lg transition-all ${
+                  selectedAnswers[currentDecision] === index
                           ? showFeedback
-                            ? option.isCorrect
-                              ? 'bg-green-500/10 border-green-500/40 text-green-400'
-                              : 'bg-red-500/10 border-red-500/40 text-red-400'
-                            : 'bg-blue-500/10 border-blue-500/40 text-blue-400'
-                          : 'border-transparent bg-gray-800/30 hover:bg-gray-800/50 text-gray-300 hover:text-white'
+                    ? caseData.decisions[currentDecision].options[index].isCorrect
+                      ? 'border-green-500/40 bg-green-500/10 text-green-300'
+                      : 'border-red-500/40 bg-red-500/10 text-red-300'
+                    : "border-purple-500/50 bg-purple-500/10 text-white"
+                  : "border-gray-800 bg-black/20 text-neutral-300 hover:border-gray-700 hover:bg-black/40"
                         }`}
                     >
                       <div className="flex items-start gap-3">
                         {showFeedback && selectedAnswers[currentDecision] === index && (
-                          option.isCorrect 
-                            ? <CheckCircle2 className="w-5 h-5 text-green-400 mt-0.5" />
-                            : <AlertCircle className="w-5 h-5 text-red-400 mt-0.5" />
+                    caseData.decisions[currentDecision].options[index].isCorrect
+                      ? <CheckCircle2 className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                      : <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
                         )}
                         <div>
                           <p>{option.text}</p>
                           {showFeedback && selectedAnswers[currentDecision] === index && (
-                            <p className={`mt-2 text-sm ${option.isCorrect ? 'text-green-400' : 'text-red-400'}`}>
+                      <p className={`mt-1.5 text-sm ${
+                        caseData.decisions[currentDecision].options[index].isCorrect ? 'text-green-400/80' : 'text-red-400/80'
+                      }`}>
                               {option.feedback}
                             </p>
                           )}
@@ -164,57 +156,62 @@ const CaseStudy: React.FC<CaseStudyProps> = ({ onComplete }) => {
                       </div>
                     </button>
                   ))}
-                </div>
               </div>
 
-              <div className="flex justify-between mt-8 pt-6 border-t border-gray-800/40">
+          <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-800/40">
                 {currentDecision > 0 ? (
                   <button
-                    onClick={() => setCurrentDecision(prev => prev - 1)}
-                    className="text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-2"
+                onClick={() => {
+                  setShowFeedback(false);
+                  setCurrentDecision(prev => prev - 1)
+                }}
+                className="text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-1 px-3 py-2"
                   >
-                    <ChevronLeft className="w-4 h-4" /> Previous
+                <ChevronLeft size={16} /> Previous
                   </button>
                 ) : (
                   <div />
                 )}
-                
                 {showFeedback && (
                   <button
                     onClick={handleNext}
-                    className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-colors px-4 py-2 rounded-lg flex items-center gap-2"
+                className={`px-6 py-3 rounded-lg flex items-center justify-center transition-all border border-white/50 bg-white/20 text-white hover:bg-white/20`}
                   >
                     {currentDecision === caseData.decisions.length - 1 ? 'Complete Case Study' : 'Next Decision'}
-                    <ChevronRight className="w-4 h-4" />
+                <ChevronRight size={16} className="ml-1" />
                   </button>
                 )}
               </div>
             </>
           ) : (
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-medium text-white mb-2">Case Study Complete!</h2>
-              <div className="flex flex-col items-center justify-center mt-8 mb-6">
-                <div className="relative">
-                  <div className="w-32 h-32 rounded-full bg-blue-500/10 border-4 border-blue-500/20 flex items-center justify-center">
-                    <CheckCircle2 className="w-16 h-16 text-blue-400" />
+        <div className="max-w-3xl w-full mx-auto py-12 px-4 text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 font-normal mb-12">
+            Case Study Completed
+          </h1>
+
+          <div className="flex justify-center mb-12">
+            <div className="w-24 h-24 rounded-full bg-green-500/10 border-4 border-green-500/20 flex items-center justify-center">
+                <CheckCircle2 className="w-12 h-12 text-green-400" />
                   </div>
                 </div>
-                <div className="mt-4 text-gray-400">
-                  <p className="text-lg">You've completed all decisions in this case study!</p>
-                </div>
-              </div>
-              
+          <p className="text-neutral-400 mb-12">You have successfully analyzed the case scenario.</p>
+
+          <div className="border-t border-gray-800/40 pt-8 mt-8 max-w-md mx-auto flex justify-center gap-4">
+            <button
+              onClick={() => router.push(`/modules/${moduleId}`)}
+              className="inline-flex items-center px-6 py-3 border border-gray-800 rounded-lg text-white hover:bg-white/5 transition"
+            >
+              Return to Module
+            </button>
               <button 
-                onClick={handleReset}
-                className="bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-colors px-6 py-2 rounded-lg flex items-center gap-2 mx-auto"
+              onClick={onComplete}
+              className="inline-flex items-center px-6 py-3 border border-white/50 bg-white/20 text-white hover:bg-white/20 rounded-lg transition"
               >
-                <RotateCcw className="w-4 h-4" />
-                Restart Case Study
+               Continue <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
-          )}
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -12,12 +12,13 @@ import { Users, Briefcase, Target } from 'lucide-react';
 import { AnimatedSolutionSection } from "./components/AnimatedSolutionSection";
 import CookieConsent from '@/app/(marketing)/cookie-consent/CookieConsent';
 import DemoSection from './components/DemoSection';
+import FAQSection from './components/FAQSection';
 
 // Type Definitions
-interface FAQ {
-  question: string;
-  answer: string;
-}
+// interface FAQ {
+//   question: string;
+//   answer: string;
+// }
 
 interface Product {
   title: string;
@@ -28,101 +29,101 @@ interface Product {
 }
 
 
-const FAQSection: React.FC = () => {
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-
-  const toggleFAQ = (index: number) => {
-    setOpenFAQ(openFAQ === index ? null : index);
-  };
-
-  const faqs: FAQ[] = [
-    {
-      question: "How is the training content updated to reflect the latest cybersecurity threats?",
-      answer: "We continuously monitor the cybersecurity landscape and update our training modules regularly to ensure your team is learning the latest techniques to prevent emerging threats."
-    },
-    {
-      question: "Can we track the progress of our employees?",
-      answer: "Yes, our platform provides detailed reporting and analytics that allow you to track employee progress, assess learning outcomes, and identify areas for improvement."
-    },
-    {
-      question: "Is the platform customizable for different roles within our company?",
-      answer: "Absolutely! Our training can be customized to fit different roles and departments, ensuring each employee receives relevant training based on their responsibilities."
-    },
-    {
-      question: "How secure is your platform?",
-      answer: "Security is our top priority. We follow industry best practices, including encryption and regular security audits, to protect your data and ensure the platform is secure."
-    },
-    {
-      question: "Do you provide support during the implementation process?",
-      answer: "Yes, we offer full support during implementation, including onboarding assistance and ongoing technical support to ensure a smooth transition and high engagement."
-    }
-  ];
-
-  return (
-    <section className="py-16 md:py-24 font-sans bg-transparent px-4">
-      <h2 className="text-3xl sm:text-4xl md:text-5xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-normal">
-        Frequently Asked Questions
-      </h2>
-      <h3 className="text-lg sm:text-xl md:text-xl mb-14 text-gray-400 text-center">
-        Get answers to common questions about our cybersecurity training solutions
-      </h3>
-      <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="space-y-5"
-        >
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="border-t border-gray-800 overflow-hidden"
-            >
-              <button
-                className="flex justify-between items-center w-full my-1 mt-6 text-left"
-                onClick={() => toggleFAQ(index)}
-              >
-                <span className="text-white">{faq.question}</span>
-                <motion.div
-                  animate={{ rotate: openFAQ === index ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <ChevronDown className="h-5 w-5 text-white" />
-                </motion.div>
-              </button>
-              <AnimatePresence initial={false}>
-                {openFAQ === index && (
-                  <motion.div
-                    key="content"
-                    initial="collapsed"
-                    animate="open"
-                    exit="collapsed"
-                    variants={{
-                      open: { opacity: 1, height: "auto" },
-                      collapsed: { opacity: 0, height: 0 }
-                    }}
-                    transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
-                  >
-                    <motion.div
-                      variants={{ collapsed: { y: -10 }, open: { y: 0 } }}
-                      transition={{ duration: 0.2 }}
-                      className="pt-5 text-gray-400"
-                    >
-                      {faq.answer}
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+// const FAQSection: React.FC = () => {
+//   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+// 
+//   const toggleFAQ = (index: number) => {
+//     setOpenFAQ(openFAQ === index ? null : index);
+//   };
+// 
+//   const faqs: FAQ[] = [
+//     {
+//       question: "How is the training content updated to reflect the latest cybersecurity threats?",
+//       answer: "We continuously monitor the cybersecurity landscape and update our training modules regularly to ensure your team is learning the latest techniques to prevent emerging threats."
+//     },
+//     {
+//       question: "Can we track the progress of our employees?",
+//       answer: "Yes, our platform provides detailed reporting and analytics that allow you to track employee progress, assess learning outcomes, and identify areas for improvement."
+//     },
+//     {
+//       question: "Is the platform customizable for different roles within our company?",
+//       answer: "Absolutely! Our training can be customized to fit different roles and departments, ensuring each employee receives relevant training based on their responsibilities."
+//     },
+//     {
+//       question: "How secure is your platform?",
+//       answer: "Security is our top priority. We follow industry best practices, including encryption and regular security audits, to protect your data and ensure the platform is secure."
+//     },
+//     {
+//       question: "Do you provide support during the implementation process?",
+//       answer: "Yes, we offer full support during implementation, including onboarding assistance and ongoing technical support to ensure a smooth transition and high engagement."
+//     }
+//   ];
+// 
+//   return (
+//     <section className="py-16 md:py-24 font-sans bg-transparent px-4">
+//       <h2 className="text-3xl sm:text-4xl md:text-5xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-normal">
+//         Frequently Asked Questions
+//       </h2>
+//       <h3 className="text-lg sm:text-xl md:text-xl mb-14 text-gray-400 text-center">
+//         Get answers to common questions about our cybersecurity training solutions
+//       </h3>
+//       <div className="max-w-4xl mx-auto">
+//         <motion.div
+//           initial={{ opacity: 0 }}
+//           animate={{ opacity: 1 }}
+//           transition={{ duration: 0.5, delay: 0.5 }}
+//           className="space-y-5"
+//         >
+//           {faqs.map((faq, index) => (
+//             <motion.div
+//               key={index}
+//               initial={{ opacity: 0, y: 20 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.3, delay: index * 0.1 }}
+//               className="border-t border-gray-800 overflow-hidden"
+//             >
+//               <button
+//                 className="flex justify-between items-center w-full my-1 mt-6 text-left"
+//                 onClick={() => toggleFAQ(index)}
+//               >
+//                 <span className="text-white">{faq.question}</span>
+//                 <motion.div
+//                   animate={{ rotate: openFAQ === index ? 180 : 0 }}
+//                   transition={{ duration: 0.3 }}
+//                 >
+//                   <ChevronDown className="h-5 w-5 text-white" />
+//                 </motion.div>
+//               </button>
+//               <AnimatePresence initial={false}>
+//                 {openFAQ === index && (
+//                   <motion.div
+//                     key="content"
+//                     initial="collapsed"
+//                     animate="open"
+//                     exit="collapsed"
+//                     variants={{
+//                       open: { opacity: 1, height: "auto" },
+//                       collapsed: { opacity: 0, height: 0 }
+//                     }}
+//                     transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+//                   >
+//                     <motion.div
+//                       variants={{ collapsed: { y: -10 }, open: { y: 0 } }}
+//                       transition={{ duration: 0.2 }}
+//                       className="pt-5 text-gray-400"
+//                     >
+//                       {faq.answer}
+//                     </motion.div>
+//                   </motion.div>
+//                 )}
+//               </AnimatePresence>
+//             </motion.div>
+//           ))}
+//         </motion.div>
+//       </div>
+//     </section>
+//   );
+// };
 
 
 const Home: React.FC = () => {
@@ -164,7 +165,7 @@ const Home: React.FC = () => {
 
   return (
     <main className="relative">
-      <div className="absolute inset-0 min-h-screen w-full bg-[#0b0b0b] [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)] z-[-1]"></div>
+      <div className="absolute inset-0 min-h-screen w-full bg-[#0b0b0b] z-[-1]"></div>
       <Navbar />
       <CookieConsent />
       <section className="min-h-screen w-full rounded-md !overflow-visible relative flex flex-col items-center antialiased">
@@ -195,7 +196,7 @@ const Home: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="text-4xl mt-3  sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl bg-clip-text text-transparent bg-gradient-to-b pb-2 from-white to-neutral-600 font-sans font-bold text-center"
+                  className="text-4xl mt-3  sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl bg-clip-text text-transparent bg-gradient-to-b pb-2 from-white to-neutral-600 font-sans font-bold text-center"
                 >
                   <span className="bg-clip-text text-transparent bg-gradient-to-b pb-2 from-white font-light to-neutral-600">Evade</span> <span className="whitespace-nowrap font-light bg-clip-text text-transparent bg-gradient-to-b pb-2  from-white to-neutral-600">Cyber Attacks </span> <span className="font-light">Beforehand</span> 
                 </motion.h1>
@@ -218,11 +219,10 @@ const Home: React.FC = () => {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 mb-8 md:mb-10 text-md sm:text-xl w-full sm:w-fit rounded-full bg-gray-300 hover:bg-gray-100 group transition-all flex items-center justify-center gap-4"
+                      className="inline-flex items-center px-7 py-2 border border-white/20 rounded-full font-medium hover:bg-white/10 transition-colors mb-8 md:mb-10"
                     >
-                      <span className="ml-[4px] font-sans inline-flex text-black md:text-center ">
+                      <span className="ml-[4px] font-sans inline-flex text-white md:text-center ">
                         Try App 
-                        <ChevronRight className="mt-[6px]" size={18} color="black"/>
                       </span>
                     </motion.button>
                   </Link>
@@ -230,11 +230,10 @@ const Home: React.FC = () => {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 mb-8 md:mb-10 text-md sm:text-xl w-full sm:w-fit rounded-full bg-transparent border border-gray-200/50 hover:border-gray-300 group transition-all flex items-center justify-center gap-4"
+                      className="inline-flex items-center px-7 bg-white text-black py-2 rounded-full font-medium hover:bg-white/90 transition-colors mb-8 md:mb-10"
                     >
-                      <span className="ml-[4px] font-sans inline-flex text-white md:text-center ">
+                      <span className="ml-[4px] font-sans inline-flex text-black md:text-center ">
                         Free Trial 
-                        <ChevronRight className="mt-[6px]" size={18} color="white"/>
                       </span>
                     </motion.button>
                   </Link>
@@ -245,7 +244,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/20">
+      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/10">
         <h2 className="text-5xl md:text-6xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 font-normal lg:hidden">
           Reality
         </h2>
@@ -254,13 +253,13 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/20  py-32">
+      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/10  py-32">
         <DemoSection />
       </section>
 
       {/* <DemoSection /> */}
 
-      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/20 py-32">
+      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/10 py-32">
         <div className="container mx-auto px-0 sm:px-6 lg:px-8 max-w-[1400px]">
           {/* <h2 className="text-4xl text-start px-7 mb-16 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-normal">
             Solutions
@@ -287,7 +286,7 @@ const Home: React.FC = () => {
         </div>
       </section>    */}
 
-      <section className="pt-28 font-sans border-b border-white/20 overflow-hidden">
+      <section className="pt-28 font-sans border-b border-white/10 overflow-hidden">
         <div className="container mx-auto px-2 max-w-[1400px]">
           <FAQSection />
         </div>
@@ -296,7 +295,7 @@ const Home: React.FC = () => {
       {/* CTA Section */}
       <div className="py-20 px-6 sm:px-6 lg:px-8 mb-40 text-center">
         <div className="pt-16 max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-normal mb-8">
+          <h2 className="text-3xl md:text-5xl font-normal mb-6">
             Prepare for Tomorrow
           </h2>
           <p className="text-gray-400 mb-12 text-lg">
@@ -305,13 +304,13 @@ const Home: React.FC = () => {
           <div className="space-x-6">
             <Link
               href="/free-trial"
-              className="inline-flex items-center px-7 bg-white text-black py-3 rounded-full font-medium hover:bg-white/90 transition-colors"
+              className="inline-flex items-center px-7 bg-white text-black py-2 rounded-full font-medium hover:bg-white/90 transition-colors"
             >
               Free Trial
             </Link>
             <Link
               href="/try-app"
-              className="inline-flex items-center px-7 py-3 border border-white/20 rounded-full font-medium hover:bg-white/10 transition-colors"
+              className="inline-flex items-center px-7 py-2 border border-white/20 rounded-full font-medium hover:bg-white/10 transition-colors"
             >
               Try App
             </Link>

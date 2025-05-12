@@ -245,16 +245,16 @@ const Navbar = () => {
 
               {isDesktop && (
                 <div className="flex items-center gap-8 ml-auto">
-                  <Link href="/login" className="text-gray-400 hover:text-white">Log in</Link>
+                  <Link href="/login" className="text-gray-400 hover:text-white">Log In</Link>
                   <button 
                     onClick={() => {
                       setIsDemoOpen(true);
                       setIsLoading(true);
                     }} 
-                    className="p-4 h-9 w-full sm:w-fit rounded-full border border-white/70 hover:bg-white/5 group transition-all flex items-center justify-center gap-4"
+                    className="p-4 h-9 w-full text-gray-400 hover:text-white sm:w-fit rounded-full border border-gray/30 hover:bg-white/5 group transition-all flex items-center justify-center gap-4"
                   >
-                    <span className="text-neutral-400 flex md:text-center">
-                      Book a demo <ChevronRight className="text-neutral-400 mt-[3px]" size={15}/>
+                    <span className=" flex md:text-center">
+                      Book Demo
                     </span>
                   </button>
                 </div>

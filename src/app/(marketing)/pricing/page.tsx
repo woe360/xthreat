@@ -377,260 +377,266 @@ const PricingPage = () => {
   const getCalculablePlans = () => pricingPlans.filter(plan => plan.name !== "Tailored");
 
   return (
-    <div className="min-h-screen font-sans bg-[#0b0b0b] [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)] text-white relative overflow-hidden">
+    <div className="min-h-screen font-sans bg-[#0b0b0b] text-white relative overflow-hidden">
       <Navbar />
       
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-56">
-        {/* Header */}
-        <div className="text-start">
-          <h2 className="text-5xl font-normal">
-            Pricing
-          </h2>
-          <p className="mt-6 text-lg text-neutral-400 italic">
-            You pay per user, what you see here.
-          </p>
-        </div>
-
-        {/* Pricing Toggle */}
-        <div className="flex justify-end mb-16">
-          <div className="inline-flex rounded-full border border-white/10 p-[2px]">
-            <button
-              onClick={() => setIsYearly(false)}
-              className={`px-6 py-2 rounded-full transition-colors ${!isYearly ? 'bg-white/10' : ''}`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setIsYearly(true)}
-              className={`px-8 py-2 rounded-full transition-colors ${isYearly ? 'bg-white/10' : ''}`}
-            >
-              Yearly
-            </button>
+      {/* Section 1: Header, Toggle, Pricing Cards - Wrapped in full-width border div */}
+      <div className="w-full pb-16">
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 pt-80">
+          {/* Header */}
+          <div className="text-start">
+            <h2 className="text-5xl font-normal">
+              Pricing
+            </h2>
+            <p className="mt-6 text-lg text-neutral-400 italic">
+              You pay per user, what you see here.
+            </p>
           </div>
-        </div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16 mb-32">
-          {pricingPlans.map((plan) => (
-            <div key={plan.name} className="flex flex-col">
-              <h3 className="text-xl font-normal mb-6">
-                {plan.name}
-              </h3>
-              
-              <div className="mb-6">
-                <div className="text-5xl font-light">
-                  €{isYearly ? plan.yearlyPrice.toFixed(1) : plan.monthlyPrice.toFixed(1)}
-                </div>
-                <div className="text-neutral-400 mt-1">
-                  Per user / {isYearly ? 'year' : 'month'}
-                </div>
-              </div>
-              
-              <p className="text-neutral-400 mb-10 min-h-[80px]">
-                {plan.description}
-              </p>
-              
-              <ul className="space-y-4 mb-8 flex-grow">
-                {plan.features.slice(0, 3).map((feature, idx) => (
-                  <li key={idx} className="flex items-start text-neutral-400">
-                    <Check className="h-5 w-5 mr-3 text-white/60 mt-0.5 flex-shrink-0" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              
+          {/* Pricing Toggle */}
+          <div className="flex justify-end mb-16">
+            <div className="inline-flex rounded-full border border-white/10 p-[2px]">
               <button
-                onClick={() => handleCTAClick('/free-trial', plan.name)}
-                className="rounded-full border border-white/20 py-3 px-8 hover:bg-white/5 transition-colors mt-auto"
+                onClick={() => setIsYearly(false)}
+                className={`px-6 py-2 rounded-full transition-colors ${!isYearly ? 'bg-white/10' : ''}`}
               >
-                Start Free Trial
+                Monthly
               </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Features Table */}
-        {/* <div className="mt-36 mb-36">
-          <h3 className="text-3xl font-normal mb-12">Compare features</h3>
-          <FeaturesTable />
-        </div> */}
-
-        {/* Calculator Section */}
-        <div className="w-full border-t border-b border-white/20 py-36">
-          <div className="max-w-[1360px] mx-auto">
-            <div className="flex justify-between items-center mb-16">
-              <h3 className="text-5xl font-normal">
-                Pricing calculator
-              </h3>
-              <button 
-                onClick={() => handleCTAClick('/contact')}
-                className="text-sm rounded-full border border-white/20 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
+              <button
+                onClick={() => setIsYearly(true)}
+                className={`px-8 py-2 rounded-full transition-colors ${isYearly ? 'bg-white/10' : ''}`}
               >
-                REQUEST CUSTOM PRICING <span className="text-xl">→</span>
+                Yearly
               </button>
-            </div>
-            
-            <div className="flex flex-col space-y-12">
-              <div className="grid grid-cols-2 gap-x-16 gap-y-10">
-                <div>
-                  <p className="text-lg text-neutral-400 mb-3">Plan</p>
-                  <Select value={selectedPlan} onValueChange={(value) => setSelectedPlan(value)}>
-                    <SelectTrigger 
-                      id="plan-select" 
-                      className="bg-transparent border-0 border-t border-white/20 rounded-none px-0 py-2 h-auto text-xl font-normal flex justify-between shadow-none"
-                    >
-                      <SelectValue placeholder="Select plan" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-neutral-900 border-gray-700">
-                      {getCalculablePlans().map(plan => (
-                        <SelectItem key={plan.name} value={plan.name}>{plan.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <p className="text-lg text-neutral-400 mb-3">Billing Cycle</p>
-                  <Select value={isYearly ? 'yearly' : 'monthly'} onValueChange={(value) => setIsYearly(value === 'yearly')}>
-                    <SelectTrigger 
-                      id="billing-cycle" 
-                      className="bg-transparent border-0 border-t border-white/20 rounded-none px-0 py-2 h-auto text-xl font-normal flex justify-between shadow-none"
-                    >
-                      <SelectValue placeholder="Select billing" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-neutral-900 border-gray-700">
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="yearly">Yearly</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              <div className="w-full">
-                <p className="text-lg text-neutral-400 mb-3">Number of Users</p>
-                <div className="flex items-center gap-4 w-full mb-2">
-                  <Input
-                    type="number"
-                    min="1"
-                    max="3000"
-                    value={userCount}
-                    onChange={(e) => setUserCount(Math.min(3000, Math.max(1, parseInt(e.target.value) || 1)))}
-                    className="bg-transparent border-0 border-t border-white/20 rounded-none px-0 py-2 h-auto text-xl font-normal w-full shadow-none"
-                  />
-                </div>
-                
-                <div className="flex items-center w-full">
-                  <p className="text-sm text-neutral-400 w-10">{userCount}</p>
-                  <div className="w-full mx-2">
-                    <Slider
-                      value={[userCount]}
-                      onValueChange={(value) => setUserCount(value[0])}
-                      max={3000}
-                      step={1}
-                      className="w-full [&_[role=slider]]:bg-white [&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_.swui-slider-track]:bg-neutral-700 [&_.swui-slider-range]:bg-white"
-                    />
-                  </div>
-                  <p className="text-sm text-neutral-400 w-12 text-right">3000+</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-20 flex justify-end">
-              <div className="text-right">
-                <p className="text-xl text-neutral-400">Cost</p>
-                <p className="text-7xl font-normal mt-3">€{calculatePrice()}</p>
-                <p className="text-sm text-neutral-400 mt-2">
-                  {isYearly ? 'per year' : 'per month'} for {userCount} user{userCount > 1 ? 's' : ''} (€{getPricePerUser()} per user)
-                </p>
-              </div>
             </div>
           </div>
-        </div>
 
-        {/* FAQ and CTA Section */}
-        <div className="w-full mt-36">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-16">
-              <h3 className="text-5xl font-normal">
-                Frequently asked questions
-              </h3>
-            </div>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-8">
-              {faqs.map((faq, index) => (
-                <div key={index} className="border-t border-white/20">
-                  <button
-                    className="flex justify-between items-center w-full py-4 text-left text-xl"
-                    onClick={() => toggleFAQ(index)}
-                  >
-                    <span>{faq.question}</span>
-                    <motion.div
-                      animate={{ rotate: openFAQ === index ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <ChevronDown className="h-5 w-5 text-white/60" />
-                    </motion.div>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {openFAQ === index && (
-                      <motion.div
-                        key="content"
-                        initial="collapsed"
-                        animate="open"
-                        exit="collapsed"
-                        variants={{
-                          open: { opacity: 1, height: "auto" },
-                          collapsed: { opacity: 0, height: 0 }
-                        }}
-                        transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
-                      >
-                        <div className="text-neutral-400 pb-4">
-                          {faq.answer}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+          {/* Pricing Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16"> {/* Removed mb-32 */}
+            {pricingPlans.map((plan) => (
+              <div key={plan.name} className="flex flex-col">
+                <h3 className="text-xl font-normal mb-6">
+                  {plan.name}
+                </h3>
+                
+                <div className="mb-6">
+                  <div className="text-5xl font-light">
+                    €{isYearly ? plan.yearlyPrice.toFixed(1) : plan.monthlyPrice.toFixed(1)}
+                  </div>
+                  <div className="text-neutral-400 mt-1">
+                    Per user / {isYearly ? 'year' : 'month'}
+                  </div>
                 </div>
-              ))}
-            </div>
-            
-            <div className="mt-20 border-t border-white/20 pt-12">
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <h4 className="text-2xl text-neutral-400 mb-6 md:mb-0">Still have questions?</h4>
+                
+                <p className="text-neutral-400 mb-10 min-h-[80px]">
+                  {plan.description}
+                </p>
+                
+                <ul className="space-y-4 mb-8 flex-grow">
+                  {plan.features.slice(0, 3).map((feature, idx) => (
+                    <li key={idx} className="flex items-start text-neutral-400">
+                      <Check className="h-5 w-5 mr-3 text-white/60 mt-0.5 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
                 <button
-                  onClick={() => handleCTAClick('/contact')}
-                  className="rounded-full border text-sm border-white/20 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
+                  onClick={() => handleCTAClick('/free-trial', plan.name)}
+                  className="rounded-full border border-white/20 py-3 px-8 hover:bg-white/5 transition-colors mt-auto"
                 >
-                  GET IN TOUCH <span className="text-xl">→</span>
+                  Start Free Trial
                 </button>
               </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Features Table (Optional) - If uncommented, might need border adjustments */}
+      {/* <div className="w-full border-b border-white/20 py-20">
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-3xl font-normal mb-12 text-center">Compare features</h3>
+          <FeaturesTable />
+        </div>
+      </div> */}
+
+      {/* Calculator Section - Now just has bottom border */}
+      <div className="w-full border-b border-white/10 py-36">
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8"> {/* Added padding */}
+          <div className="flex justify-between items-center mb-16">
+            <h3 className="text-5xl font-normal">
+              Pricing calculator
+            </h3>
+            <button 
+              onClick={() => handleCTAClick('/contact')}
+              className="text-sm rounded-full border border-white/20 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
+            >
+              Request Custom Pricing <span className="text-xl">→</span>
+            </button>
+          </div>
+          
+          <div className="flex flex-col space-y-12">
+            <div className="grid grid-cols-2 gap-x-16 gap-y-10">
+              <div>
+                <p className="text-lg text-neutral-400 mb-3">Plan</p>
+                <Select value={selectedPlan} onValueChange={(value) => setSelectedPlan(value)}>
+                  <SelectTrigger 
+                    id="plan-select" 
+                    className="bg-transparent border-0 border-t border-white/20 rounded-none px-0 py-2 h-auto text-xl font-normal flex justify-between shadow-none"
+                  >
+                    <SelectValue placeholder="Select plan" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-neutral-900 border-gray-700">
+                    {getCalculablePlans().map(plan => (
+                      <SelectItem key={plan.name} value={plan.name}>{plan.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <p className="text-lg text-neutral-400 mb-3">Billing Cycle</p>
+                <Select value={isYearly ? 'yearly' : 'monthly'} onValueChange={(value) => setIsYearly(value === 'yearly')}>
+                  <SelectTrigger 
+                    id="billing-cycle" 
+                    className="bg-transparent border-0 border-t border-white/20 rounded-none px-0 py-2 h-auto text-xl font-normal flex justify-between shadow-none"
+                  >
+                    <SelectValue placeholder="Select billing" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-neutral-900 border-gray-700">
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="yearly">Yearly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="w-full">
+              <p className="text-lg text-neutral-400 mb-3">Number of Users</p>
+              <div className="flex items-center gap-4 w-full mb-2">
+                <Input
+                  type="number"
+                  min="1"
+                  max="3000"
+                  value={userCount}
+                  onChange={(e) => setUserCount(Math.min(3000, Math.max(1, parseInt(e.target.value) || 1)))}
+                  className="bg-transparent border-0 border-t border-white/20 rounded-none px-0 py-2 h-auto text-xl font-normal w-full shadow-none"
+                />
+              </div>
+              
+              <div className="flex items-center w-full">
+                <p className="text-sm text-neutral-400 w-10">{userCount}</p>
+                <div className="w-full mx-2">
+                  <Slider
+                    value={[userCount]}
+                    onValueChange={(value) => setUserCount(value[0])}
+                    max={3000}
+                    step={1}
+                    className="w-full [&_[role=slider]]:bg-white [&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_.swui-slider-track]:bg-neutral-700 [&_.swui-slider-range]:bg-white"
+                  />
+                </div>
+                <p className="text-sm text-neutral-400 w-12 text-right">3000+</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-20 flex justify-end">
+            <div className="text-right">
+              <p className="text-xl text-neutral-400">Cost</p>
+              <p className="text-7xl font-normal mt-3">€{calculatePrice()}</p>
+              <p className="text-sm text-neutral-400 mt-2">
+                {isYearly ? 'per year' : 'per month'} for {userCount} user{userCount > 1 ? 's' : ''} (€{getPricePerUser()} per user)
+              </p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Final CTA Section */}
-        <div className="w-full mt-36 border-t border-white/20 pt-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h3 className="text-4xl font-normal mb-6">
-              Ready to get started?
+      {/* FAQ and CTA Section - Outer div has border, inner border removed */}
+      <div className="w-full mt-36 border-b border-white/10 pb-20">
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8"> {/* Added padding */}
+          <div className="flex justify-between items-center mb-16">
+            <h3 className="text-5xl font-normal">
+              Frequently asked questions
             </h3>
-            <p className="text-neutral-400 mb-10 max-w-2xl mx-auto">
-              Try a free trial or see how our app works with no commitment
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/free-trial"
-                className="rounded-full border border-white bg-white text-black py-3 px-8 hover:bg-white/90 transition-colors"
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-8">
+            {faqs.map((faq, index) => (
+              <div key={index} className="border-t border-white/20"> {/* FAQ item border */}
+                <button
+                  className="flex justify-between items-center w-full py-4 text-left text-xl"
+                  onClick={() => toggleFAQ(index)}
+                >
+                  <span>{faq.question}</span>
+                  <motion.div
+                    animate={{ rotate: openFAQ === index ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ChevronDown className="h-5 w-5 text-white/60" />
+                  </motion.div>
+                </button>
+                <AnimatePresence initial={false}>
+                  {openFAQ === index && (
+                    <motion.div
+                      key="content"
+                      initial="collapsed"
+                      animate="open"
+                      exit="collapsed"
+                      variants={{
+                        open: { opacity: 1, height: "auto" },
+                        collapsed: { opacity: 0, height: 0 }
+                      }}
+                      transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                    >
+                      <div className="text-neutral-400 pb-4">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+          
+          {/* "Still have questions?" CTA - No border here now */}
+          <div className="mt-20 pt-12">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <h4 className="text-2xl text-neutral-400 mb-6 md:mb-0">Still have questions?</h4>
+              <button
+                onClick={() => handleCTAClick('/contact')}
+                className="rounded-full border text-sm border-white/20 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
               >
-                Start Free Trial
-              </Link>
-              <Link
-                href="/try-app"
-                className="rounded-full border border-white/20 py-3 px-8 hover:bg-white/5 transition-colors"
-              >
-                Try App
-              </Link>
+                Get In Touch <span className="text-xl">→</span>
+              </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Final CTA Section - Has bottom border */}
+      <div className="w-full mt-36 pt-10 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h3 className="text-4xl font-normal mb-6">
+            Ready to get started?
+          </h3>
+          <p className="text-neutral-400 mb-10 max-w-2xl mx-auto">
+            Try a free trial or see how our app works with no commitment
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/free-trial"
+              className="rounded-full border border-white bg-white text-black py-2 px-7 hover:bg-white/90 transition-colors"
+            >
+             Free Trial
+            </Link>
+            <Link
+              href="/try-app"
+              className="rounded-full border border-white/20 py-2 px-7 hover:bg-white/5 transition-colors"
+            >
+              Try App
+            </Link>
           </div>
         </div>
       </div>

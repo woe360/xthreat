@@ -280,7 +280,7 @@ const CreateModuleDialog = ({ onModuleCreated }: { onModuleCreated: () => void }
         points: 0
       };
 
-      const response = await fetch('http://localhost:5000/api/modules', {
+      const response = await fetch('/api/modules', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -550,7 +550,7 @@ const ModuleList = () => {
   const fetchModules = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/modules');
+      const response = await fetch('/api/modules');
       
       if (!response.ok) {
         const error = await response.json();
@@ -685,7 +685,7 @@ const TrainingsPage = () => {
   const fetchModules = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/modules');
+      const response = await fetch('/api/modules');
       
       if (!response.ok) {
         const error = await response.json();

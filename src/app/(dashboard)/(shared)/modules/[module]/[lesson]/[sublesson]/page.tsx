@@ -1,15 +1,28 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+
+// Import all necessary lesson components
+import { Quiz } from '../../../components/lessons/Quiz';
+import { QuizSkeleton } from '../../../components/lessons/QuizSkeleton';
+import { EmailInspector } from '../../../components/lessons/Email';
+import VendorPortalSimulator from '../../../components/lessons/Vendor';
+import MultiChannelPhishingSimulator from '../../../components/lessons/Multi';
+import CaseStudy from '../../../components/lessons/CaseStudy';
+import URLInspectorChallenge from '../../../components/lessons/Inspector';
+import SecurityStory from '../../../components/lessons/Story';
+import EmailComparison from '../../../components/lessons/EmailComparison';
 import ConceptOverview from '../../../components/lessons/ConceptOverview';
 
 interface SubLessonData {
-  id: string;
+  id: string | number;
   title: string;
   content_type: string;
+  lesson_id: number;
   content?: {
     paragraphs?: string[];
     keyConcepts?: string[];
@@ -20,9 +33,15 @@ interface SubLessonData {
 
 const SubLessonPage = () => {
   const params = useParams();
+  const router = useRouter();
   const [subLessonData, setSubLessonData] = useState<SubLessonData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // State for quiz data
+  const [questions, setQuestions] = useState<any[]>([])
+  const [answers, setAnswers] = useState<any[]>([])
+  const [quizLoading, setQuizLoading] = useState(false);
 
   // Extract slugs from params
   const moduleSlug = params.module as string;
@@ -38,15 +57,20 @@ const SubLessonPage = () => {
 
     const fetchData = async () => {
       setLoading(true);
+      setQuizLoading(false);
       setError(null);
+      setQuestions([]);
+      setAnswers([]);
+      const supabase = createClientComponentClient();
+
       try {
-        // Fetch data from the specific sub-lesson API endpoint
+        // Fetch base sub-lesson data first (using API route is fine)
         const apiUrl = `/api/modules/${moduleSlug}/lessons/${lessonSlug}/sublessons/${subLessonSlug}`;
-        console.log("Fetching from API:", apiUrl);
+        console.log("Fetching base data from API:", apiUrl);
         const res = await fetch(apiUrl);
 
         if (!res.ok) {
-          const errorData = await res.json().catch(() => ({})); // Try to get error message
+          const errorData = await res.json().catch(() => ({}));
           console.error("API Error Response:", errorData);
           throw new Error(errorData.error || `Failed to fetch sub-lesson (${res.status})`);
         }
@@ -55,11 +79,44 @@ const SubLessonPage = () => {
         setSubLessonData(data);
         console.log("Received sub-lesson data:", data);
 
-      } catch (err) {
-        console.error("Error fetching sub-lesson:", err);
+        // --- Fetch additional data based on content_type --- 
+        if (data.content_type === 'quiz') {
+          console.log("Content type is quiz, fetching questions/answers...");
+          setQuizLoading(true);
+          // Fetch questions for this specific sub-lesson
+          const { data: questionsData, error: questionsError } = await supabase
+            .from('quiz_questions')
+            .select('*')
+            .eq('sub_lesson_id', data.id)
+            .order('order_number', { ascending: true });
+
+          if (questionsError) throw questionsError;
+          setQuestions(questionsData || []);
+          console.log("Fetched questions:", questionsData);
+
+          // Fetch answers if questions exist
+          if (questionsData?.length) {
+            const questionIds = questionsData.map(q => q.id);
+            const { data: answersData, error: answersError } = await supabase
+              .from('quiz_answers')
+              .select('*')
+              .in('question_id', questionIds);
+            
+            if (answersError) throw answersError;
+            setAnswers(answersData || []);
+            console.log("Fetched answers:", answersData);
+          }
+          setQuizLoading(false);
+        }
+         // Add similar blocks here for other content types if they need extra data
+         // e.g., if 'email_inspector' needed specific email data associated with subLessonData.id
+
+      } catch (err) { 
+        console.error("Error during data fetching:", err);
         setError(err instanceof Error ? err.message : 'An unknown error occurred');
       } finally {
         setLoading(false);
+        setQuizLoading(false);
       }
     };
 
@@ -68,7 +125,7 @@ const SubLessonPage = () => {
   }, [moduleSlug, lessonSlug, subLessonSlug]);
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-[#050607] text-white">Loading sub-lesson...</div>; // TODO: Add proper skeleton
+    return <div className="min-h-screen flex items-center justify-center bg-[#050607] text-white">Loading sub-lesson...</div>;
   }
 
   if (error || !subLessonData) {
@@ -83,15 +140,32 @@ const SubLessonPage = () => {
           </Link>
         <div className="p-8 rounded-lg border border-red-500/30 bg-red-900/10 text-center">
           <h1 className="text-xl text-red-400">Error Loading Lesson</h1>
-          <p className='text-red-300 mt-2'>{error || 'Sub-lesson not found.'}</p>
+          <p className='text-red-300 mt-2'>{error || 'Sub-lesson data could not be loaded.'}</p>
         </div>
       </div>
     );
   }
 
-  // --- Render based on content_type --- 
   const renderContent = () => {
+    if (subLessonData.content_type === 'quiz' && quizLoading) {
+        return <QuizSkeleton />;
+    }
+
     switch (subLessonData.content_type) {
+      case 'email_inspector':
+        return <EmailInspector moduleId={moduleSlug} />;
+      case 'vendor_portal':
+        return <VendorPortalSimulator />;
+      case 'multi_channel':
+        return <MultiChannelPhishingSimulator />;
+      case 'story':
+        return <SecurityStory />;
+      case 'email_comparison':
+        return <EmailComparison moduleId={moduleSlug} />;
+      case 'case_study':
+        return <CaseStudy />;
+      case 'url_inspector':
+        return <URLInspectorChallenge moduleId={moduleSlug} lessonId={String(subLessonData.id)} />;
       case 'concept_overview':
         return (
           <ConceptOverview 
@@ -100,11 +174,26 @@ const SubLessonPage = () => {
             keyConcepts={subLessonData.content?.keyConcepts}
           />
         );
+      case 'quiz':
+        if (questions.length > 0) {
+            return (
+              <Quiz 
+                questions={questions} 
+                answers={answers} 
+                moduleId={moduleSlug}
+              />
+            );
+        } else if (!quizLoading) {
+            console.log('No questions found for sub-lesson ID:', subLessonData.id);
+            return <div className="text-center p-6">No quiz questions available for this lesson</div>;
+        } else {
+            return <QuizSkeleton />;
+        }
       default:
         return (
           <div className="p-6 border border-yellow-500/30 rounded-md bg-yellow-900/10">
             <p>Unknown content type: {subLessonData.content_type}</p>
-            <p>(ID: {subLessonData.id})</p>
+            <p>(Sub-Lesson ID: {subLessonData.id})</p>
           </div>
         );
     }
@@ -120,7 +209,6 @@ const SubLessonPage = () => {
         Back to Module
       </Link>
 
-      {/* Render the content based on type */}
       {renderContent()}
     </div>
   );

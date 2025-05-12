@@ -93,13 +93,13 @@ const Modules: React.FC = () => {
   return (
     <main className="bg-[#050607] font-sans text-gray-100 min-h-screen">
       {/* Header Section */}
-      <div className="max-w-[1400px] mx-auto pb-2 px-4">
+      <div className="max-w-[1650px] mx-auto pb-2 px-4">
         <TimeTrackingDashboard />
       </div>
 
       {/* Sticky Tags Section */}
       <div className="sticky top-0 bg-[#050607]/80 backdrop-blur-md z-10 border-b border-white/15 py-4 px-4">
-        <div className="max-w-[1400px] mx-auto px-4">
+        <div className="max-w-[1620px] mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex flex-wrap gap-2 w-full md:w-auto">
               {tags.map((tag) => (
@@ -131,7 +131,7 @@ const Modules: React.FC = () => {
       </div>
 
       {/* Modules Content */}
-      <div className="max-w-[1400px] mx-auto py-8 px-8">
+      <div className="max-w-[1650px] mx-auto py-8 px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredModules.map((module) => (
             <Link href={`/modules/${module.slug}`} key={module.id} className="group">
