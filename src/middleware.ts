@@ -174,12 +174,12 @@ export async function middleware(req: NextRequest) {
 
     // Check access permissions
     const hasAccess = checkRoleAccess(pathname, userRole);
-    console.log('Access check:', {
-      pathname,
-      userRole,
-      hasAccess,
-      allowedPaths: roleBasedRoutes[userRole].allowedPaths
-    });
+    // console.log('Access check:', {
+    //   pathname,
+    //   userRole,
+    //   hasAccess,
+    //   allowedPaths: roleBasedRoutes[userRole].allowedPaths
+    // });
     
     if (!hasAccess) {
       const redirectPath = userRole === 'admin' ? '/overview' : '/new-dashboard';

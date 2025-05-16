@@ -245,12 +245,10 @@ const Home: React.FC = () => {
       </section>
 
       <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/10">
-        <h2 className="text-5xl md:text-6xl mb-2 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 font-normal lg:hidden">
-          Reality
-        </h2>
-        <div className="w-full px-6 sm:px-6 lg:px-8 max-w-[1400px] mx-auto">
+        
+        {/* <div className="w-full px-6 sm:px-6 lg:px-8 max-w-[1400px] mx-auto"> */}
           <StatisticsHack />
-        </div>
+        {/* </div> */}
       </section>
 
       <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/10  py-32">

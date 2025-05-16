@@ -8,6 +8,7 @@ import MobileMenu from "./MobileMenu";
 import { motion, AnimatePresence } from 'framer-motion';
 import XLogo from '../assets/XThreat_icon_primary_white_to_gradient.svg';
 import useCalendarPreload from './cal-preloading';
+import CalEmbed from '@/components/CalEmbed';
 
 const CAL_URL = "https://cal.com/domass/30min?hide_event_type_details=true";
 
@@ -132,7 +133,7 @@ const Navbar = () => {
           </motion.div>
         </div>
         {active === title && (
-          <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-[#101010] backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
+          <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-transparent backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
             {content}
           </div>
         )}
@@ -186,7 +187,7 @@ const Navbar = () => {
             animate={{ y: 0 }}
             exit={{ y: -100 }}
             transition={{ duration: 0.3 }}
-            className="fixed right-0 font-sans text-sm left-0 top-0 py-4 px-5 bg-[#101010]/20 backdrop-blur-lg z-[100]"
+            className="fixed right-0 font-sans text-sm left-0 top-0 py-4 px-5 bg-transparent backdrop-blur-lg z-[100]"
           >
             <div className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
               <div className="flex items-center gap-1 md:gap-[2px]">
@@ -246,61 +247,13 @@ const Navbar = () => {
               {isDesktop && (
                 <div className="flex items-center gap-8 ml-auto">
                   <Link href="/login" className="text-gray-400 hover:text-white">Log In</Link>
-                  <button 
-                    onClick={() => {
-                      setIsDemoOpen(true);
-                      setIsLoading(true);
-                    }} 
-                    className="p-4 h-9 w-full text-gray-400 hover:text-white sm:w-fit rounded-full border border-gray/30 hover:bg-white/5 group transition-all flex items-center justify-center gap-4"
-                  >
-                    <span className=" flex md:text-center">
-                      Book Demo
-                    </span>
-                  </button>
+                  <CalEmbed />
                 </div>
               )}
             </div>
           </motion.header>
         )}
       </AnimatePresence>
-
-      {isDemoOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-70 flex px-10 justify-center items-center z-[200]"
-          onClick={() => {
-            setIsDemoOpen(false);
-            setIsLoading(true);
-          }}
-        >
-          <div 
-            className="bg-[#101010] rounded-lg shadow-lg p-10 max-w-5xl w-full relative border border-neutral-800"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-[#101010] z-10">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
-              </div>
-            )}
-            <div className="relative" style={{ height: '88vh' }}>
-              <iframe
-                ref={iframeRef}
-                src={CAL_URL}
-                className="absolute inset-0 w-full h-full border-none"
-                allow="camera; microphone; display-capture"
-                onLoad={() => setIsLoading(false)}
-                style={{
-                  backgroundColor: '#101010',
-                  transform: 'scale(1.06)',
-                  transformOrigin: 'top',
-                  height: '88vh',
-                  opacity: isLoading ? 0 : 1,
-                  transition: 'opacity 0.3s'
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
 
       {!isDesktop && menuOpen && <MobileMenu />}
 

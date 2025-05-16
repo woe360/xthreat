@@ -82,13 +82,10 @@ const Notification = ({ name, description, icon, time, iconSize = 40, whiteBackg
   return (
     <figure
       className={cn(
-        "relative mx-auto min-h-fit w-full max-w-[400px] cursor-pointer overflow-hidden rounded-2xl p-3",
-        "transition-all duration-200 ease-in-out hover:scale-[103%]",
-        "bg-gray-900/10 [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
-        "transform-gpu backdrop-blur-md [border:1px_solid_rgba(255,255,255,.1)] [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+        "relative mx-auto min-h-fit w-full max-w-[400px] cursor-pointer overflow-hidden rounded-2xl p-3 border bg-[#181b24] bg-opacity-100 border-white/5",
+        "transition-all duration-200 ease-in-out"
       )}
     >
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-gray-900/60 backdrop-blur-sm to-transparent"></div>
       <div className="relative z-10 flex flex-row items-center gap-3">
         <div 
           className={cn("flex-shrink-0 flex items-center justify-center rounded-xl", className)}

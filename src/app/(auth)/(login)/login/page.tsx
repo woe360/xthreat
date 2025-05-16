@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { setAuthToken } from '@/lib/utils/jwt';
 import { getClientIP, getDeviceInfo } from '@/lib/utils/session';
 import { getTabSpecificSupabaseClient } from '@/lib/supabase/client';
+import { motion } from 'framer-motion';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -295,7 +296,12 @@ export default function SignIn() {
   return (
     <div className="min-h-screen font-sans bg-[#0b0b0b] [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)] flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
-        <div className="flex justify-center mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex justify-center mb-12"
+        >
           <Link href="/" className="inline-flex">
             <Image
               src={XLogo}
@@ -306,9 +312,14 @@ export default function SignIn() {
               priority
             />
           </Link>
-        </div>
+        </motion.div>
 
-        <div className="text-center mb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-center mb-10"
+        >
           <h1 className="text-4xl font-normal mb-6">
             {showOtpInput ? 'Verification' : ''}
           </h1>
@@ -317,24 +328,39 @@ export default function SignIn() {
               ? `Enter the verification code sent to ${email}`
               : ''}
           </p>
-        </div>
+        </motion.div>
 
         {error && (
-          <div className="mb-8 text-red-400 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="mb-8 text-red-400 text-center"
+          >
             {error}
-          </div>
+          </motion.div>
         )}
 
         {showOtpInput && (
-          <button 
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             onClick={() => setShowOtpInput(false)}
             className="flex text-sm items-center mb-10 text-neutral-400 hover:text-white transition-colors"
           >
             <ChevronLeft className="mr-1" size={16}/> Back to login
-          </button>
+          </motion.button>
         )}
 
-        <form ref={formRef} onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP} className="space-y-8">
+        <motion.form
+          ref={formRef}
+          onSubmit={showOtpInput ? handleVerifyOTP : handleRequestOTP}
+          className="space-y-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.35 }}
+        >
           {!showOtpInput ? (
             <div>
               <input
@@ -359,7 +385,7 @@ export default function SignIn() {
                 {otp.map((digit, index) => (
                   <input
                     key={index}
-                    ref={(el) => inputRefs.current[index] = el}
+                    ref={el => { inputRefs.current[index] = el; }}
                     type="text"
                     inputMode="numeric"
                     pattern="\d*"
@@ -390,9 +416,14 @@ export default function SignIn() {
               )}
             </button>
           </div>
-        </form>
+        </motion.form>
 
-        <div className="flex flex-col items-center mt-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="flex flex-col items-center mt-12"
+        >
           <div className="flex items-center">
             <span className="text-neutral-400">Need help? </span>
             <span className="text-white ml-1">support@xthreat.eu</span>
@@ -409,7 +440,7 @@ export default function SignIn() {
               Copied to clipboard
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

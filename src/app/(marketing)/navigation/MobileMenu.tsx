@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import CalEmbed from '@/components/CalEmbed';
 
 const CAL_URL = "https://cal.com/domass/30min?hide_event_type_details=true";
 
@@ -85,57 +86,9 @@ const MobileMenu = () => {
           >
             Log In
           </Link>
-          <button
-            onClick={() => {
-              setIsDemoOpen(true);
-              setIsLoading(true);
-            }}
-            className="text-xl h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-[#ffffff] hover:bg-white/90 inline-flex items-center justify-center select-none transition ease-in-out duration-200 w-full"
-          >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-500 to-neutral-700 group-hover:from-black group-hover:to-black flex items-center">
-              Request Demo <ChevronRight className="ml-1 h-4 w-4" />
-            </span>
-          </button>
+          <CalEmbed />
         </motion.div>
       </motion.div>
-
-      {isDemoOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-70 flex px-3 justify-center items-center z-[200]"
-          onClick={() => {
-            setIsDemoOpen(false);
-            setIsLoading(true);
-          }}
-        >
-          <div 
-            className="bg-[#101010] rounded-lg shadow-lg p-5 max-w-5xl w-full relative border border-neutral-800"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-[#101010] z-10">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
-              </div>
-            )}
-            <div className="relative mb-7" style={{ height: '76vh' }}>
-              <iframe
-                ref={iframeRef}
-                src={CAL_URL}
-                className="absolute inset-0 w-full rounded-lg h-full border-none"
-                allow="camera; microphone; display-capture"
-                onLoad={() => setIsLoading(false)}
-                style={{
-                  backgroundColor: '#101010',
-                  transform: 'scale(1.06)',
-                  transformOrigin: 'top',
-                  height: '75vh',
-                  opacity: isLoading ? 0 : 1,
-                  transition: 'opacity 0.3s'
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 };

@@ -225,57 +225,84 @@ const PricingPage = () => {
   const pricingTiers = [
     { 
       users: 50, 
-      essentialMonthly: 2.3, 
-      essentialYearly: 22.08, 
-      coreMonthly: 4.5, 
-      coreYearly: 43.20,
-      advancedMonthly: 6.4,
-      advancedYearly: 61.44
+      essentialMonthly: 3.9, 
+      essentialYearly: 39.0, 
+      coreMonthly: 6.9, 
+      coreYearly: 69.0,
+      advancedMonthly: 9.9,
+      advancedYearly: 99.0
     },
     { 
       users: 100, 
-      essentialMonthly: 1.9, 
-      essentialYearly: 18.24, 
-      coreMonthly: 3.9, 
-      coreYearly: 37.44,
-      advancedMonthly: 5.9,
-      advancedYearly: 56.64
+      essentialMonthly: 3.2, 
+      essentialYearly: 32.0, 
+      coreMonthly: 6.0, 
+      coreYearly: 60.0,
+      advancedMonthly: 9.1,
+      advancedYearly: 91.0
     },
     { 
       users: 250, 
-      essentialMonthly: 1.5, 
-      essentialYearly: 14.40, 
-      coreMonthly: 3.2, 
-      coreYearly: 30.72,
-      advancedMonthly: 5.2,
-      advancedYearly: 49.92
+      essentialMonthly: 2.5, 
+      essentialYearly: 25.0, 
+      coreMonthly: 4.9, 
+      coreYearly: 49.0,
+      advancedMonthly: 8.0,
+      advancedYearly: 80.0
     },
     { 
       users: 1000, 
-      essentialMonthly: 1.3, 
-      essentialYearly: 12.48, 
-      coreMonthly: 2.8, 
-      coreYearly: 26.88,
-      advancedMonthly: 4.8,
-      advancedYearly: 46.08
+      essentialMonthly: 2.2, 
+      essentialYearly: 22.0, 
+      coreMonthly: 4.3, 
+      coreYearly: 43.0,
+      advancedMonthly: 7.4,
+      advancedYearly: 74.0
     },
     { 
       users: 2000, 
-      essentialMonthly: 1.2, 
-      essentialYearly: 11.52, 
-      coreMonthly: 2.6, 
-      coreYearly: 24.96,
-      advancedMonthly: 4.6,
-      advancedYearly: 44.16
+      essentialMonthly: 2.0, 
+      essentialYearly: 20.0, 
+      coreMonthly: 4.0, 
+      coreYearly: 40.0,
+      advancedMonthly: 7.1,
+      advancedYearly: 71.0
     },
     { 
       users: 3000, 
+      essentialMonthly: 1.7, 
+      essentialYearly: 17.0, 
+      coreMonthly: 3.5, 
+      coreYearly: 35.0,
+      advancedMonthly: 6.7,
+      advancedYearly: 67.0
+    },
+    { 
+      users: 5000, 
+      essentialMonthly: 1.4, 
+      essentialYearly: 14.0, 
+      coreMonthly: 2.9, 
+      coreYearly: 29.0,
+      advancedMonthly: 5.9,
+      advancedYearly: 59.0
+    },
+    { 
+      users: 10000, 
       essentialMonthly: 1.0, 
-      essentialYearly: 9.60, 
+      essentialYearly: 10.0, 
       coreMonthly: 2.3, 
-      coreYearly: 22.08,
+      coreYearly: 23.0,
+      advancedMonthly: 5.0,
+      advancedYearly: 50.0
+    },
+    { 
+      users: 30000, 
+      essentialMonthly: 0.8, 
+      essentialYearly: 8.0, 
+      coreMonthly: 1.8, 
+      coreYearly: 18.0,
       advancedMonthly: 4.3,
-      advancedYearly: 41.28
+      advancedYearly: 43.0
     }
   ];
 
@@ -306,8 +333,8 @@ const PricingPage = () => {
   const pricingPlans: PricingPlan[] = [
     {
       name: "Essential",
-      monthlyPrice: 2.3,
-      yearlyPrice: 22.08,
+      monthlyPrice: 3.9,
+      yearlyPrice: 39,
       description: "Ideal for small teams looking to protect their business with essential cybersecurity training.",
       features: [
         "14-day free trial with full access",
@@ -322,8 +349,8 @@ const PricingPage = () => {
     },
     {
       name: "Core",
-      monthlyPrice: 4.5,
-      yearlyPrice: 43.20,
+      monthlyPrice: 6.9,
+      yearlyPrice: 69,
       description: "Comprehensive cybersecurity awareness training designed for medium sized or growing businesses.",
       features: [
         "14-day free trial with full access",
@@ -339,8 +366,8 @@ const PricingPage = () => {
     },
     {
       name: "Advanced",
-      monthlyPrice: 6.4,
-      yearlyPrice: 61.44,
+      monthlyPrice: 9.9,
+      yearlyPrice: 99,
       description: "Enterprise-grade cybersecurity training solutions built to scale with your organization's needs.",
       features: [
         "Everything in the Core plan",
@@ -378,23 +405,37 @@ const PricingPage = () => {
 
   return (
     <div className="min-h-screen font-sans bg-[#0b0b0b] text-white relative overflow-hidden">
+      {/* Subtle gradient elements */}
+      {/* <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-purple-500/5 rounded-full blur-[120px] pointer-events-none"></div> */}
+      {/* <div className="absolute top-3/4 left-1/3 w-1/3 h-1/3 bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none"></div> */}
       <Navbar />
       
       {/* Section 1: Header, Toggle, Pricing Cards - Wrapped in full-width border div */}
       <div className="w-full pb-16">
         <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 pt-80">
           {/* Header */}
-          <div className="text-start">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-start"
+          >
             <h2 className="text-5xl font-normal">
               Pricing
             </h2>
             <p className="mt-6 text-lg text-neutral-400 italic">
               You pay per user, what you see here.
             </p>
-          </div>
+          </motion.div>
 
           {/* Pricing Toggle */}
-          <div className="flex justify-end mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex justify-end mb-16"
+          >
             <div className="inline-flex rounded-full border border-white/10 p-[2px]">
               <button
                 onClick={() => setIsYearly(false)}
@@ -409,16 +450,20 @@ const PricingPage = () => {
                 Yearly
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Pricing Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16"> {/* Removed mb-32 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16"
+          >
             {pricingPlans.map((plan) => (
               <div key={plan.name} className="flex flex-col">
                 <h3 className="text-xl font-normal mb-6">
                   {plan.name}
                 </h3>
-                
                 <div className="mb-6">
                   <div className="text-5xl font-light">
                     €{isYearly ? plan.yearlyPrice.toFixed(1) : plan.monthlyPrice.toFixed(1)}
@@ -427,11 +472,9 @@ const PricingPage = () => {
                     Per user / {isYearly ? 'year' : 'month'}
                   </div>
                 </div>
-                
                 <p className="text-neutral-400 mb-10 min-h-[80px]">
                   {plan.description}
                 </p>
-                
                 <ul className="space-y-4 mb-8 flex-grow">
                   {plan.features.slice(0, 3).map((feature, idx) => (
                     <li key={idx} className="flex items-start text-neutral-400">
@@ -440,7 +483,6 @@ const PricingPage = () => {
                     </li>
                   ))}
                 </ul>
-                
                 <button
                   onClick={() => handleCTAClick('/free-trial', plan.name)}
                   className="rounded-full border border-white/20 py-3 px-8 hover:bg-white/5 transition-colors mt-auto"
@@ -449,7 +491,7 @@ const PricingPage = () => {
                 </button>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -462,7 +504,12 @@ const PricingPage = () => {
       </div> */}
 
       {/* Calculator Section - Now just has bottom border */}
-      <div className="w-full border-b border-white/10 py-36">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="w-full border-b border-white/10 py-36"
+      >
         <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8"> {/* Added padding */}
           <div className="flex justify-between items-center mb-16">
             <h3 className="text-5xl font-normal">
@@ -470,9 +517,9 @@ const PricingPage = () => {
             </h3>
             <button 
               onClick={() => handleCTAClick('/contact')}
-              className="text-sm rounded-full border border-white/20 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
+              className=" rounded-full border border-white/20 py-2.5 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
             >
-              Request Custom Pricing <span className="text-xl">→</span>
+              Request Custom Pricing
             </button>
           </div>
           
@@ -518,9 +565,9 @@ const PricingPage = () => {
                 <Input
                   type="number"
                   min="1"
-                  max="3000"
+                  max="30000"
                   value={userCount}
-                  onChange={(e) => setUserCount(Math.min(3000, Math.max(1, parseInt(e.target.value) || 1)))}
+                  onChange={(e) => setUserCount(Math.min(30000, Math.max(1, parseInt(e.target.value) || 1)))}
                   className="bg-transparent border-0 border-t border-white/20 rounded-none px-0 py-2 h-auto text-xl font-normal w-full shadow-none"
                 />
               </div>
@@ -531,12 +578,12 @@ const PricingPage = () => {
                   <Slider
                     value={[userCount]}
                     onValueChange={(value) => setUserCount(value[0])}
-                    max={3000}
+                    max={30000}
                     step={1}
                     className="w-full [&_[role=slider]]:bg-white [&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_.swui-slider-track]:bg-neutral-700 [&_.swui-slider-range]:bg-white"
                   />
                 </div>
-                <p className="text-sm text-neutral-400 w-12 text-right">3000+</p>
+                <p className="text-sm text-neutral-400 w-12 text-right">30000+</p>
               </div>
             </div>
           </div>
@@ -551,10 +598,15 @@ const PricingPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* FAQ and CTA Section - Outer div has border, inner border removed */}
-      <div className="w-full mt-36 border-b border-white/10 pb-20">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="w-full mt-36 border-b border-white/10 pb-20"
+      >
         <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8"> {/* Added padding */}
           <div className="flex justify-between items-center mb-16">
             <h3 className="text-5xl font-normal">
@@ -606,17 +658,22 @@ const PricingPage = () => {
               <h4 className="text-2xl text-neutral-400 mb-6 md:mb-0">Still have questions?</h4>
               <button
                 onClick={() => handleCTAClick('/contact')}
-                className="rounded-full border text-sm border-white/20 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
+                className="rounded-full border border-white/20 py-2.5 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
               >
-                Get In Touch <span className="text-xl">→</span>
+                Get In Touch
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Final CTA Section - Has bottom border */}
-      <div className="w-full mt-36 pt-10 pb-20">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+        className="w-full mt-36 pt-10 pb-20"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h3 className="text-4xl font-normal mb-6">
             Ready to get started?
@@ -627,19 +684,19 @@ const PricingPage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/free-trial"
-              className="rounded-full border border-white bg-white text-black py-2 px-7 hover:bg-white/90 transition-colors"
+              className="rounded-full border border-white bg-white text-black py-2.5 px-7 hover:bg-white/85 transition-colors"
             >
              Free Trial
             </Link>
             <Link
               href="/try-app"
-              className="rounded-full border border-white/20 py-2 px-7 hover:bg-white/5 transition-colors"
+              className="rounded-full border border-white/20 py-2.5 px-7 hover:bg-white/5 transition-colors"
             >
               Try App
             </Link>
           </div>
         </div>
-      </div>
+      </motion.div>
       
       <Footer />
     </div>

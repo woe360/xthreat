@@ -62,17 +62,27 @@ const ContactPage: React.FC = () => {
   return (
     <div className="min-h-screen font-sans text-white flex flex-col">
       <Navbar />
-      <main className="flex-grow flex justify-center items-center py-32 mt-28 px-4 relative">
+      <main className="flex-grow flex justify-center items-center py-32 mt-52 px-4 relative">
         <div className="absolute inset-0  pointer-events-none" />
         <div className="max-w-7xl w-full relative flex flex-col items-center">
           
-          <div className="w-full max-w-3xl text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="w-full max-w-3xl text-center mb-16"
+          >
             <h1 className="text-5xl font-normal mb-6">
               Contact
             </h1>
-          </div>
+          </motion.div>
 
-          <div className="w-full max-w-4xl flex flex-col sm:flex-row justify-around gap-10 mb-20 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="w-full max-w-4xl flex flex-col sm:flex-row justify-around gap-10 mb-20 px-4"
+          >
               <div className="flex-1 p-6 border-white/10 text-center transition-all group">
                  <div className="h-10 w-10 mb-4 inline-block">
                    <svg viewBox="0 0 24 24" className="w-full h-full fill-current opacity-60 group-hover:opacity-100 transition-opacity">
@@ -108,9 +118,14 @@ const ContactPage: React.FC = () => {
                   </Link>
                 </div>
               </div>
-          </div>
+          </motion.div>
 
-          <div className="w-full max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="w-full max-w-3xl"
+          >
             <form className="space-y-8" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                 <input
@@ -200,7 +215,7 @@ const ContactPage: React.FC = () => {
                 </motion.button>
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
       </main>
       <Footer />

@@ -1133,7 +1133,7 @@ const MenuOptions = () => {
 
   return (
     <nav className="dark:bg-black w-16 h-screen font-sans flex flex-col sticky justify-between py-6 z-[100] flex-shrink-0">
-      <div className="px-2 mb-3 flex justify-center">
+      <div className="px-2 mb-4 flex justify-center">
         <Image
           src={XLogo}
           alt="X Logo"
@@ -1151,7 +1151,7 @@ const MenuOptions = () => {
                 <Link
                   href={menuItem.href}
                   className={cn(
-                    'group h-10 flex items-center justify-center rounded-lg p-2',
+                    'group h-10 flex items-center justify-center rounded-md p-2',
                     'cursor-pointer transition-colors duration-150',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500',
                     {

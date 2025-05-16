@@ -414,6 +414,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { cn } from "@/lib/utils";
+import AuthListener from "@/components/AuthListener";
 
 const savass = {
   variable: '--font-savass',
@@ -449,6 +450,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <AuthListener />
           <div className="relative flex min-h-screen flex-col">
             <main className="flex-1">
               {children}

@@ -1,39 +1,43 @@
 // src/app/api/modules/[module]/route.ts
-import { createClient } from '@supabase/supabase-js'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: Request,
   { params }: { params: { module: string } }
 ) {
+  // Check if params exists before accessing its properties
+  if (!params || typeof params.module !== 'string') {
+    return NextResponse.json({ error: 'Invalid module parameter' }, { status: 400 })
+  }
+  const moduleSlug = params.module
+  
+  if (!moduleSlug) {
+    return NextResponse.json(
+      { error: 'Module slug is required' },
+      { status: 400 }
+    )
+  }
+
+  const cookieStore = cookies()
+  // Use authenticated client
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+
   try {
-    // Access the dynamic route parameter directly
-    const moduleSlug = params.module;
-    console.log('Module API called with slug:', moduleSlug)
-    
-    if (!moduleSlug) {
-      return NextResponse.json(
-        { error: 'Module slug is required' },
-        { status: 400 }
-      )
+    // 1. Check session authentication
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+
+    if (sessionError || !session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    
-    // Create a direct Supabase client without cookies
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    
-    if (!supabaseUrl || !supabaseKey) {
-      return NextResponse.json({ 
-        error: 'Missing Supabase credentials'
-      }, { status: 500 })
-    }
-    
-    const supabase = createClient(supabaseUrl, supabaseKey)
-    
-    // HACK: Hardcoded data for phishing-awareness to bypass database issues
-    if (moduleSlug === 'phishing-awareness') {
-      console.log('Using hardcoded data for phishing-awareness')
-      
+
+    // HACK Check: Remove this block if you want DB lookup for phishing-awareness
+    if (moduleSlug.toLowerCase() === 'phishing-awareness') {
+      // console.log('Using hardcoded data for phishing-awareness') // Removed log
       return NextResponse.json({
         id: 1,
         slug: 'phishing-awareness',
@@ -42,79 +46,47 @@ export async function GET(
         tags: ['Threats']
       })
     }
-    
-    // First try to find all modules to debug
-    console.log('Fetching all modules to find a match')
-    const { data: allModules, error: listError } = await supabase
-      .from('modules')
-      .select('id, slug, title')
-    
-    if (listError) {
-      console.error('Error listing modules:', listError)
-    } else {
-      console.log('Available modules:', allModules)
-      
-      // Try to find a case-insensitive match
-      const foundModule = allModules.find(m => 
-        m.slug.toLowerCase() === moduleSlug.toLowerCase())
-      
-      if (foundModule) {
-        console.log('Found module with case-insensitive match:', foundModule)
-        
-        // Get the full module data
-        const { data, error } = await supabase
-          .from('modules')
-          .select('*')
-          .eq('id', foundModule.id)
-          .single()
-          
-        if (error) {
-          console.error('Error fetching found module:', error)
-        } else {
-          console.log('Successfully retrieved module data:', data)
-          return NextResponse.json(data)
-        }
-      }
-    }
-    
-    // Try by exact slug as fallback
+    // End of HACK Check
+
+    // 2. Fetch the specific module using the authenticated client
+    // RLS on 'modules' table will apply
     const { data, error } = await supabase
       .from('modules')
-      .select('*')
-      .eq('slug', moduleSlug)
-      .single()
-    
+      .select('*') // Select all columns or specific ones needed
+      .ilike('slug', moduleSlug) // Case-insensitive match
+      .maybeSingle() // Handles 0 or 1 result gracefully
+
     if (error) {
-      console.error('Error fetching module by exact slug:', error)
-      
-      // Try by ID as last resort
+      console.error('Error fetching module:', error)
+      return NextResponse.json({ error: 'Failed to fetch module data' }, { status: 500 })
+    }
+
+    if (!data) {
+      // Module not found by slug, or RLS prevents access
+      // Optionally, try fetching by ID if slug might be numeric
       if (!isNaN(Number(moduleSlug))) {
         const moduleId = parseInt(moduleSlug)
-        console.log('Trying to find module by ID:', moduleId)
-        
         const { data: idData, error: idError } = await supabase
           .from('modules')
           .select('*')
           .eq('id', moduleId)
-          .single()
-          
+          .maybeSingle()
+        
         if (idError) {
-          console.error('Module not found by ID either:', idError)
-        } else {
-          console.log('Found module by ID:', idData)
+          console.error('Error fetching module by ID:', idError)
+          // Fall through to 404 if ID lookup also fails
+        } else if (idData) {
+          // Found by ID
           return NextResponse.json(idData)
         }
       }
-      
-      // If all else fails, return error
-      return NextResponse.json(
-        { error: 'Module not found' },
-        { status: 404 }
-      )
+      // If not found by slug or ID, return 404
+      return NextResponse.json({ error: 'Module not found' }, { status: 404 })
     }
-    
-    console.log('Module found by exact slug:', data)
+
+    // 3. Return the module data
     return NextResponse.json(data)
+
   } catch (error) {
     console.error('Error in module API:', error)
     return NextResponse.json(

@@ -14,7 +14,7 @@ import { Database } from '@/types/supabase'
 const pricingPlans = {
   essential: {
     name: "Essential",
-    monthlyPrice: 2.3,
+    monthlyPrice: 3.9,
     description: "Ideal for small teams looking to protect their business with essential cybersecurity training.",
     features: [
       "14-day free trial with full access",
@@ -27,7 +27,7 @@ const pricingPlans = {
   },
   core: {
     name: "Core",
-    monthlyPrice: 4.5,
+    monthlyPrice: 6.9,
     description: "Comprehensive cybersecurity awareness training designed for medium sized or growing businesses.",
     features: [
       "14-day free trial with full access",
@@ -40,7 +40,7 @@ const pricingPlans = {
   },
   advanced: {
     name: "Advanced",
-    monthlyPrice: 6.4,
+    monthlyPrice: 9.9,
     description: "Enterprise-grade cybersecurity training solutions built to scale with your organization's needs.",
     features: [
       "Everything in the Core plan",

@@ -1,39 +1,36 @@
-import { createClient } from '@supabase/supabase-js'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: Request,
-  { params: paramsPromise }: { params: Promise<{ module: string; lesson: string; sublesson: string }> }
+  { params }: { params: { module: string; lesson: string; sublesson: string } }
 ) {
   try {
-    const params = await paramsPromise;
-    const moduleSlug = params.module;
-    const lessonSlug = params.lesson;
-    const subLessonSlug = params.sublesson;
+    // Ensure params are valid
+    if (!params || !params.module || !params.lesson || !params.sublesson) {
+      return NextResponse.json({ error: 'Missing module, lesson, or sub-lesson slug' }, { status: 400 })
+    }
+    const moduleSlug = params.module
+    const lessonSlug = params.lesson
+    const subLessonSlug = params.sublesson
     
-    console.log(`Fetching sub-lesson: ${moduleSlug}/${lessonSlug}/${subLessonSlug}`);
+    const cookieStore = cookies()
+    // Use authenticated client
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
 
-    if (!moduleSlug || !lessonSlug || !subLessonSlug) {
-      return NextResponse.json(
-        { error: 'Missing module, lesson, or sub-lesson slug' },
-        { status: 400 }
-      )
+    // 1. Check session authentication
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+
+    if (sessionError || !session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Create a direct Supabase client 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    
-    if (!supabaseUrl || !supabaseKey) {
-      return NextResponse.json({ 
-        error: 'Missing Supabase credentials'
-      }, { status: 500 })
-    }
-    
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
-    // Query to find the specific sub-lesson using slugs
-    // We need to join modules -> lessons -> sub_lessons
+    // 2. Query for the sub-lesson using authenticated client
+    // RLS will apply to modules, lessons, and sub_lessons tables
     const { data: subLessonData, error: subLessonError } = await supabase
       .from('sub_lessons')
       .select(`
@@ -42,43 +39,26 @@ export async function GET(
           module:modules!inner (*)
         )
       `)
-      .eq('slug', subLessonSlug) // Match sub-lesson slug
-      .eq('lesson.slug', lessonSlug) // Match parent lesson slug
-      .eq('lesson.module.slug', moduleSlug) // Match grandparent module slug
-      .single(); // Expect only one result
+      .eq('slug', subLessonSlug)
+      .eq('lesson.slug', lessonSlug)
+      .eq('lesson.module.slug', moduleSlug)
+      .maybeSingle() // Use maybeSingle for potentially 0 rows due to RLS
 
     if (subLessonError) {
-      console.error('Error fetching sub-lesson:', subLessonError);
-      if (subLessonError.code === 'PGRST116') { // code for 'exact one row expected' but 0 found
-         return NextResponse.json(
-          { error: 'Sub-lesson not found' },
-          { status: 404 }
-        );
-      }
-      return NextResponse.json(
-        { error: 'Failed to fetch sub-lesson', details: subLessonError.message },
-        { status: 500 }
-      );
+      console.error('Error fetching sub-lesson:', subLessonError)
+      // Avoid leaking detailed errors
+      return NextResponse.json({ error: 'Failed to fetch sub-lesson data' }, { status: 500 })
     }
 
     if (!subLessonData) {
-      return NextResponse.json(
-        { error: 'Sub-lesson not found' },
-        { status: 404 }
-      );
+      // Not found or RLS restricted access
+      return NextResponse.json({ error: 'Sub-lesson not found' }, { status: 404 })
     }
 
-    // The query above includes nested lesson and module data.
-    // We might only need the sub_lesson fields for the page.
-    // Let's extract the core sub_lesson fields.
-    const { lesson, ...coreSubLessonData } = subLessonData;
+    // Extract only the core sub_lesson fields if desired
+    const { lesson, ...coreSubLessonData } = subLessonData
 
-    // You might want to specifically select only the fields needed 
-    // in the initial query for efficiency, e.g.:
-    // .select('id, title, content_type, content, order_number, points, slug')
-
-    console.log('Successfully fetched sub-lesson:', coreSubLessonData);
-    return NextResponse.json(coreSubLessonData); // Return only the sub-lesson data
+    return NextResponse.json(coreSubLessonData)
 
   } catch (error) {
     console.error('Error in sub-lesson API route:', error)
