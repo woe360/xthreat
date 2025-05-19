@@ -65,7 +65,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent 
-        className="bg-[#050607] border border-gray-800/40 text-gray-100 rounded-xl max-w-md mx-auto overflow-hidden" 
+        className="bg-[#121212] border border-gray-800/40 text-gray-100 rounded-xl max-w-md mx-auto overflow-hidden" 
       >
         <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-light text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400 flex items-center">

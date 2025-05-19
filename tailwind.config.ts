@@ -21,6 +21,11 @@ const config = {
       fontFamily: {
         savass: ['Savass Sans', 'sans-serif'],
       },
+      scale: {
+        102: '1.02',
+        103: '1.03',
+        104: '1.04',
+      },
 		animation: {
 			move: "move 5s linear infinite",
 			shimmer: "shimmer 2s linear infinite",

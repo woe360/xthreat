@@ -17,6 +17,8 @@ import URLInspectorChallenge from '../../../components/lessons/Inspector';
 import SecurityStory from '../../../components/lessons/Story';
 import EmailComparison from '../../../components/lessons/EmailComparison';
 import ConceptOverview from '../../../components/lessons/ConceptOverview';
+import SupplyChain from '../../../components/lessons/SupplyChain';
+import ExecutiveImpersonationExample from '../../../components/lessons/Impersonation';
 
 interface SubLessonData {
   id: string | number;
@@ -125,12 +127,12 @@ const SubLessonPage = () => {
   }, [moduleSlug, lessonSlug, subLessonSlug]);
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-[#050607] text-white">Loading sub-lesson...</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-[#0b0b0b] text-white">Loading sub-lesson...</div>;
   }
 
   if (error || !subLessonData) {
     return (
-      <div className="min-h-screen bg-[#050607] text-white p-8">
+      <div className="min-h-screen bg-[#0b0b0b] text-white p-8">
          <Link
             className="text-gray-400 border text-sm border-white/20 rounded-full px-4 py-2 inline-flex items-center hover:text-white mb-6"
             href={`/modules/${moduleSlug}`}
@@ -163,7 +165,11 @@ const SubLessonPage = () => {
       case 'email_comparison':
         return <EmailComparison moduleId={moduleSlug} />;
       case 'case_study':
-        return <CaseStudy />;
+        return <CaseStudy moduleId={moduleSlug} />;
+      case 'supply_chain':
+        return <SupplyChain moduleId={moduleSlug} />;
+      case 'impersonation':
+        return <ExecutiveImpersonationExample moduleId={moduleSlug} />;
       case 'url_inspector':
         return <URLInspectorChallenge moduleId={moduleSlug} lessonId={String(subLessonData.id)} />;
       case 'concept_overview':

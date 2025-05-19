@@ -19,6 +19,7 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [attemptCount, setAttemptCount] = useState(0);
+  const [isInitialized, setIsInitialized] = useState(false);
   
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,6 +28,27 @@ export default function SignIn() {
 
   // Use Supabase client
   const supabaseClient = useRef(getTabSpecificSupabaseClient());
+
+  // Check for existing session only once on mount
+  useEffect(() => {
+    if (isInitialized) return;
+
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabaseClient.current.auth.getSession();
+        if (session) {
+          router.replace('/dashboard');
+          return;
+        }
+      } catch (error) {
+        console.error('Session check error:', error);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    checkSession();
+  }, [router, isInitialized]);
 
   const resetOtp = () => {
     setOtp(['', '', '', '', '', '']);
@@ -100,14 +122,6 @@ export default function SignIn() {
       document.removeEventListener('paste', handlePaste);
     };
   }, [showOtpInput, otp]);
-
-  // Initialize the client when component loads
-  useEffect(() => {
-    // Force a re-initialization of the Supabase client
-    supabaseClient.current = getTabSpecificSupabaseClient();
-    
-    console.log("Login page initialized with session-specific Supabase client");
-  }, []);
 
   const handleRequestOTP = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -242,7 +256,8 @@ export default function SignIn() {
 
         // Redirect to dashboard - using router.push instead of location.href
         // to prevent a full page reload
-        router.push('/dashboard');
+        console.log('OTP verified, redirecting to dashboard...');
+        window.location.href = '/dashboard';
       } else {
         throw new Error('Authentication failed');
       }
@@ -325,7 +340,7 @@ export default function SignIn() {
           </h1>
           <p className="text-lg text-neutral-400">
             {showOtpInput 
-              ? `Enter the verification code sent to ${email}`
+              ? `Enter the code sent to ${email}`
               : ''}
           </p>
         </motion.div>

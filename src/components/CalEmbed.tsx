@@ -23,7 +23,7 @@ export default function CalEmbed() {
       data-cal-namespace="demo"
       data-cal-link="domass/demo"
       data-cal-config='{"layout":"month_view"}'
-      className="p-4 h-9 w-full text-gray-400 hover:text-white sm:w-fit rounded-full border border-gray/30 hover:bg-white/5 group transition-all flex items-center justify-center gap-4"
+      className="p-4 h-9 w-full text-neutral-400 hover:text-white sm:w-fit rounded-full border border-neutral/30 hover:bg-white/5 group transition-all flex items-center justify-center gap-4"
     >
       <span className="flex md:text-center">
         Book Demo

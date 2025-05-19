@@ -87,7 +87,7 @@ const renderVisual = (title: string, icon?: React.ReactNode) => {
     return (
       <div className="relative">
         <div className="absolute inset-0 bg-blue-500 opacity-20 rounded-full filter blur-xl"></div>
-        <div className="relative bg-gray-800 p-6 md:p-8 rounded-full">
+        <div className="relative bg-neutral-800 p-6 md:p-8 rounded-full">
           {icon}
         </div>
       </div>
@@ -123,14 +123,14 @@ export const AnimatedSolutionSection: React.FC<AnimatedSolutionSectionProps> = (
           opacity: useSpring(opacity, { stiffness: 100, damping: 30 }),
           scale: useSpring(scale, { stiffness: 100, damping: 30 }),
         }}
-        className={`grid grid-cols-1 md:grid-cols-2 w-full max-w-7xl ${index === products.length - 1 ? '' : 'border-gray-600/40 border-b-0'}`}
+        className={`grid grid-cols-1 md:grid-cols-2 w-full max-w-7xl ${index === products.length - 1 ? '' : 'border-neutral-600/40 border-b-0'}`}
       >
         {isEven ? (
           <>
-            <div className={`p-12 flex flex-col justify-center min-h-[400px] ${index === products.length - 1 ? '' : 'border-b border-gray-600/40'}`}>
+            <div className={`p-12 flex flex-col justify-center min-h-[400px] ${index === products.length - 1 ? '' : 'border-b border-neutral-600/40'}`}>
               <div>
                 <h2 className="text-3xl md:text-4xl font-normal mb-6 text-white">{title}</h2>
-                <p className="text-lg text-gray-400 leading-relaxed">{description}</p>
+                <p className="text-lg text-neutral-400 leading-relaxed tracking-wide">{description}</p>
               </div>
               {/* <Link 
                 href={link}
@@ -140,19 +140,19 @@ export const AnimatedSolutionSection: React.FC<AnimatedSolutionSectionProps> = (
                 <ChevronRight className="ml-1 w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Link> */}
             </div>
-            <div className={`flex items-center justify-center p-16 min-h-[400px] ${index === products.length - 1 ? '' : 'border-b border-gray-600/40'}`}>
+            <div className={`flex items-center justify-center p-16 min-h-[400px] ${index === products.length - 1 ? '' : 'border-b border-neutral-600/40'}`}>
               {renderVisual(title, icon)}
             </div>
           </>
         ) : (
           <>
-            <div className={`flex items-center justify-center p-16 min-h-[400px] ${index === products.length - 1 ? '' : 'border-b border-gray-600/40'}`}>
+            <div className={`flex items-center justify-center p-16 min-h-[400px] ${index === products.length - 1 ? '' : 'border-b border-neutral-600/40'}`}>
               {renderVisual(title, icon)}
             </div>
-            <div className={`p-16 flex flex-col justify-center min-h-[400px] ${index === products.length - 1 ? '' : 'border-b border-gray-600/40'}`}>
+            <div className={`p-16 flex flex-col justify-center min-h-[400px] ${index === products.length - 1 ? '' : 'border-b border-neutral-600/40'}`}>
               <div>
                 <h2 className="text-3xl md:text-4xl font-normal mb-6 text-white">{title}</h2>
-                <p className="text-lg text-gray-400 leading-relaxed">{description}</p>
+                <p className="text-lg text-neutral-400 leading-relaxed tracking-wide">{description}</p>
               </div>
               {/* <Link 
                 href={link}

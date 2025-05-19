@@ -174,7 +174,7 @@ const ModulePage = () => {
 
   if (error || !moduleData) {
     return (
-      <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-4 px-6 mt-3">
+      <div className="min-h-screen font-sans bg-[#0b0b0b] text-gray-100 p-4 px-8 mt-3">
         <Link
           className="text-gray-400 inline-flex items-center hover:text-white mb-6"
           href="/modules"
@@ -205,7 +205,7 @@ const ModulePage = () => {
   const sortedLessons = [...lessons].sort((a, b) => a.lesson_order - b.lesson_order)
 
   return (
-    <div className="min-h-screen font-sans bg-[#050607] text-gray-100 px-8 py-6">
+    <div className="min-h-screen font-sans bg-[#0b0b0b] text-gray-100 px-10 py-6">
       <div className="max-w-[1400px] mx-auto">
         <div className="border-b border-white/15 pb-6 mb-8">
           <Link
@@ -293,7 +293,7 @@ const ModulePage = () => {
                 >
                   {/* Lesson header - always visible */}
                   <div 
-                    className={`p-5 cursor-pointer transition-colors hover:bg-gray-900/30 ${isExpanded ? 'bg-gray-900/20' : 'bg-black/20'}`}
+                    className={`p-5 cursor-pointer transition-colors hover:bg-neutral-900/30 ${isExpanded ? 'bg-neutral-900/20' : 'bg-[#121212]'}`}
                     onClick={() => toggleExpand(lesson.id)}
                   >
                     <div className="flex justify-between items-center">
@@ -324,7 +324,7 @@ const ModulePage = () => {
                   <div 
                     className={`
                       overflow-hidden transition-all duration-300 ease-in-out
-                      ${isExpanded ? 'max-h-[500px] opacity-100 border-t border-gray-800/40 bg-black/10' : 'max-h-0 opacity-0'}
+                      ${isExpanded ? 'max-h-[500px] opacity-100 border-t border-neutral-800/40 bg-[#121212]' : 'max-h-0 opacity-0'}
                     `}
                   >
                     {subLessons.map((subLesson, i) => {
@@ -340,7 +340,7 @@ const ModulePage = () => {
                         <Link 
                           href={href} // Use href with fetched slugs
                           key={subLesson.id}
-                          className="group flex items-center ml-2 justify-between p-4 border-b border-gray-800/20 last:border-0 hover:bg-gray-900/20 transition-colors"
+                          className="group flex items-center ml-2 justify-between p-4 border-b border-neutral-800/20 last:border-0 hover:bg-neutral-900/10 transition-colors"
                         >
                           <div className="flex items-center gap-3">
                             <div className={`w-8 h-8 flex items-center justify-center text-sm rounded-full border border-gray-600 text-gray-400`}>

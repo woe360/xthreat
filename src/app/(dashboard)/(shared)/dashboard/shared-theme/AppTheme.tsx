@@ -23,7 +23,7 @@ export default function AppTheme({
           mode: 'dark',
           background: {
             default: '#050607', // Keep main background dark
-            paper: '#181b24', // Update component background to match
+            paper: '#121212', // Update component background to match
           },
           primary: {
             main: '#007FFF',

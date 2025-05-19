@@ -9,7 +9,7 @@ interface UseRoleAccessProps {
   redirectTo?: string;
 }
 
-export function useRoleAccess({ requiredRole, redirectTo = '/new-dashboard' }: UseRoleAccessProps = {}) {
+export function useRoleAccess({ requiredRole, redirectTo = '/dashboard' }: UseRoleAccessProps = {}) {
   const [role, setRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);

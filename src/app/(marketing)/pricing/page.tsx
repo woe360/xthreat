@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Check, ChevronDown, X } from 'lucide-react';
 import Navbar from '@/app/(marketing)/navigation/navbar';
 import Footer from '@/app/(marketing)/navigation/footer';
@@ -12,6 +12,7 @@ import { Input } from '@/components/input';
 import { cn } from "@/lib/utils"
 import { Slider } from "@/components/slider"
 import Link from 'next/link';
+import NumberFlow from "@number-flow/react";
 
 interface AnimatedPriceProps {
   price: number;
@@ -204,6 +205,9 @@ const PricingPage = () => {
   const [selectedPlan, setSelectedPlan] = useState('Essential');
   const router = useRouter();
 
+  const [animatedTotalCost, setAnimatedTotalCost] = useState(0);
+  const [animatedCostPerUser, setAnimatedCostPerUser] = useState(0);
+
   const togglePricing = () => setIsYearly(!isYearly);
 
   const toggleFAQ = (index: number) => {
@@ -321,14 +325,12 @@ const PricingPage = () => {
     }
   };
 
-  const calculatePrice = () => {
+  useEffect(() => {
     const pricePerUser = getPrice(userCount, selectedPlan, isYearly);
-    return (userCount * pricePerUser).toFixed(2);
-  };
-
-  const getPricePerUser = () => {
-    return getPrice(userCount, selectedPlan, isYearly).toFixed(2);
-  };
+    const totalCost = userCount * pricePerUser;
+    setAnimatedTotalCost(totalCost);
+    setAnimatedCostPerUser(pricePerUser);
+  }, [userCount, selectedPlan, isYearly]);
 
   const pricingPlans: PricingPlan[] = [
     {
@@ -424,7 +426,7 @@ const PricingPage = () => {
             <h2 className="text-5xl font-normal">
               Pricing
             </h2>
-            <p className="mt-6 text-lg text-neutral-400 italic">
+            <p className="mt-6 text-lg text-neutral-400">
               You pay per user, what you see here.
             </p>
           </motion.div>
@@ -436,20 +438,61 @@ const PricingPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex justify-end mb-16"
           >
-            <div className="inline-flex rounded-full border border-white/10 p-[2px]">
-              <button
-                onClick={() => setIsYearly(false)}
-                className={`px-6 py-2 rounded-full transition-colors ${!isYearly ? 'bg-white/10' : ''}`}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setIsYearly(true)}
-                className={`px-8 py-2 rounded-full transition-colors ${isYearly ? 'bg-white/10' : ''}`}
-              >
-                Yearly
-              </button>
-            </div>
+            {(() => {
+              // Logic for the animated toggle - assuming isYearly and setIsYearly are defined in this component's scope
+              const monthlyRef = useRef<HTMLButtonElement>(null);
+              const yearlyRef = useRef<HTMLButtonElement>(null);
+              const [highlightStyle, setHighlightStyle] = useState({ x: 0, width: 0, opacity: 0 });
+
+              useEffect(() => {
+                const calculateHighlight = () => {
+                  if (isYearly) {
+                    if (yearlyRef.current) {
+                      setHighlightStyle({
+                        x: yearlyRef.current.offsetLeft,
+                        width: yearlyRef.current.offsetWidth,
+                        opacity: 1,
+                      });
+                    }
+                  } else {
+                    if (monthlyRef.current) {
+                      setHighlightStyle({
+                        x: monthlyRef.current.offsetLeft - 2,
+                        width: monthlyRef.current.offsetWidth,
+                        opacity: 1,
+                      });
+                    }
+                  }
+                };
+                calculateHighlight(); // Calculate on mount and when isYearly changes
+                // Consider adding a window resize listener here if the button sizes are responsive
+              }, [isYearly]);
+
+              return (
+                <div className="relative inline-flex rounded-full border border-white/10 p-[2px]">
+                  <motion.div
+                    className="absolute top-[2px] bottom-[2px] h-[calc(100%-4px)] rounded-full bg-white/10"
+                    initial={false}
+                    animate={highlightStyle}
+                    transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5 }}
+                  />
+                  <button
+                    ref={monthlyRef}
+                    onClick={() => setIsYearly(false)}
+                    className={`relative z-10 px-7 py-2 rounded-full transition-colors`}
+                  >
+                    Monthly
+                  </button>
+                  <button
+                    ref={yearlyRef}
+                    onClick={() => setIsYearly(true)}
+                    className={`relative z-10 px-7 py-2 rounded-full transition-colors`}
+                  >
+                    Yearly
+                  </button>
+                </div>
+              );
+            })()}
           </motion.div>
 
           {/* Pricing Cards */}
@@ -466,7 +509,15 @@ const PricingPage = () => {
                 </h3>
                 <div className="mb-6">
                   <div className="text-5xl font-light">
-                    €{isYearly ? plan.yearlyPrice.toFixed(1) : plan.monthlyPrice.toFixed(1)}
+                    <NumberFlow 
+                      value={isYearly ? plan.yearlyPrice : plan.monthlyPrice} 
+                      format={{
+                        style: 'currency',
+                        currency: 'EUR',
+                        trailingZeroDisplay: 'stripIfInteger',
+                        maximumFractionDigits: 1 
+                      }}
+                    />
                   </div>
                   <div className="text-neutral-400 mt-1">
                     Per user / {isYearly ? 'year' : 'month'}
@@ -591,9 +642,28 @@ const PricingPage = () => {
           <div className="mt-20 flex justify-end">
             <div className="text-right">
               <p className="text-xl text-neutral-400">Cost</p>
-              <p className="text-7xl font-normal mt-3">€{calculatePrice()}</p>
+              <p className="text-7xl font-normal mt-3">
+                <NumberFlow 
+                  value={animatedTotalCost} 
+                  format={{
+                    style: 'currency',
+                    currency: 'EUR',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  }}
+                />
+              </p>
               <p className="text-sm text-neutral-400 mt-2">
-                {isYearly ? 'per year' : 'per month'} for {userCount} user{userCount > 1 ? 's' : ''} (€{getPricePerUser()} per user)
+                {isYearly ? 'per year' : 'per month'} for {userCount} user{userCount > 1 ? 's' : ''} 
+                (<NumberFlow 
+                  value={animatedCostPerUser} 
+                  format={{
+                    style: 'currency',
+                    currency: 'EUR',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  }}
+                /> per user)
               </p>
             </div>
           </div>
@@ -616,7 +686,7 @@ const PricingPage = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-8">
             {faqs.map((faq, index) => (
-              <div key={index} className="border-t border-white/20"> {/* FAQ item border */}
+              <div key={`faq-item-${index}`} className="border-t border-white/20">
                 <button
                   className="flex justify-between items-center w-full py-4 text-left text-xl"
                   onClick={() => toggleFAQ(index)}
@@ -632,17 +702,19 @@ const PricingPage = () => {
                 <AnimatePresence initial={false}>
                   {openFAQ === index && (
                     <motion.div
-                      key="content"
+                      layout 
+                      key={`faq-content-${index}`}
                       initial="collapsed"
                       animate="open"
                       exit="collapsed"
+                      className="block" 
                       variants={{
-                        open: { opacity: 1, height: "auto" },
-                        collapsed: { opacity: 0, height: 0 }
+                        open: { opacity: 1, height: "auto", transitionEnd: { overflow: "visible" } }, 
+                        collapsed: { opacity: 0, height: 0, overflow: "hidden" }
                       }}
                       transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
                     >
-                      <div className="text-neutral-400 pb-4">
+                      <div className="text-neutral-400 py-4">
                         {faq.answer}
                       </div>
                     </motion.div>

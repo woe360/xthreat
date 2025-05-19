@@ -45,7 +45,7 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <div className="w-full px-6  pb-20">
+    <div className="w-full px-6">
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-16">
           <h3 className="text-5xl font-normal">
@@ -67,7 +67,7 @@ const FAQSection: React.FC = () => {
               className="border-t border-white/10 overflow-hidden"
             >
               <button
-                className="flex justify-between items-center w-full py-4 text-left text-xl"
+                className="flex justify-between text-white/90 items-center w-full py-4 text-left text-xl"
                 onClick={() => toggleFAQ(index)}
               >
                 <span>{faq.question}</span>
@@ -110,7 +110,7 @@ const FAQSection: React.FC = () => {
             <h4 className="text-2xl text-neutral-400 mb-6 md:mb-0">Still have questions?</h4>
             <Link href="/contact" passHref>
               <button
-                className="rounded-full border text-sm border-white/20 py-2 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
+                className="rounded-full border border-white/20 py-2.5 px-6 flex items-center gap-2 hover:bg-white/5 transition-colors"
               >
                 Get In Touch
               </button>

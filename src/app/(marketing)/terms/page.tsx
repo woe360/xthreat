@@ -10,7 +10,7 @@ interface TermSection {
   content: string | string[];
 }
 
-const LAST_UPDATED_DATE = '2024-09-19';
+const LAST_UPDATED_DATE = '2025-05-20';
 
 const TERMS_SECTIONS: TermSection[] = [
   {
@@ -72,47 +72,50 @@ const PolicySection = ({ index, section }: { index: number; section: TermSection
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="min-h-screen flex flex-col bg-[#0b0b0b]">
       <Navbar/>
-      <main className="flex-grow py-16 sm:py-24 pt-32">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h1 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl font-semibold text-white mb-6 mt-24"
-          >
-            Terms of Service
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-sm text-neutral-400 mb-10"
-          >
-            Last Updated: {LAST_UPDATED_DATE}
-          </motion.p>
-          
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-neutral-300 text-base leading-relaxed"
-          >
-            <p className="mb-6">
-              Welcome to XThreat. These Terms of Service ("Terms") govern your use of our website, products, and services. 
-              By accessing or using XThreat, you agree to be bound by these Terms. If you disagree with any part of the terms, 
-              you may not access our services.
-            </p>
-            {TERMS_SECTIONS.map((section, index) => (
-              <PolicySection 
-                key={section.title}
-                index={index}
-                section={section}
-              />
-            ))}
-          </motion.div>
+      <main className="flex-grow pb-32">
+        <div className="max-w-screen-2xl mx-auto flex justify-center w-full mt-[50vh]">
+          <div className="w-1/2 max-w-[1000px] px-4">
+            <motion.h1 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-5xl font-normal text-white mb-10 text-center normal-case"
+            >
+              Terms of Service
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-base text-neutral-400 mb-16 text-center"
+            >
+              Last updated: {LAST_UPDATED_DATE}
+            </motion.p>
+            <div className="border-b border-white/10 pb-16 mb-16">
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="text-neutral-300 text-lg leading-relaxed text-center max-w-2xl mx-auto"
+              >
+                Welcome to XThreat. These Terms of Service ("Terms") govern your use of our website, products, and services. 
+                By accessing or using XThreat, you agree to be bound by these Terms. If you disagree with any part of the terms, 
+                you may not access our services.
+              </motion.p>
+            </div>
+            <div className="space-y-24">
+              {TERMS_SECTIONS.map((section, index) => (
+                <div key={section.title} className="border-b border-white/10 pb-16 last:border-0 last:pb-0">
+                  <PolicySection 
+                    index={index}
+                    section={section}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </main>
       <Footer />

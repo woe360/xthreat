@@ -24,7 +24,7 @@ const AboutPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-32"
+          className="text-center mb-20"
         >
           <h1 className="text-5xl font-normal mt-24 mb-6">
             Security that People Actually Use
@@ -35,7 +35,7 @@ const AboutPage = () => {
         </motion.div>
 
         {/* Key Info Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 mb-32">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-32 py-40 ">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -78,12 +78,12 @@ const AboutPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="mb-32"
+          className="py-40 border-b border-white/10"
         >
-          <h2 className="text-4xl font-normal text-center mb-16">
+          <h2 className="text-4xl font-normal text-center mb-20">
             Why Companies Choose Us
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-32">
             <div className="border-t border-white/20 pt-8">
               <h3 className="text-2xl font-normal mb-6">Employee Engagement</h3>
               <p className="text-neutral-400 mb-8">Interactive microlearning sessions that keep your team engaged.</p>
@@ -123,21 +123,21 @@ const AboutPage = () => {
           </div>
         </motion.div>
 
-        <div className="flex items-center w-full justify-center">
+        {/* <div className="flex items-center w-full justify-center">
           <RoadmapSection />
-        </div>
+        </div> */}
         
         {/* CTA Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.7 }}
-          className="text-center"
+          className="text-center py-40"
         >
-          <h2 className="text-4xl font-normal mb-6">
+          <h2 className="text-4xl font-normal mb-10">
             Start Securing Your Team Today
           </h2>
-          <p className="text-xl text-neutral-400 mb-12">
+          <p className="text-xl text-neutral-400 mb-16">
             Get a personalized demo and see how we can help protect your company.
           </p>
           <div className="space-x-6">

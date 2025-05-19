@@ -7,12 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ContainerScroll } from "./components/container-scroll-animation";
 import { BentoGridThirdDemo } from "./components/bentosas";
 import StatisticsHack from "./components/statistics";
-import { ChevronDown, ChevronRight } from 'lucide-react';
-import { Users, Briefcase, Target } from 'lucide-react';
+import { ArrowRightIcon, ChevronDown, ChevronRight, Users, Briefcase, Target } from 'lucide-react';
 import { AnimatedSolutionSection } from "./components/AnimatedSolutionSection";
 import CookieConsent from '@/app/(marketing)/cookie-consent/CookieConsent';
 import DemoSection from './components/DemoSection';
 import FAQSection from './components/FAQSection';
+import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 
 // Type Definitions
 // interface FAQ {
@@ -163,46 +163,64 @@ const Home: React.FC = () => {
     }
   ];
 
+  // Animation variants
+  const defaultAnimation = {
+    initial: {
+      opacity: 0,
+      y: 20,
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+    },
+  };
+
   return (
     <main className="relative">
       <div className="absolute inset-0 min-h-screen w-full bg-[#0b0b0b] z-[-1]"></div>
       <Navbar />
       <CookieConsent />
-      <section className="min-h-screen w-full rounded-md !overflow-visible relative flex flex-col items-center antialiased">
-        <div className="absolute inset-0 h-full w-full items-center px-5 py-24 bg-[#0b0b0b] [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)]"></div>
-        <div className="flex flex-col md:pt-0 w-full items-center">
-          <ContainerScroll
-            titleComponent={
+      <section className="min-h-screen w-full rounded-md !overflow-visible relative flex flex-col items-center justify-center antialiased">
+        <div className="absolute inset-0 h-full w-full items-center px-5 py-24 bg-[#0b0b0b] [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)] z-[-1]"></div>
+        <div className="flex flex-col md:pt-0 w-full items-center mt-[100px]">
+          {/* <ContainerScroll
+            titleComponent={ */}
               <div className="flex items-center flex-col w-full">
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  variants={defaultAnimation}
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true }}
                   transition={{ duration: 0.5 }}
                   className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block"
                 >
-                  <Link 
+                  <Link
                     href="/pricing"
-                    className="relative inline-flex h-8 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+                    className="relative inline-flex h-8 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
                   >
-                    <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-                    <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-                      <span className="flex font-sans font-normal flex-row">
-                        Get 20% off with a yearly plan! <ChevronRight className="mt-[5px] ml-1" size={12}/>
+                    <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,theme(colors.neutral.600)_0%,theme(colors.neutral.400)_50%,theme(colors.neutral.600)_100%)]" />
+                    <AnimatedShinyText className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-neutral-800 px-3 py-1 text-sm font-medium text-neutral-300 backdrop-blur-3xl">
+                      <span className="flex font-sans text-black font-normal flex-row items-center">
+                        Get 20% off with a yearly plan! <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
                       </span>
-                    </span>
+                    </AnimatedShinyText>
                   </Link>
                 </motion.div>
                 <motion.h1
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  variants={defaultAnimation}
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="text-4xl mt-3  sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl bg-clip-text text-transparent bg-gradient-to-b pb-2 from-white to-neutral-600 font-sans font-bold text-center"
+                  className="text-4xl mt-8  sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl bg-clip-text text-transparent bg-gradient-to-b pb-2 from-white to-neutral-600 font-sans font-bold text-center"
                 >
-                  <span className="bg-clip-text text-transparent bg-gradient-to-b pb-2 from-white font-light to-neutral-600">Evade</span> <span className="whitespace-nowrap font-light bg-clip-text text-transparent bg-gradient-to-b pb-2  from-white to-neutral-600">Cyber Attacks </span> <span className="font-light">Beforehand</span> 
+                  <span className="bg-clip-text text-transparent bg-gradient-to-b pb-2 from-white font-light to-neutral-600">Evade</span> <span className="whitespace-nowrap font-light bg-clip-text text-transparent bg-gradient-to-b pb-2  from-white to-neutral-600">Cyber Attacks </span> <span className="font-light">Beforehand</span>
                 </motion.h1>
                 <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  variants={defaultAnimation}
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                   className="text-lg sm:text-xl md:text-2xl text-center text-neutral-400 mt-4 mx-3 max-w-3xl"
                 >
@@ -210,8 +228,10 @@ const Home: React.FC = () => {
                 </motion.p>
 
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  variants={defaultAnimation}
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.6 }}
                   className="flex justify-center gap-4 mt-8 mb-12"
                 >
@@ -221,8 +241,8 @@ const Home: React.FC = () => {
                       whileTap={{ scale: 0.95 }}
                       className="inline-flex items-center px-7 py-2 border border-white/20 rounded-full font-medium hover:bg-white/10 transition-colors mb-8 md:mb-10"
                     >
-                      <span className="ml-[4px] font-sans inline-flex text-white md:text-center ">
-                        Try App 
+                      <span className="ml-[4px] font-sans font-normal inline-flex text-white md:text-center ">
+                        Try App
                       </span>
                     </motion.button>
                   </Link>
@@ -232,26 +252,25 @@ const Home: React.FC = () => {
                       whileTap={{ scale: 0.95 }}
                       className="inline-flex items-center px-7 bg-white text-black py-2 rounded-full font-medium hover:bg-white/90 transition-colors mb-8 md:mb-10"
                     >
-                      <span className="ml-[4px] font-sans inline-flex text-black md:text-center ">
-                        Free Trial 
+                      <span className="ml-[4px] font-sans font-normal inline-flex text-black md:text-center ">
+                        Free Trial
                       </span>
                     </motion.button>
                   </Link>
                 </motion.div>
               </div>
-            }
-          />
+            {/* } /> */}
         </div>
       </section>
 
-      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/10">
+      <section className="min-h-[95vh] flex flex-col relative z-20 justify-center border-b border-white/10">
         
         {/* <div className="w-full px-6 sm:px-6 lg:px-8 max-w-[1400px] mx-auto"> */}
           <StatisticsHack />
         {/* </div> */}
       </section>
 
-      <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/10  py-32">
+      <section className="min-h-[80vh] flex flex-col relative z-20 justify-center border-b border-white/10  py-32">
         <DemoSection />
       </section>
 
@@ -259,9 +278,9 @@ const Home: React.FC = () => {
 
       <section className="min-h-screen flex flex-col relative z-20 justify-center border-b border-white/10 py-32">
         <div className="container mx-auto px-0 sm:px-6 lg:px-8 max-w-[1400px]">
-          {/* <h2 className="text-4xl text-start px-7 mb-16 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 font-normal">
+          <h2 className="text-5xl text-start px-7 mb-16 bg-clip-text text-white">
             Solutions
-          </h2> */}
+          </h2>
           {products.map((product, index) => (
             <AnimatedSolutionSection
               key={index}
@@ -284,7 +303,7 @@ const Home: React.FC = () => {
         </div>
       </section>    */}
 
-      <section className="pt-28 font-sans border-b border-white/10 overflow-hidden">
+      <section className="min-h-[80vh] py-32 flex flex-col justify-center font-sans border-b border-white/10 overflow-hidden">
         <div className="container mx-auto px-2 max-w-[1400px]">
           <FAQSection />
         </div>
@@ -296,19 +315,19 @@ const Home: React.FC = () => {
           <h2 className="text-3xl md:text-5xl font-normal mb-6">
             Prepare for Tomorrow
           </h2>
-          <p className="text-gray-400 mb-12 text-lg">
+          <p className="text-neutral-400 mb-12 text-lg">
             Every 39 seconds, a business is attacked.
           </p>  
           <div className="space-x-6">
             <Link
               href="/free-trial"
-              className="inline-flex items-center px-7 bg-white text-black py-2 rounded-full font-medium hover:bg-white/90 transition-colors"
+              className="inline-flex items-center px-7 bg-white text-black py-2 rounded-full font-normal hover:bg-white/90 transition-colors"
             >
               Free Trial
             </Link>
             <Link
               href="/try-app"
-              className="inline-flex items-center px-7 py-2 border border-white/20 rounded-full font-medium hover:bg-white/10 transition-colors"
+              className="inline-flex items-center px-7 py-2 border border-white/20 rounded-full font-normal hover:bg-white/10 transition-colors"
             >
               Try App
             </Link>

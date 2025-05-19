@@ -91,15 +91,23 @@ const Modules: React.FC = () => {
   }
 
   return (
-    <main className="bg-[#050607] font-sans text-gray-100 min-h-screen">
+    <main className="bg-[#0b0b0b] font-sans text-neutral-100 min-h-screen">
       {/* Header Section */}
-      <div className="max-w-[1650px] mx-auto pb-2 px-4">
-        <TimeTrackingDashboard />
+      <div className="max-w-[1650px] mx-auto pb-2 px-10">
+        {/* <TimeTrackingDashboard /> */}
+        <div className="pt-8">
+          <h1 className="text-2xl md:text-3xl font-light text-neutral-100 mb-4">
+            Modules
+          </h1>
+          <p className="text-neutral-400 max-w-3xl">
+            Select your department to access specialized cybersecurity training modules tailored to your role's specific security requirements and risk factors.
+          </p>
+        </div>
       </div>
 
       {/* Sticky Tags Section */}
-      <div className="sticky top-0 bg-[#050607]/80 backdrop-blur-md z-10 border-b border-white/15 py-4 px-4">
-        <div className="max-w-[1620px] mx-auto px-4">
+      <div className="sticky top-0  backdrop-blur-md z-10 border-b border-white/10 py-4 px-4">
+        <div className="max-w-[1620px] mx-auto px-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex flex-wrap gap-2 w-full md:w-auto">
               {tags.map((tag) => (
@@ -109,7 +117,7 @@ const Modules: React.FC = () => {
                   className={`px-3 py-1.5 rounded-full text-sm ${
                     selectedTag === tag || (tag === 'All' && !selectedTag)
                       ? tagColors[tag].bg
-                      : 'bg-[#0a0a0a] border border-white/15 hover:border-white/30 text-gray-400'
+                      : 'bg-[#121212] border border-white/10 hover:border-white/30 text-neutral-400'
                   } transition-all`}
                 >
                   {tag}
@@ -122,7 +130,7 @@ const Modules: React.FC = () => {
                 placeholder="Search modules..."
                 value={searchQuery}
                 onChange={handleSearch}
-                className="w-full bg-[#0a0a0a] border border-white/15 focus:border-white/30 rounded-full px-4 py-1.5 pl-9 text-white text-sm outline-none"
+                className="w-full bg-[#121212] border border-white/10 focus:border-white/30 rounded-full px-4 py-1.5 pl-9 text-neutral-100 text-sm outline-none"
               />
               <Search className="absolute left-3 top-2 h-4 w-4 text-gray-500" />
             </div>
@@ -131,19 +139,19 @@ const Modules: React.FC = () => {
       </div>
 
       {/* Modules Content */}
-      <div className="max-w-[1650px] mx-auto py-8 px-8">
+      <div className="max-w-[1650px] mx-auto py-8 px-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredModules.map((module) => (
             <Link href={`/modules/${module.slug}`} key={module.id} className="group">
-              <div className="bg-black/20 border border-white/15 hover:border-gray-500/30 rounded-md p-6 h-full transition-all hover:shadow-lg hover:shadow-black/40"> 
-                <div className="flex flex-col h-full">
-                  <h2 className="text-md md:text-xl font-light text-white mb-2 group-hover:text-white/90">{module.title}</h2>
-                  <p className="text-gray-400 text-sm md:text-base mb-4 flex-grow line-clamp-2 group-hover:text-gray-300">{module.description}</p>
+              <div className="bg-[#121212] border border-white/10 hover:border-gray-500/30 rounded-md p-6 h-full transition-all hover:shadow-lg hover:shadow-black/40 group-hover:transform group-hover:scale-102 transition-transform"> 
+                <div className="flex flex-col h-full ">
+                  <h2 className="text-md md:text-xl font-light text-neutral-100 mb-2 group-hover:text-neutral-100/90">{module.title}</h2>
+                  <p className="text-neutral-400 text-sm md:text-base mb-4 flex-grow line-clamp-2 group-hover:text-neutral-300">{module.description}</p>
                   <div className="flex flex-wrap gap-2 mt-auto">
                     {module.tags.map((tag, tagIndex) => (
                       <span
                         key={`${module.id}-${tagIndex}`}
-                        className={`text-xs md:text-sm rounded-full px-2.5 py-1 ${tagColors[tag]?.bg || 'bg-gray-500/10 text-gray-400'}`}
+                        className={`text-xs md:text-sm rounded-full px-2.5 py-1 ${tagColors[tag]?.bg || 'bg-neutral-500/10 text-neutral-400'}`}
                       >
                         {tag}
                       </span>

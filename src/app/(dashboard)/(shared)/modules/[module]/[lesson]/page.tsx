@@ -242,7 +242,7 @@ const LessonPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#050607] text-gray-100 p-4 px-10 mt-3">
+    <div className="min-h-screen bg-[#0b0b0b] text-gray-100 p-4 px-10 mt-3">
       <div className="">
         <div className="flex items-center justify-between gap-3 mb-6">
           <div className="flex items-center gap-3">

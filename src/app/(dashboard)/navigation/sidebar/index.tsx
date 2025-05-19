@@ -1132,7 +1132,7 @@ const MenuOptions = () => {
   };
 
   return (
-    <nav className="dark:bg-black w-16 h-screen font-sans flex flex-col sticky justify-between py-6 z-[100] flex-shrink-0">
+    <nav className="bg-[#0b0b0b] w-16 h-screen font-sans flex flex-col sticky justify-between py-6 z-[100] flex-shrink-0">
       <div className="px-2 mb-4 flex justify-center">
         <Image
           src={XLogo}
@@ -1155,8 +1155,8 @@ const MenuOptions = () => {
                     'cursor-pointer transition-colors duration-150',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500',
                     {
-                      'bg-gradient-to-b from-[#21222f]/80 to-[#21222f]/60 text-gray-200': isPathActive(menuItem.href),
-                      'hover:bg-gradient-to-b hover:from-[#21222f]/80 hover:to-[#21222f]/60 text-gray-400 hover:text-gray-200': !isPathActive(menuItem.href),
+                      'bg-[#242424]/80 text-gray-200': isPathActive(menuItem.href),
+                      'hover:bg-[#242424]/70 text-gray-400 hover:text-gray-200': !isPathActive(menuItem.href),
                     }
                   )}
                 >
@@ -1170,7 +1170,7 @@ const MenuOptions = () => {
               <TooltipContent 
                 side="right" 
                 sideOffset={10}
-                className="bg-[#181b24] text-gray-200 border-gray-700 z-[9999]"
+                className="bg-[#121212] text-gray-200 border-neutral-700 z-[9999]"
               >
                 {menuItem.name}
               </TooltipContent>
@@ -1188,7 +1188,7 @@ const MenuOptions = () => {
                 className={cn(
                   "flex items-center justify-center w-10 h-10 rounded-lg",
                   "text-gray-400 hover:text-gray-200 cursor-pointer",
-                  "hover:bg-[#21222f] transition-colors duration-150 group",
+                  " transition-colors duration-150 group",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
                 )}        
               >           
@@ -1200,7 +1200,7 @@ const MenuOptions = () => {
             </TooltipTrigger>
             <TooltipContent 
               side="right" 
-              className="bg-gray-800 text-gray-200 border-gray-700"
+              className="bg-[#121212] text-neutral-200 border-neutral-700"
             >
               Report
             </TooltipContent>
@@ -1220,14 +1220,14 @@ const MenuOptions = () => {
                 )}         
               >           
                 <LogOut 
-                  className="transition-transform group-hover:scale-110" 
+                  className="transition-transform text-neutral-400 group-hover:scale-110" 
                   size={20} 
                 />           
               </button>
             </TooltipTrigger>
             <TooltipContent 
               side="right" 
-              className="bg-gray-800 text-gray-200 border-gray-700"
+              className="bg-[#121212] text-neutral-200 border-neutral-700"
             >
               Log out
             </TooltipContent>

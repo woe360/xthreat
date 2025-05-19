@@ -58,6 +58,42 @@ const sampleData: LeaderboardRow[] = [
     completedModules: ['Email Security', 'Device Protection'],
     lastActive: '2024-03-15',
   },
+  {
+    id: 4,
+    rank: 4,
+    name: 'Maria Garcia',
+    department: 'Sales',
+    securityScore: 860,
+    accuracy: 90,
+    currentStreak: 28,
+    level: { title: 'Security Expert', progress: 60 },
+    completedModules: ['Email Security', 'Device Protection'],
+    lastActive: '2024-03-15',
+  },
+  {
+    id: 5,
+    rank: 5,
+    name: 'Maria Garcia',
+    department: 'Sales',
+    securityScore: 860,
+    accuracy: 90,
+    currentStreak: 28,
+    level: { title: 'Security Expert', progress: 60 },
+    completedModules: ['Email Security', 'Device Protection'],
+    lastActive: '2024-03-15',
+  },
+  {
+    id: 6,
+    rank: 6,
+    name: 'Maria Garcia',
+    department: 'Sales',
+    securityScore: 860,
+    accuracy: 90,
+    currentStreak: 28,
+    level: { title: 'Security Expert', progress: 60 },
+    completedModules: ['Email Security', 'Device Protection'],
+    lastActive: '2024-03-15',
+  },
 ];
 
 // Styled components
@@ -185,7 +221,7 @@ export default function CustomizedDataGrid() {
 
   return (
     <Box sx={{ 
-      bgcolor: '#181b24',
+      bgcolor: '#121212',
       p: 2,
       borderRadius: 1,
     }}>
@@ -210,7 +246,7 @@ export default function CustomizedDataGrid() {
         hideFooterSelectedRowCount
         sx={{
           border: 'none',
-          bgcolor: '#181b24',
+          bgcolor: '#121212',
           '& .MuiDataGrid-cell': {
             borderBottom: '1px solid',
             borderColor: 'divider',

@@ -45,7 +45,7 @@ const MobileMenu = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.2 }}
-      className="fixed top-0 right-0 w-full h-full bg-black z-[200] lg:hidden mt-[64px] overflow-hidden"
+      className="fixed top-0 right-0 w-full h-full bg-[#0b0b0b] z-[200] lg:hidden mt-[64px] overflow-hidden"
     >
       <motion.div 
         className="flex flex-col w-full h-full p-6 overflow-y-auto items-center justify-between"
@@ -82,7 +82,7 @@ const MobileMenu = () => {
         <motion.div className="mt-auto w-full mb-20" variants={itemVariants}>
           <Link
             href="/login"
-            className="text-xl h-11 pl-4 pr-4 rounded-xl border border-[#4D4D4D] bg-transparent text-white hover:bg-white/10 inline-flex items-center justify-center select-none transition ease-in-out duration-200 mb-4 w-full"
+            className="text-xl h-11 pl-4 pr-4 rounded-full border border-white/10 bg-transparent text-white hover:bg-white/10 inline-flex items-center justify-center select-none transition ease-in-out duration-200 mb-4 w-full"
           >
             Log In
           </Link>

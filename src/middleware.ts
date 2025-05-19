@@ -84,9 +84,9 @@ const roleBasedRoutes: RoleBasedRoutes = {
     ]
   },
   manager: {
-    dashboard: '/new-dashboard',
+    dashboard: '/dashboard',
     allowedPaths: [
-      '/new-dashboard',
+      '/dashboard',
       '/modules',
       '/role-based',
       '/account',
@@ -99,9 +99,9 @@ const roleBasedRoutes: RoleBasedRoutes = {
     ]
   },
   user: {
-    dashboard: '/new-dashboard',
+    dashboard: '/dashboard',
     allowedPaths: [
-      '/new-dashboard',
+      '/dashboard',
       '/modules',
       '/role-based',
       '/account',
@@ -131,7 +131,7 @@ const sharedProtectedRoutes = [
   '/profile',
   '/settings',
   '/account',
-  '/new-dashboard'
+  '/dashboard'
 ];
 
 export async function middleware(req: NextRequest) {
@@ -182,7 +182,7 @@ export async function middleware(req: NextRequest) {
     // });
     
     if (!hasAccess) {
-      const redirectPath = userRole === 'admin' ? '/overview' : '/new-dashboard';
+      const redirectPath = userRole === 'admin' ? '/overview' : '/dashboard';
       return NextResponse.redirect(new URL(redirectPath, req.url));
     }
 

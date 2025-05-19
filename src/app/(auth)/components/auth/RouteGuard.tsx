@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import type { AuthGuardProps } from '@/lib/types/auth';
 import { getTabSpecificSupabaseClient, getCurrentUser, getCurrentTabId } from '@/lib/supabase/client';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
@@ -9,12 +9,20 @@ import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 const ProtectedRoute = ({ children }: AuthGuardProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   
   // Get tab-specific Supabase client
   const supabase = getTabSpecificSupabaseClient();
 
   useEffect(() => {
+    // Don't perform auth check on login page or if already redirecting
+    if (pathname === '/login' || isRedirecting) {
+      setIsLoading(false);
+      return;
+    }
+
     // Always clear cookies on load to prevent cross-tab contamination
     if (typeof window !== 'undefined') {
       document.cookie = 'sb-access-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
@@ -42,7 +50,10 @@ const ProtectedRoute = ({ children }: AuthGuardProps) => {
         
         if (error || !clientUser) {
           console.log(`No user found with Supabase client for tab ${tabId}`);
-          router.replace('/login');
+          if (!isRedirecting) {
+            setIsRedirecting(true);
+            router.replace('/login');
+          }
           return;
         }
         
@@ -51,7 +62,10 @@ const ProtectedRoute = ({ children }: AuthGuardProps) => {
         setIsLoading(false);
       } catch (error) {
         console.error('Auth check failed:', error);
-        router.replace('/login');
+        if (!isRedirecting) {
+          setIsRedirecting(true);
+          router.replace('/login');
+        }
       }
     };
 
@@ -61,12 +75,18 @@ const ProtectedRoute = ({ children }: AuthGuardProps) => {
       async (event: AuthChangeEvent, session: Session | null) => {
         if (event === 'SIGNED_OUT' || !session) {
           setIsAuthenticated(false);
-          router.replace('/login');
+          if (!isRedirecting) {
+            setIsRedirecting(true);
+            router.replace('/login');
+          }
         } else if (event === 'SIGNED_IN' && session) {
           // Double check user authentication after sign in
           const { data: { user }, error } = await supabase.auth.getUser();
           if (error || !user) {
-            router.replace('/login');
+            if (!isRedirecting) {
+              setIsRedirecting(true);
+              router.replace('/login');
+            }
             return;
           }
           setIsAuthenticated(true);
@@ -78,7 +98,7 @@ const ProtectedRoute = ({ children }: AuthGuardProps) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [router, supabase]);
+  }, [router, supabase, pathname, isRedirecting]);
 
   // Loading state
   if (isLoading) {
@@ -90,7 +110,7 @@ const ProtectedRoute = ({ children }: AuthGuardProps) => {
   }
 
   // Not authenticated
-  if (!isAuthenticated) {
+  if (!isAuthenticated && pathname !== '/login') {
     return null;
   }
 

@@ -126,14 +126,14 @@ const Navbar = () => {
         }}
         className="relative"
       >
-        <div className="flex items-center text-gray-400 hover:text-white cursor-pointer">
+        <div className="flex items-center text-neutral-400 hover:text-white cursor-pointer">
           <span className="mr-1">{title}</span>
           <motion.div animate={{ rotate: isHovered ? 180 : 0 }} transition={{ duration: 0.3 }}>
             <ChevronDown className="h-4 w-4" />
           </motion.div>
         </div>
         {active === title && (
-          <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-transparent backdrop-blur-lg border border-gray-700 p-6 rounded-md shadow-lg`}>
+          <div className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${width} bg-transparent backdrop-blur-lg border border-neutral-700 p-6 rounded-md shadow-lg`}>
             {content}
           </div>
         )}
@@ -207,10 +207,10 @@ const Navbar = () => {
                 <nav className="flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
                   <ul className="flex items-center gap-8 list-none">
                     {/* <NavItem title="Solutions" content={<SolutionsContent />} width="w-[480px]" /> */}
-                    {/* <li><Link href="/solutions" className="text-gray-400 hover:text-white">Solutions</Link></li> */}
-                    <li><Link href="/pricing" className="text-gray-400 hover:text-white">Pricing</Link></li>
-                    <li><Link href="/about" className="text-gray-400 hover:text-white">Company</Link></li>
-                    <li><Link href="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
+                    {/* <li><Link href="/solutions" className="text-neutral-400 hover:text-white">Solutions</Link></li> */}
+                    <li><Link href="/pricing" className="text-neutral-400 hover:text-white">Pricing</Link></li>
+                    <li><Link href="/about" className="text-neutral-400 hover:text-white">Company</Link></li>
+                    <li><Link href="/contact" className="text-neutral-400 hover:text-white">Contact</Link></li>
                   </ul>
                 </nav>
               ) : (
@@ -246,7 +246,7 @@ const Navbar = () => {
 
               {isDesktop && (
                 <div className="flex items-center gap-8 ml-auto">
-                  <Link href="/login" className="text-gray-400 hover:text-white">Log In</Link>
+                  <Link href="/login" className="text-neutral-400 hover:text-white">Log In</Link>
                   <CalEmbed />
                 </div>
               )}

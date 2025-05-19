@@ -22,7 +22,7 @@ export const clients = [...new Array(10)].map((client, index) => ({
 // Default menu options (available to all users)
 const defaultOptions = [
   // { name: 'Dashboard', Component: Dashboard, href: '/dashboard' },
-  { name: 'Dashboard', Component: Dashboard, href: '/new-dashboard' },
+  { name: 'Dashboard', Component: Dashboard, href: '/dashboard' },
   { name: 'Modules', Component: Modules, href: '/modules' },
   { name: 'Role Based', Component: RoleTraining, href: '/role-based' },
   { name: 'Account', Component: Account, href: '/account' },

@@ -32,6 +32,8 @@ const FeatureItem: React.FC<FeatureItemProps> = ({ text }) => (
 const ContactPage: React.FC = () => {
   const [formStatus, setFormStatus] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [numberOfEmployees, setNumberOfEmployees] = useState('');
+  const [reason, setReason] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -60,7 +62,7 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans text-white flex flex-col">
+    <div className="min-h-screen font-sans text-white  flex flex-col">
       <Navbar />
       <main className="flex-grow flex justify-center items-center py-32 mt-52 px-4 relative">
         <div className="absolute inset-0  pointer-events-none" />
@@ -90,8 +92,8 @@ const ContactPage: React.FC = () => {
                      <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
                    </svg>
                  </div>
-                 <h3 className="text-lg  font-normal mb-2">Technical Support</h3>
-                 <p className="text-sm text-neutral-400 mb-4">Technical issues & product related questions.</p>
+                 <h3 className="text-xl  font-normal mb-2">Technical Support</h3>
+                 <p className="text-lg text-neutral-400 mb-4">Technical issues & product related questions.</p>
                  <Link 
                    href="mailto:support@xthreat.com"
                    className="inline-flex items-center px-6 py-2.5 border border-white/20 rounded-full hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-blue-500/10 transition-all"
@@ -107,8 +109,8 @@ const ContactPage: React.FC = () => {
                     <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-normal mb-2">Sales Inquiries</h3>
-                <p className="text-sm text-neutral-400 mb-4">How our solutions fit your business needs.</p>
+                <h3 className="text-xl font-normal mb-2">Sales Inquiries</h3>
+                <p className="text-lg text-neutral-400 mb-4">How our solutions fit your business needs.</p>
                 <div className="flex gap-3 items-center justify-center">
                   <Link 
                     href="mailto:sales@xthreat.com"
@@ -127,13 +129,13 @@ const ContactPage: React.FC = () => {
             className="w-full max-w-3xl"
           >
             <form className="space-y-8" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+              <div className="grid grid-cols-1  sm:grid-cols-2 gap-10">
                 <input
                   type="text"
                   id="firstName"
                   name="firstName"
                   placeholder="First Name"
-                  className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full"
+                  className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full placeholder:text-neutral-400"
                   required
                 />
                 <input
@@ -141,7 +143,7 @@ const ContactPage: React.FC = () => {
                   id="email"
                   name="email"
                   placeholder="Work Email"
-                  className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full"
+                  className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full placeholder:text-neutral-400"
                   required
                 />
               </div>
@@ -152,15 +154,15 @@ const ContactPage: React.FC = () => {
                   id="companyName"
                   name="companyName"
                   placeholder="Company Name"
-                  className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full"
+                  className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full placeholder:text-neutral-400"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mt-10">
-                <Select name="numberOfEmployees" required>
+                <Select name="numberOfEmployees" required value={numberOfEmployees} onValueChange={setNumberOfEmployees}>
                   <SelectTrigger className="bg-transparent border-0 border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full">
-                    <span className="text-start w-full text-neutral-500">Company Size</span>
+                    <SelectValue placeholder="Company Size" />
                   </SelectTrigger>
                   <SelectContent className="bg-black border border-white/20">
                     <SelectItem value="1-50">1-50 employees</SelectItem>
@@ -171,9 +173,9 @@ const ContactPage: React.FC = () => {
                   </SelectContent>
                 </Select>
 
-                <Select name="reason" required>
+                <Select name="reason" required value={reason} onValueChange={setReason}>
                   <SelectTrigger className="bg-transparent border-0 border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full">
-                    <span className="text-start w-full text-neutral-500">Reason for Contact</span>
+                    <SelectValue placeholder="Reason for Contact" />
                   </SelectTrigger>
                   <SelectContent className="bg-black border border-white/20">
                     <SelectItem value="Get a Quote">Get a custom quote</SelectItem>
@@ -188,7 +190,7 @@ const ContactPage: React.FC = () => {
                   id="additional"
                   name="additionalDetails"
                   placeholder="Additional Details"
-                  className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full min-h-32 resize-none"
+                  className="bg-transparent border-b border-white/10 rounded-none px-0 py-4 h-auto text-xl font-normal focus:outline-none w-full min-h-32 resize-none placeholder:text-neutral-400"
                 />
               </div>
 

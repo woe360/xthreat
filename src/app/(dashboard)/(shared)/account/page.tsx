@@ -323,38 +323,50 @@ const AccountPage = () => {
   )
 
   const renderTabContent = () => {
+    if (user.isLoading) {
+      return (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      )
+    }
+
+    const commonContainerClasses = "max-w-[1650px] mx-auto px-10";
+
     switch (activeTab) {
       case 'profile':
         return (
-          <div className="space-y-6">
-            <div className="bg-black/20 border border-gray-800/40 rounded-lg overflow-hidden">
-              <div className="p-6">
-                <h2 className="text-xl font-light text-white mb-4">Personal Information</h2>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-gray-400">First Name</Label>
-                      <p className="text-white mt-1">{user.firstName}</p>
+          <div className={commonContainerClasses}>
+            <div className="space-y-6">
+              <div className="bg-black/20 border border-gray-800/40 rounded-lg overflow-hidden">
+                <div className="p-6">
+                  <h2 className="text-xl font-light text-white mb-4">Personal Information</h2>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-gray-400">First Name</Label>
+                        <p className="text-white mt-1">{user.firstName}</p>
+                      </div>
+                      <div>
+                        <Label className="text-gray-400">Last Name</Label>
+                        <p className="text-white mt-1">{user.lastName}</p>
+                      </div>
                     </div>
                     <div>
-                      <Label className="text-gray-400">Last Name</Label>
-                      <p className="text-white mt-1">{user.lastName}</p>
+                      <Label className="text-gray-400">Email Address</Label>
+                      <p className="text-white mt-1">{user.email}</p>
                     </div>
-                  </div>
-                  <div>
-                    <Label className="text-gray-400">Email Address</Label>
-                    <p className="text-white mt-1">{user.email}</p>
-                  </div>
-                  <div>
-                    <Label className="text-gray-400">Account Type</Label>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <p className="text-white capitalize">{user.role}</p>
-                      {requestManagerButton}
+                    <div>
+                      <Label className="text-gray-400">Account Type</Label>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <p className="text-white capitalize">{user.role}</p>
+                        {requestManagerButton}
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <Label className="text-gray-400">Member Since</Label>
-                    <p className="text-white mt-1">{user.joinDate}</p>
+                    <div>
+                      <Label className="text-gray-400">Member Since</Label>
+                      <p className="text-white mt-1">{user.joinDate}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -363,30 +375,32 @@ const AccountPage = () => {
         )
       case 'notifications':
         return (
-          <div className="space-y-6">
-            <div className="bg-black/20 border border-gray-800/40 rounded-lg overflow-hidden">
-              <div className="p-6">
-                <h2 className="text-xl font-light text-white mb-4">Notification Preferences</h2>
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between py-3 border-b border-gray-800/40">
-                    <div>
-                      <p className="text-white font-light">Email Notifications</p>
-                      <p className="text-sm text-gray-400 mt-0.5">Receive security updates and course completions</p>
+          <div className={commonContainerClasses}>
+            <div className="space-y-6">
+              <div className="bg-black/20 border border-gray-800/40 rounded-lg overflow-hidden">
+                <div className="p-6">
+                  <h2 className="text-xl font-light text-white mb-4">Notification Preferences</h2>
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between py-3 border-b border-gray-800/40">
+                      <div>
+                        <p className="text-white font-light">Email Notifications</p>
+                        <p className="text-sm text-gray-400 mt-0.5">Receive security updates and course completions</p>
+                      </div>
+                      <Switch 
+                        checked={user.notifications.email}
+                        onCheckedChange={() => handleNotificationChange('email')}
+                      />
                     </div>
-                    <Switch 
-                      checked={user.notifications.email}
-                      onCheckedChange={() => handleNotificationChange('email')}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between py-3">
-                    <div>
-                      <p className="text-white font-light">Push Notifications</p>
-                      <p className="text-sm text-gray-400 mt-0.5">Receive alerts in your browser</p>
+                    <div className="flex items-center justify-between py-3">
+                      <div>
+                        <p className="text-white font-light">Push Notifications</p>
+                        <p className="text-sm text-gray-400 mt-0.5">Receive alerts in your browser</p>
+                      </div>
+                      <Switch 
+                        checked={user.notifications.push}
+                        onCheckedChange={() => handleNotificationChange('push')}
+                      />
                     </div>
-                    <Switch 
-                      checked={user.notifications.push}
-                      onCheckedChange={() => handleNotificationChange('push')}
-                    />
                   </div>
                 </div>
               </div>
@@ -395,47 +409,49 @@ const AccountPage = () => {
         )
       case 'preferences':
         return (
-          <div className="space-y-6">
-            <div className="bg-black/20 border border-gray-800/40 rounded-lg overflow-hidden">
-              <div className="p-6">
-                <h2 className="text-xl font-light text-white mb-4">Regional Settings</h2>
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between py-3 border-b border-gray-800/40">
-                    <div>
-                      <p className="text-white font-light">Language</p>
-                      <p className="text-sm text-gray-400 mt-0.5">Select your preferred language</p>
+          <div className={commonContainerClasses}>
+            <div className="space-y-6">
+              <div className="bg-black/20 border border-gray-800/40 rounded-lg overflow-hidden">
+                <div className="p-6">
+                  <h2 className="text-xl font-light text-white mb-4">Regional Settings</h2>
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between py-3 border-b border-gray-800/40">
+                      <div>
+                        <p className="text-white font-light">Language</p>
+                        <p className="text-sm text-gray-400 mt-0.5">Select your preferred language</p>
+                      </div>
+                      <Select 
+                        value={user.language}
+                        onValueChange={handleLanguageChange}
+                      >
+                        <SelectTrigger className="w-[180px] bg-black/20 border-gray-800/40">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#050607] border border-gray-800/40">
+                          <SelectItem value="english">English</SelectItem>
+                          <SelectItem value="lithuanian">Lithuanian</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                    <Select 
-                      value={user.language}
-                      onValueChange={handleLanguageChange}
-                    >
-                      <SelectTrigger className="w-[180px] bg-black/20 border-gray-800/40">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-[#050607] border border-gray-800/40">
-                        <SelectItem value="english">English</SelectItem>
-                        <SelectItem value="lithuanian">Lithuanian</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex items-center justify-between py-3">
-                    <div>
-                      <p className="text-white font-light">Country</p>
-                      <p className="text-sm text-gray-400 mt-0.5">Select your country</p>
+                    <div className="flex items-center justify-between py-3">
+                      <div>
+                        <p className="text-white font-light">Country</p>
+                        <p className="text-sm text-gray-400 mt-0.5">Select your country</p>
+                      </div>
+                      <Select
+                        value={user.country}
+                        onValueChange={handleCountryChange}
+                      >
+                        <SelectTrigger className="w-[180px] bg-black/20 border-gray-800/40">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#050607] border border-gray-800/40 max-h-60">
+                          {europeanCountries.map((country) => (
+                            <SelectItem key={country} value={country.toLowerCase()}>{country}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
-                    <Select
-                      value={user.country}
-                      onValueChange={handleCountryChange}
-                    >
-                      <SelectTrigger className="w-[180px] bg-black/20 border-gray-800/40">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-[#050607] border border-gray-800/40 max-h-60">
-                        {europeanCountries.map((country) => (
-                          <SelectItem key={country} value={country.toLowerCase()}>{country}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
                   </div>
                 </div>
               </div>
@@ -449,18 +465,18 @@ const AccountPage = () => {
 
   if (user.isLoading) {
     return (
-      <div className="min-h-screen bg-[#050607] flex justify-center items-center">
+      <div className="min-h-screen bg-[#0b0b0b] flex justify-center items-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen font-sans bg-[#050607] text-gray-100">
-      <div className="max-w-[1400px] mx-auto px-6 py-12">
+    <div className="min-h-screen font-sans bg-[#0b0b0b] text-gray-100">
+      <div className="max-w-[1650px] mx-auto px-10 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-light bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-2">
+          <h1 className="text-2xl md:text-3xl font-light text-white mb-2">
             Account Settings
           </h1>
           <p className="text-gray-400 max-w-3xl">

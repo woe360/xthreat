@@ -21,21 +21,16 @@ interface DemoCard {
 const SimplifiedLearningProgress: React.FC<{ isHovering: boolean }> = ({ isHovering }) => {
   const [isComplete, setIsComplete] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [activeSegment, setActiveSegment] = useState(0);
+  const [activeBlock, setActiveBlock] = useState(0);
+  const totalBlocks = 5;
 
-  // Animation only starts on hover
   useEffect(() => {
     if (!isHovering || isComplete) return;
-    
     const timer = setInterval(() => {
       setProgress(prev => {
         const newProgress = prev + 1;
-        
-        // Update active segment based on progress
-        if (newProgress % 25 === 0 && newProgress < 100) {
-          setActiveSegment(newProgress / 25);
-        }
-        
+        const block = Math.min(Math.ceil(newProgress / (100 / totalBlocks)), totalBlocks);
+        setActiveBlock(block);
         if (newProgress >= 100) {
           setIsComplete(true);
           clearInterval(timer);
@@ -44,156 +39,77 @@ const SimplifiedLearningProgress: React.FC<{ isHovering: boolean }> = ({ isHover
         return newProgress;
       });
     }, 50);
-    
     return () => clearInterval(timer);
   }, [isHovering, isComplete]);
 
-  // Reset on hover end
   useEffect(() => {
     if (!isHovering && !isComplete) {
       setProgress(0);
-      setActiveSegment(0);
+      setActiveBlock(0);
     }
   }, [isHovering, isComplete]);
 
+  useEffect(() => {
+    if (!isHovering && isComplete) {
+      const timeout = setTimeout(() => {
+        setIsComplete(false);
+        setProgress(0);
+        setActiveBlock(0);
+      }, 1200);
+      return () => clearTimeout(timeout);
+    }
+  }, [isHovering, isComplete]);
+
+  // Minimalist block dimensions
+  const blockWidth = 28;
+  const blockHeight = 36;
+  const blockGap = 12;
+  const blockY = 44;
+  const blockXStart = 10;
+  const svgWidth = blockXStart * 2 + totalBlocks * blockWidth + (totalBlocks - 1) * blockGap;
+  const svgHeight = 100;
+  const accent = "rgba(147, 51, 234, 0.7)";
+  const accentStroke = "rgba(147, 51, 234, 0.9)";
+  const outline = "rgba(255,255,255,0.13)";
+
   return (
     <div className="flex flex-col items-center justify-center h-full">
-      {!isComplete ? (
-        <motion.svg 
-          viewBox="0 0 100 100" 
-          className="w-32 h-32"
-        >
-          {/* Shield outline */}
+      <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="w-56 h-28">
+        {/* Minimal checkmark above blocks when complete */}
+        {isComplete && (
           <motion.path
-            d="M50,10 
-               C65,10 80,15 80,15 
-               L80,45 
-               C80,65 65,85 50,90 
-               C35,85 20,65 20,45 
-               L20,15 
-               C20,15 35,10 50,10 Z"
+            d={`M${blockXStart + 2},28 L${blockXStart + blockWidth / 2 + 2},${blockY - 10} L${blockXStart + blockWidth * 2.5 + blockGap * 1.5},14`}
             fill="none"
-            stroke="rgba(255,255,255,0.2)"
-            strokeWidth="1"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: isHovering ? 1 : 0 }}
-            transition={{ duration: 1 }}
-          />
-          
-          {/* Shield segments (4 parts) */}
-          {/* Top segment */}
-          <motion.path
-            d="M50,15 
-               C60,15 70,18 70,18 
-               L70,32 
-               C60,30 40,30 30,32 
-               L30,18 
-               C30,18 40,15 50,15 Z"
-            fill="none"
-            stroke={activeSegment >= 1 ? "rgba(147, 51, 234, 0.5)" : "rgba(255,255,255,0.1)"}
-            strokeWidth="0.75"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: isHovering ? (activeSegment >= 1 ? 1 : 0.3) : 0 }}
-            transition={{ duration: 0.5 }}
-          />
-          
-          {/* Middle-top segment */}
-          <motion.path
-            d="M30,32 
-               C40,30 60,30 70,32 
-               L70,45 
-               C60,43 40,43 30,45 Z"
-            fill="none"
-            stroke={activeSegment >= 2 ? "rgba(147, 51, 234, 0.5)" : "rgba(255,255,255,0.1)"}
-            strokeWidth="0.75"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: isHovering ? (activeSegment >= 2 ? 1 : 0.3) : 0 }}
-            transition={{ duration: 0.5, delay: isHovering ? 0.2 : 0 }}
-          />
-          
-          {/* Middle-bottom segment */}
-          <motion.path
-            d="M30,45 
-               C40,43 60,43 70,45 
-               L70,60 
-               C60,65 40,65 30,60 Z"
-            fill="none"
-            stroke={activeSegment >= 3 ? "rgba(147, 51, 234, 0.5)" : "rgba(255,255,255,0.1)"}
-            strokeWidth="0.75"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: isHovering ? (activeSegment >= 3 ? 1 : 0.3) : 0 }}
-            transition={{ duration: 0.5, delay: isHovering ? 0.4 : 0 }}
-          />
-          
-          {/* Bottom segment */}
-          <motion.path
-            d="M30,60 
-               C40,65 60,65 70,60 
-               C70,70 60,80 50,85 
-               C40,80 30,70 30,60 Z"
-            fill="none"
-            stroke={activeSegment >= 4 ? "rgba(147, 51, 234, 0.5)" : "rgba(255,255,255,0.1)"}
-            strokeWidth="0.75"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: isHovering ? (activeSegment >= 4 ? 1 : 0.3) : 0 }}
-            transition={{ duration: 0.5, delay: isHovering ? 0.6 : 0 }}
-          />
-          
-          {/* Lock icon in the middle */}
-          <motion.path
-            d="M45,50 h10 v-5 a5,5 0 0 0 -10,0 v5"
-            fill="none"
-            stroke="rgba(255,255,255,0.3)"
-            strokeWidth="0.75"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: isHovering ? 1 : 0 }}
-            transition={{ duration: 0.5, delay: isHovering ? 0.8 : 0 }}
-          />
-          <motion.rect
-            x="43" y="50" width="14" height="10" rx="2"
-            fill="none"
-            stroke="rgba(255,255,255,0.3)"
-            strokeWidth="0.75"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: isHovering ? 1 : 0 }}
-            transition={{ duration: 0.5, delay: isHovering ? 1 : 0 }}
-          />
-        </motion.svg>
-      ) : (
-        <motion.svg 
-          viewBox="0 0 100 100" 
-          className="w-32 h-32"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          {/* Complete shield */}
-          <motion.path
-            d="M50,10 
-               C65,10 80,15 80,15 
-               L80,45 
-               C80,65 65,85 50,90 
-               C35,85 20,65 20,45 
-               L20,15 
-               C20,15 35,10 50,10 Z"
-            fill="none"
-            stroke="rgba(147, 51, 234, 0.3)"
-            strokeWidth="1"
-          />
-          
-          {/* Checkmark */}
-          <motion.path
-            d="M35,50 L45,65 L65,35"
-            fill="none"
-            stroke="rgba(147, 51, 234, 0.8)"
-            strokeWidth="1.5"
+            stroke={accentStroke}
+            strokeWidth="2.2"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.7 }}
           />
-        </motion.svg>
-      )}
-      <p className="text-gray-400 text-sm mt-3">
-        {isComplete ? "Module Complete" : isHovering ? `${Math.round(progress)}%` : "Hover to start"}
+        )}
+        {/* Minimalist building blocks */}
+        {[...Array(totalBlocks)].map((_, i) => {
+          const isFilled = activeBlock > i || isComplete;
+          return (
+            <motion.rect
+              key={i}
+              x={blockXStart + i * (blockWidth + blockGap)}
+              y={blockY}
+              width={blockWidth}
+              height={blockHeight}
+              rx={7}
+              fill={isFilled ? accent : "none"}
+              stroke={isFilled ? accentStroke : outline}
+              strokeWidth={1.5}
+              initial={{ fill: "none" }}
+              animate={{ fill: isFilled ? accent : "none" }}
+              transition={{ duration: 0.32, delay: isHovering && isFilled ? i * 0.09 : 0 }}
+            />
+          );
+        })}
+      </svg>
+      <p className="text-gray-400 text-base mt-3 min-h-[1.5em]">
+        {isComplete ? "Module Complete" : ""}
       </p>
     </div>
   );

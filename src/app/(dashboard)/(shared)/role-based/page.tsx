@@ -27,7 +27,6 @@ const DepartmentTraining = () => {
       riskLevel: 'High',
       estimatedTime: 4,
       available: true,
-      icon: <Building className="h-5 w-5 text-blue-400" />,
       preview: 'Learn to protect financial assets, secure transactions, and prevent cyber fraud. This training covers secure banking protocols, financial data protection, and identifying financial fraud attempts.',
       keyTopics: [
         'Secure financial transaction handling',
@@ -42,7 +41,6 @@ const DepartmentTraining = () => {
       description: 'Training focused on protecting employee data, preventing social engineering attacks, and maintaining personnel information security.',
       riskLevel: 'High',
       estimatedTime: 3,
-      icon: <Users className="h-5 w-5 text-purple-400" />,
       preview: 'Master the protection of sensitive employee information and prevent social engineering attacks. Learn about secure data handling and privacy compliance.',
       keyTopics: [
         'Employee data protection',
@@ -57,7 +55,6 @@ const DepartmentTraining = () => {
       description: 'Advanced security protocols, system protection, and infrastructure security best practices.',
       riskLevel: 'High',
       estimatedTime: 6,
-      icon: <Shield className="h-5 w-5 text-green-400" />,
       preview: 'Advanced security training covering system protection, infrastructure security, and technical safeguards. Designed for IT professionals managing company systems.',
       keyTopics: [
         'System security protocols',
@@ -113,7 +110,7 @@ const DepartmentTraining = () => {
   if (selectedDept) {
     return (
       <div className="min-h-screen font-sans bg-[#050607] text-gray-100">
-        <div className="max-w-[1400px] mx-auto px-6 py-12">
+        <div className="max-w-[1650px] mx-auto px-10 py-12">
           {/* Header with back button */}
           <div className="mb-8">
             <button
@@ -178,12 +175,12 @@ const DepartmentTraining = () => {
   }
 
   return (
-    <div className="min-h-screen font-sans bg-[#050607] text-gray-100">
-      <div className="max-w-[1400px] mx-auto px-6 py-12">
+    <div className="min-h-screen font-sans bg-[#0b0b0b] text-gray-100">
+      <div className="max-w-[1650px] mx-auto px-10 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-light bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-4">
-            Role-Based Security Training
+          <h1 className="text-2xl md:text-3xl font-light text-white mb-4">
+            Role-Based Training
           </h1>
           <p className="text-gray-400 max-w-3xl">
             Select your department to access specialized cybersecurity training modules tailored to your role's specific security requirements and risk factors.
@@ -199,13 +196,12 @@ const DepartmentTraining = () => {
               className={`text-left ${dept.id !== 'finance' ? 'cursor-not-allowed' : 'hover:transform hover:-translate-y-1'} transition-all duration-200`}
               disabled={dept.id !== 'finance'}
             >
-              <div className={`bg-black/20 border border-gray-800/40 ${dept.id === 'finance' ? 'hover:border-gray-700/70' : 'opacity-70'} rounded-lg h-full transition-all`}>
+              <div className={`bg-[#121212] border border-gray-800/40 ${dept.id === 'finance' ? 'hover:border-gray-700/70' : 'opacity-70'} rounded-lg h-full transition-all`}>
                 <div className="p-6 flex flex-col h-full">
                   {/* Department Header */}
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center">
-                      {dept.icon ? dept.icon : null}
-                      <h3 className="text-xl font-light text-white ml-2">
+                      <h3 className="text-xl font-light text-white">
                         {dept.title}
                       </h3>
                     </div>
