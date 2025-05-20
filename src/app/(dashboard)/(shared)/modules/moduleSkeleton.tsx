@@ -7,7 +7,7 @@ export const ModuleSkeleton = () => {
       <div className="max-w-[1650px] mx-auto pb-2 px-10">
         <div className="pt-8">
           <Skeleton className="h-10 w-60 bg-gray-800/40 mb-4 rounded" />
-          <Skeleton className="h-5 w-96 bg-gray-800/40 rounded" />
+          <Skeleton className="h-5 w-96 bg-gray-800/40 rounded mb-5" />
         </div>
       </div>
 

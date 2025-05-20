@@ -299,14 +299,14 @@ const AccountPage = () => {
     </Dialog>
   )
 
-  const requestManagerButton = user.role === 'user' && (
-    <button
-      onClick={() => setShowRoleRequest(true)}
-      className="mt-4 px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors"
-    >
-      Request Manager Access
-    </button>
-  )
+  // const requestManagerButton = user.role === 'user' && (
+  //   <button
+  //     onClick={() => setShowRoleRequest(true)}
+  //     className="mt-4 px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors"
+  //   >
+  //     Request Manager Access
+  //   </button>
+  // )
 
   const SettingsTabButton = ({ id, label, icon: Icon }: { id: string, label: string, icon: React.ElementType }) => (
     <button
@@ -360,7 +360,7 @@ const AccountPage = () => {
                       <Label className="text-gray-400">Account Type</Label>
                       <div className="flex items-center space-x-2 mt-1">
                         <p className="text-white capitalize">{user.role}</p>
-                        {requestManagerButton}
+                        {/* {requestManagerButton} */}
                       </div>
                     </div>
                     <div>

@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ChartUserByCountry from './ChartUserByCountry';
 import CustomizedTreeView from './CustomizedTreeView';
-import CustomizedDataGrid from './CustomizedDataGrid';
+import UserTableLeaderboard from './UserTableLeaderboard';
 import HighlightedCard from './HighlightedCard';
 import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
@@ -104,7 +104,7 @@ export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
       <Grid container spacing={0}>
         <Grid item xs={12} lg={13}>
           <Box sx={{ backgroundColor: '#121212', border: '1px solid white/10', borderRadius: 1 }}>
-            <CustomizedDataGrid />
+            <UserTableLeaderboard />
           </Box>
         </Grid>
       </Grid>

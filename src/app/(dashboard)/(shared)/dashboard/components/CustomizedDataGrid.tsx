@@ -179,19 +179,14 @@ const columns: GridColDef<LeaderboardRow>[] = [
     field: 'level',
     headerName: 'Level',
     width: 180,
-    renderCell: (params: GridRenderCellParams<LeaderboardRow>) => (
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-          <Typography variant="body2">{params.value.title}</Typography>
-          <Typography variant="caption">{params.value.progress}%</Typography>
+    renderCell: (params: GridRenderCellParams<LeaderboardRow>) => {
+      const { title } = params.value;
+      return (
+        <Box sx={{ width: '100%' }}>
+          <Typography variant="body2">{title}</Typography>
         </Box>
-        <LinearProgress 
-          variant="determinate" 
-          value={params.value.progress}
-          sx={{ height: 4, borderRadius: 2 }}
-        />
-      </Box>
-    ),
+      );
+    },
   },
   {
     field: 'completedModules',
@@ -224,6 +219,7 @@ export default function CustomizedDataGrid() {
       bgcolor: '#121212',
       p: 2,
       borderRadius: 1,
+      border: '1px solid rgba(255, 255, 255, 0.1)',
     }}>
       <StyledTabs
         value={tabValue}

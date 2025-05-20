@@ -4,7 +4,8 @@ import StatCard, { StatCardProps } from '../../dashboard/components/StatCard';
 import HighlightedCard from '../../dashboard/components/HighlightedCard';
 import SessionsChart from '../../dashboard/components/SessionsChart';
 import PageViewsBarChart from '../../dashboard/components/PageViewsBarChart';
-import CustomizedDataGrid from '../../dashboard/components/CustomizedDataGrid';
+// import CustomizedDataGrid from '../../dashboard/components/CustomizedDataGrid';
+import UserTableLeaderboard from '../../dashboard/components/UserTableLeaderboard';
 
 // Mock data - adjust as needed
 const statCardData: StatCardProps[] = [
@@ -67,7 +68,8 @@ export default function BorderlessGrid() {
       <div className={`border-t border-b border-l border-r ${borderColor}`}>
         <div className={`p-4`}>
            {/* We'll need to adjust CustomizedDataGrid internal styles */}
-          <CustomizedDataGrid />
+          {/* <CustomizedDataGrid /> */}
+          <UserTableLeaderboard />
         </div>
       </div>
     </div>
