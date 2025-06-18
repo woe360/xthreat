@@ -207,7 +207,8 @@ const Navbar = () => {
                 <nav className="flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
                   <ul className="flex items-center gap-8 list-none">
                     {/* <NavItem title="Solutions" content={<SolutionsContent />} width="w-[480px]" /> */}
-                    {/* <li><Link href="/solutions" className="text-neutral-400 hover:text-white">Solutions</Link></li> */}
+                    <li><Link href="/services" className="text-neutral-400 hover:text-white">Services</Link></li>
+                    <li><Link href="/solutions" className="text-neutral-400 hover:text-white">Solutions</Link></li>
                     <li><Link href="/pricing" className="text-neutral-400 hover:text-white">Pricing</Link></li>
                     <li><Link href="/about" className="text-neutral-400 hover:text-white">Company</Link></li>
                     <li><Link href="/contact" className="text-neutral-400 hover:text-white">Contact</Link></li>

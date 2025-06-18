@@ -340,7 +340,7 @@ const PricingPage = () => {
       description: "Ideal for small teams looking to protect their business with essential cybersecurity training.",
       features: [
         "14-day free trial with full access",
-        "Access to essential cybersecurity awareness training modules",
+        "Access to essential training modules",
         "Core analytics and reporting",
         "Email support",
         "1 administrator seat",

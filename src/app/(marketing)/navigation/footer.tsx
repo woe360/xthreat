@@ -14,10 +14,10 @@ const Footer: React.FC = () => (
           <span className="text-neutral-400 block font-medium mb-5">Company</span>
           <div className="flex space-y-2 flex-col">
             <Link href="/about" className="text-neutral-500 hover:text-white transition-colors">About</Link>
-            {/* <Link href="/solutions" className="text-neutral-500 hover:text-white transition-colors">Solutions</Link> */}
+            <Link href="/services" className="text-neutral-500 hover:text-white transition-colors">Services</Link>
+            <Link href="/solutions" className="text-neutral-500 hover:text-white transition-colors">Solutions</Link>
             <a href="mailto:careers@xthreat.com" className="text-neutral-500 hover:text-white transition-colors">Careers</a>
             <Link href="/pricing" className="text-neutral-500 hover:text-white transition-colors">Pricing</Link>
-            <Link href="/contact" className="text-neutral-500 hover:text-white transition-colors">Contact</Link>
           </div>
         </div>
 
@@ -37,6 +37,7 @@ const Footer: React.FC = () => (
             <Link href="/terms" className="text-neutral-500 hover:text-white transition-colors">Terms</Link>
             <Link href="/privacy" className="text-neutral-500 hover:text-white transition-colors">Privacy</Link>
             <Link href="/cookies" className="text-neutral-500 hover:text-white transition-colors">Cookies</Link>
+            <Link href="/contact" className="text-neutral-500 hover:text-white transition-colors">Contact</Link>
           </div>
         </div>
 

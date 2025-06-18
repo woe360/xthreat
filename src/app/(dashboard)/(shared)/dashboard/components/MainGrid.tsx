@@ -12,6 +12,7 @@ import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard, { StatCardProps } from './StatCard';
 import SecuritySkillsRadar from './SecuritySkillsRadar';
+import { LastModuleCard, UpcomingModuleCard, RandomModuleCard } from './DashboardModuleCards';
 
 const data: StatCardProps[] = [
   {
@@ -82,17 +83,16 @@ export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
         ))}
       </Grid>
 
-      {/* Middle row - 2 equal columns */}
+      {/* Middle row - 3 equal columns for modules */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} md={6}>
-          <Box sx={{ backgroundColor: '#121212', border: '1px solid white/10', borderRadius: 1 }}>
-            <SessionsChart />
-          </Box>
+        <Grid item xs={12} md={4}>
+          <LastModuleCard />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Box sx={{ backgroundColor: '#121212', border: '1px solid white/10', borderRadius: 1 }}>
-            <PageViewsBarChart />
-          </Box>
+        <Grid item xs={12} md={4}>
+          <UpcomingModuleCard />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <RandomModuleCard />
         </Grid>
       </Grid>
 

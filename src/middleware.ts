@@ -116,6 +116,7 @@ const publicRoutes = [
   '/',
   '/pricing',
   '/solutions',
+  '/services',
   '/about',
   '/contact',
   '/cookies',

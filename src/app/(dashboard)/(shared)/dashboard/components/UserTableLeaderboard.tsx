@@ -35,7 +35,7 @@ const allItems: LeaderboardItem[] = [
     rank: 1,
     name: "Alex Thompson",
     username: "@alexthompson",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "Engineering",
     points: 980,
     streak: "60 days",
@@ -46,7 +46,7 @@ const allItems: LeaderboardItem[] = [
     rank: 2,
     name: "Sarah Chen",
     username: "@sarahchen",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358073/avatar-40-01_ij9v7j.jpg",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "Marketing",
     points: 920,
     streak: "30 days",
@@ -57,7 +57,7 @@ const allItems: LeaderboardItem[] = [
     rank: 3,
     name: "Maria Garcia",
     username: "@mariagarcia",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358072/avatar-40-03_dkeufx.jpg",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "Sales",
     points: 880,
     streak: "15 days",
@@ -68,7 +68,7 @@ const allItems: LeaderboardItem[] = [
     rank: 4,
     name: "David Kim",
     username: "@davidkim",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358070/avatar-40-05_cmz0mg.jpg",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "HR",
     points: 850,
     streak: "7 days",
@@ -79,7 +79,7 @@ const allItems: LeaderboardItem[] = [
     rank: 5,
     name: "Emily White",
     username: "@emilywhite",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358074/avatar-40-06_random.jpg", // Placeholder image
+    image: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "Finance",
     points: 820,
     streak: "45 days",
@@ -90,7 +90,7 @@ const allItems: LeaderboardItem[] = [
     rank: 6,
     name: "Michael Brown",
     username: "@michaelbrown",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358075/avatar-40-07_random.jpg", // Placeholder image
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "Engineering",
     points: 790,
     streak: "22 days",
@@ -101,7 +101,7 @@ const allItems: LeaderboardItem[] = [
     rank: 7,
     name: "Jessica Lee",
     username: "@jessicalee",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358076/avatar-40-08_random.jpg", // Placeholder image
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "Operations",
     points: 760,
     streak: "10 days",
@@ -112,7 +112,7 @@ const allItems: LeaderboardItem[] = [
     rank: 8,
     name: "Kevin Green",
     username: "@kevingreen",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358077/avatar-40-09_random.jpg", // Placeholder image
+    image: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "Marketing",
     points: 730,
     streak: "5 days",
@@ -123,7 +123,7 @@ const allItems: LeaderboardItem[] = [
     rank: 9,
     name: "Olivia Martinez",
     username: "@oliviamartinez",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358078/avatar-40-10_random.jpg", // Placeholder image
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "HR",
     points: 700,
     streak: "2 days",
@@ -134,7 +134,7 @@ const allItems: LeaderboardItem[] = [
     rank: 10,
     name: "Daniel Rodriguez",
     username: "@danielrodriguez",
-    image: "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358079/avatar-40-11_random.jpg", // Placeholder image
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face&auto=format",
     department: "Sales",
     points: 680,
     streak: "1 day",
@@ -209,7 +209,7 @@ function UserTableLeaderboard() {
     <div className="bg-[#121212] border border-white/10 rounded-lg p-4">
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-transparent">
+          <TableRow className="hover:bg-transparent border-b-white/10">
             {(['rank', 'name', 'department', 'points', 'streak', 'level'] as SortKey[]).map((key) => (
               <TableHead 
                 key={key} 
@@ -229,7 +229,7 @@ function UserTableLeaderboard() {
             return (
               <TableRow 
                 key={item.id}
-                className={`transition-opacity duration-500 ${!isVisible ? 'opacity-0 border-b-0 hover:bg-transparent pointer-events-none' : 'opacity-100'}`}
+                className={`transition-opacity duration-500 hover:bg-neutral-800/30 border-b-white/10 ${!isVisible ? 'opacity-0 border-b-0 hover:bg-transparent pointer-events-none' : 'opacity-100'}`}
               >
                 <TableCell className={`${!isVisible ? 'p-0' : ''}`}>
                   <div className={`transition-all ease-in-out duration-500 overflow-hidden ${isVisible ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
