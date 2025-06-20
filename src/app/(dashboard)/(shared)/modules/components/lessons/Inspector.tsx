@@ -16,7 +16,7 @@ const URLInspectorChallenge: React.FC<URLInspectorChallengeProps> = ({ onComplet
   const [showFeedback, setShowFeedback] = useState(false);
   const [score, setScore] = useState(0);
   const router = useRouter();
-  const { trackInteraction, trackCompletion } = useAnalytics();
+  const { trackInteraction, trackCompletion } = useAnalytics('email_inspector');
 
   const challenges = [
     {

@@ -50,14 +50,14 @@ const ConceptOverview: React.FC<ConceptOverviewProps> = ({
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-  const analytics = useAnalytics();
+  const { trackLessonStart, trackLessonComplete, getTimeSpent, getInteractionCount } = useAnalytics('concept_overview');
 
   // Track lesson start when component mounts
   useEffect(() => {
     if (moduleSlug) {
-      analytics.trackLessonStart(moduleSlug, 'concept_overview');
+      trackLessonStart(moduleSlug, 'concept_overview');
     }
-  }, [moduleSlug, analytics]);
+  }, [moduleSlug, trackLessonStart]);
 
   // Fetch next lesson when component mounts
   useEffect(() => {
@@ -111,13 +111,7 @@ const ConceptOverview: React.FC<ConceptOverviewProps> = ({
         
         // Track completion analytics
         if (moduleSlug) {
-          analytics.trackLessonComplete({
-            lesson_id: 'concept_overview',
-            module_id: moduleSlug,
-            time_spent: analytics.getTimeSpent(),
-            completion_status: 'completed',
-            interactions: analytics.getInteractionCount()
-          });
+          trackLessonComplete(moduleSlug, 'concept_overview', 'completed');
         }
         
         if (onComplete) {

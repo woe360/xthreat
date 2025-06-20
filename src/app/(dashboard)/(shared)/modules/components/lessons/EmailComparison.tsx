@@ -126,7 +126,7 @@ interface EmailComparisonProps {
 
 export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) {
   const router = useRouter()
-  const analytics = useAnalytics()
+  const { trackEmailComparisonStart, trackDifferenceFound, trackHintUsed, trackEmailComparisonComplete } = useAnalytics('email_comparison')
   const [foundDifferences, setFoundDifferences] = useState<string[]>([])
   const [showHeaders, setShowHeaders] = useState(false)
   const [hoveredLink, setHoveredLink] = useState<EmailLink | null>(null)
@@ -138,8 +138,8 @@ export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) 
 
   // Track exercise start
   React.useEffect(() => {
-    analytics.trackEmailComparisonStart(moduleId)
-  }, [moduleId, analytics])
+    trackEmailComparisonStart(moduleId)
+  }, [moduleId, trackEmailComparisonStart])
 
   const totalDifferences = differences.length
   const progress = (foundDifferences.length / totalDifferences) * 100
@@ -148,7 +148,7 @@ export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) 
     if (!foundDifferences.includes(element)) {
       setFoundDifferences([...foundDifferences, element])
       // Track difference found
-      analytics.trackDifferenceFound(element, moduleId)
+      trackDifferenceFound(element, moduleId)
     }
   }
 
@@ -156,7 +156,7 @@ export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) 
     console.log('handleComplete called!');
     
     // Track completion
-    analytics.trackEmailComparisonComplete(
+    trackEmailComparisonComplete(
       moduleId,
       foundDifferences,
       totalDifferences,
@@ -197,7 +197,7 @@ export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) 
     const remainingHints = getRemainingHints();
     if (remainingHints.length > 0) {
       // Track first hint usage
-      analytics.trackHintUsed(moduleId, 0);
+      trackHintUsed(moduleId, 0);
       setCurrentHint(remainingHints[0].hint);
       setShowHintConfirm(true);
     }
@@ -206,7 +206,7 @@ export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) 
   const handleConfirmHint = () => {
     const newHintIndex = currentHintIndex + 1;
     // Track hint usage
-    analytics.trackHintUsed(moduleId, newHintIndex);
+    trackHintUsed(moduleId, newHintIndex);
     
     setCurrentHintIndex(newHintIndex);
     setShowHintConfirm(false);

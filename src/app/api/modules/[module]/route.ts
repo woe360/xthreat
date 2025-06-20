@@ -8,13 +8,14 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: Request,
-  { params }: { params: { module: string } }
+  { params }: { params: Promise<{ module: string }> }
 ) {
-  // Check if params exists before accessing its properties
-  if (!params || typeof params.module !== 'string') {
+  // Await params before accessing its properties
+  const resolvedParams = await params
+  if (!resolvedParams || typeof resolvedParams.module !== 'string') {
     return NextResponse.json({ error: 'Invalid module parameter' }, { status: 400 })
   }
-  const moduleSlug = params.module
+  const moduleSlug = resolvedParams.module
   
   if (!moduleSlug) {
     return NextResponse.json(
@@ -23,7 +24,7 @@ export async function GET(
     )
   }
 
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   // Use authenticated client
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
 

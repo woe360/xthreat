@@ -97,7 +97,7 @@ interface EmailInspectorProps {
 
 export function EmailInspector({ moduleId, onComplete }: EmailInspectorProps) {
   const router = useRouter()
-  const analytics = useAnalytics()
+  const { trackLessonStart, trackLessonComplete, trackInteraction, getTimeSpent, getInteractionCount } = useAnalytics('email_inspector')
   const [selectedElement, setSelectedElement] = useState<string | null>(null)
   const [activePopup, setActivePopup] = useState<string | null>(null)
   const [score, setScore] = useState(0)
@@ -111,8 +111,8 @@ export function EmailInspector({ moduleId, onComplete }: EmailInspectorProps) {
 
   // Track lesson start when component mounts
   React.useEffect(() => {
-    analytics.trackLessonStart(moduleId, 'email_inspector');
-  }, [moduleId, analytics]);
+    trackLessonStart(moduleId, 'email_inspector');
+  }, [moduleId, trackLessonStart]);
 
   const totalThreats = Object.keys(sampleEmail.suspiciousElements).length
   
@@ -136,7 +136,7 @@ export function EmailInspector({ moduleId, onComplete }: EmailInspectorProps) {
       setScore(newFound.length); // Simple score: 1 point per element found
       
       // Track element found
-      analytics.trackInteraction('element_found', { 
+      trackInteraction('element_found', { 
         element, 
         score: newFound.length, 
         total_elements: totalThreats 
@@ -147,13 +147,7 @@ export function EmailInspector({ moduleId, onComplete }: EmailInspectorProps) {
 
   const handleReport = () => {
     // Track completion analytics
-    analytics.trackLessonComplete({
-      lesson_id: 'email_inspector',
-      module_id: moduleId,
-      time_spent: analytics.getTimeSpent(),
-      completion_status: 'completed',
-      interactions: analytics.getInteractionCount()
-    });
+    trackLessonComplete(moduleId, 'email_inspector', 'completed');
     
     // Completion is triggered when all elements are found
     setIsComplete(true);

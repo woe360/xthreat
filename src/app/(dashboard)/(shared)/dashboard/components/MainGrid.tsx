@@ -13,7 +13,7 @@ import SessionsChart from './SessionsChart';
 import StatCard, { StatCardProps } from './StatCard';
 import SecuritySkillsRadar from './SecuritySkillsRadar';
 import { LastModuleCard, UpcomingModuleCard, RandomModuleCard } from './DashboardModuleCards';
-import { QuizCompletionCard, EmailAccuracyCard, SessionTimeCard, HintUsageCard } from './AnalyticsCards';
+import { OverallProgressCard, LearningStreakCard, TotalStudyTimeCard, ModuleMasteryCard, ManagerAnalyticsCards } from './AnalyticsCards';
 import DashboardSkeleton from './DashboardSkeleton';
 
 const data: StatCardProps[] = [
@@ -92,18 +92,21 @@ export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
       </Typography>
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6} lg={3}>
-          <QuizCompletionCard />
+          <OverallProgressCard />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <EmailAccuracyCard />
+          <LearningStreakCard />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <SessionTimeCard />
+          <TotalStudyTimeCard />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <HintUsageCard />
+          <ModuleMasteryCard />
         </Grid>
       </Grid>
+
+      {/* Manager Analytics Section - Only visible to managers/admins */}
+      <ManagerAnalyticsCards />
 
       {/* Middle row - 3 equal columns for modules */}
       <Grid container spacing={2} sx={{ mb: 3 }}>

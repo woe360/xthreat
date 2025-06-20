@@ -62,7 +62,7 @@ const DashboardModuleCard: React.FC<DashboardModuleCardProps> = ({ title, icon, 
     return (
       <div className="p-8 h-full min-h-[240px] bg-[#121212] border border-white/10 rounded">
         <div className="mb-6">
-          <h3 className="text-xl font-medium text-white">{title}</h3>
+          <h3 className="text-sm font-medium text-neutral-400 uppercase tracking-wide">{title}</h3>
         </div>
         <div className="animate-pulse">
           <div className="h-5 bg-neutral-700 rounded mb-4 w-3/4"></div>
@@ -81,7 +81,7 @@ const DashboardModuleCard: React.FC<DashboardModuleCardProps> = ({ title, icon, 
     return (
       <div className="p-8 h-full min-h-[240px] bg-[#121212] border border-white/10 rounded flex flex-col items-center justify-center text-center">
         <div className="mb-6">
-          <h3 className="text-xl font-medium text-white">{title}</h3>
+          <h3 className="text-sm font-medium text-neutral-400 uppercase tracking-wide">{title}</h3>
         </div>
         <p className="text-neutral-400 text-base mb-6">No modules available</p>
         <Link href="/modules" className="text-blue-400 hover:text-blue-300 text-base flex items-center gap-2">
@@ -94,7 +94,7 @@ const DashboardModuleCard: React.FC<DashboardModuleCardProps> = ({ title, icon, 
   return (
     <div className="p-8 h-full min-h-[240px] bg-[#121212] border border-white/10 rounded">
       <div className="mb-6">
-        <h3 className="text-xl font-medium text-white">{title}</h3>
+        <h3 className="text-sm font-medium text-neutral-400 uppercase tracking-wide">{title}</h3>
       </div>
       
       <Link href={`/modules/${module.slug}`} className="group block">
@@ -131,7 +131,7 @@ const DashboardLessonCard: React.FC<DashboardLessonCardProps> = ({ title, subtit
     return (
       <div className="p-8 h-full min-h-[240px] bg-[#121212] border border-white/10 rounded">
         <div className="mb-6">
-          <h3 className="text-xl font-medium text-white">{title}</h3>
+          <h3 className="text-sm font-medium text-neutral-400 uppercase tracking-wide">{title}</h3>
           <p className="text-neutral-400 text-sm">{subtitle}</p>
         </div>
         <div className="animate-pulse">
@@ -151,7 +151,7 @@ const DashboardLessonCard: React.FC<DashboardLessonCardProps> = ({ title, subtit
     return (
       <div className="p-8 h-full min-h-[240px] bg-[#121212] border border-white/10 rounded flex flex-col items-center justify-center text-center">
         <div className="mb-6">
-          <h3 className="text-xl font-medium text-white">{title}</h3>
+          <h3 className="text-sm font-medium text-neutral-400 uppercase tracking-wide">{title}</h3>
           <p className="text-neutral-400 text-sm">{subtitle}</p>
         </div>
         <p className="text-neutral-400 text-base mb-6">No lessons available</p>
@@ -167,7 +167,7 @@ const DashboardLessonCard: React.FC<DashboardLessonCardProps> = ({ title, subtit
       <div className="mb-6 flex items-center gap-3">
         {icon && <div className="text-blue-400">{icon}</div>}
         <div>
-          <h3 className="text-xl font-medium text-white">{title}</h3>
+          <h3 className="text-sm font-medium text-neutral-400 uppercase tracking-wide">{title}</h3>
           <p className="text-neutral-400 text-sm">{subtitle}</p>
         </div>
       </div>

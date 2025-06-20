@@ -10,7 +10,8 @@ export async function POST(request: NextRequest) {
     console.log('🔍 API received analytics event:', analyticsEvent)
     console.log('🔍 Event will be inserted into table: analytics_events')
     
-    const supabase = createRouteHandlerClient({ cookies })
+    const cookieStore = await cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
     console.log('🔍 Supabase client created')
     
     // Store in Supabase analytics_events table
@@ -46,7 +47,8 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('start_date')
     const endDate = searchParams.get('end_date')
     
-    const supabase = createRouteHandlerClient({ cookies })
+    const cookieStore = await cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
     let query = supabase.from('analytics_events').select('*')
     
     // Apply filters

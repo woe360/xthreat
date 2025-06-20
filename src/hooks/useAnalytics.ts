@@ -1,27 +1,41 @@
 import { useEffect, useRef } from 'react'
 import { analytics, type QuizAnalytics, type EmailComparisonAnalytics, type LessonAnalytics } from '@/lib/analytics'
 
-export function useAnalytics() {
+export function useAnalytics(componentType?: string) {
   const startTimeRef = useRef<number>(Date.now())
   const interactionCountRef = useRef<number>(0)
 
-  // Track component mount/unmount
+  // Only track mount/unmount for specific lesson components for completion tracking
   useEffect(() => {
+    if (!componentType || !['concept_overview', 'email_comparison', 'email_inspector', 'quiz'].includes(componentType)) return
+    
     startTimeRef.current = Date.now()
+    // No mount tracking - we have lesson_start for that
+    
     return () => {
-      // Track component unmount time
-      const timeSpent = Date.now() - startTimeRef.current
-      analytics.trackUserInteraction('component', 'unmount', { time_spent: timeSpent })
+      // Only track unmount for completed lessons (lesson components)
+      if (componentType && ['concept_overview', 'email_comparison', 'email_inspector', 'quiz'].includes(componentType)) {
+        const timeSpent = Date.now() - startTimeRef.current
+        // Only track if the session was meaningful (more than 5 seconds)
+        if (timeSpent > 5000) {
+          analytics.trackUserInteraction(componentType, 'session_end', { time_spent: timeSpent })
+        }
+      }
     }
-  }, [])
+  }, [componentType])
 
-  // Helper function to track interactions
+  // Helper function to track interactions - but be more selective
   const trackInteraction = (action: string, data?: Record<string, any>) => {
-    interactionCountRef.current += 1
-    analytics.trackUserInteraction('component', action, {
-      ...data,
-      interaction_count: interactionCountRef.current
-    })
+    if (!componentType) return
+    
+    // Only track important interactions, not every click
+    if (['element_found', 'difference_found', 'hint_used', 'completion'].includes(action)) {
+      interactionCountRef.current += 1
+      analytics.trackUserInteraction(componentType, action, {
+        ...data,
+        interaction_count: interactionCountRef.current
+      })
+    }
   }
 
   // Quiz analytics

@@ -7,28 +7,56 @@ import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { areaElementClasses } from '@mui/x-charts/LineChart';
 import { SxProps, Theme } from '@mui/material/styles';
 import { safeFetch } from '@/lib/utils';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRoleAccess } from '@/hooks/useRoleAccess';
 
 // Hook to fetch analytics data
 function useAnalyticsData() {
   const [data, setData] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
+  const supabase = createClientComponentClient();
 
   React.useEffect(() => {
     async function fetchAnalytics() {
       try {
-        const { data: analyticsResponse, error } = await safeFetch('/api/analytics');
-        if (analyticsResponse) {
-          setData(processAnalyticsData(analyticsResponse.data || []));
-        } else {
-          console.warn('Failed to fetch analytics:', error);
+        console.log('📊 Fetching analytics data directly from Supabase...');
+        
+        // Try to get current user first
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+          console.warn('📊 User not authenticated, using mock data');
           setData(getMockAnalyticsData());
+          return;
         }
+        
+        console.log('📊 User authenticated:', user.email);
+        
+        // Fetch analytics events directly from Supabase
+        const { data: events, error } = await supabase
+          .from('analytics_events')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('timestamp', { ascending: false });
+        
+        if (error) {
+          console.error('📊 Supabase query error:', error);
+          setData(getMockAnalyticsData());
+          return;
+        }
+        
+        console.log('📊 Raw analytics events from Supabase:', events?.length || 0, 'events');
+        console.log('📊 Sample events:', events?.slice(0, 3));
+        
+        setData(processAnalyticsData(events || []));
+        
       } catch (error) {
-        console.warn('Failed to fetch analytics:', error);
+        console.warn('📊 Analytics fetch error:', error);
         setData(getMockAnalyticsData());
       } finally {
         setLoading(false);
@@ -36,67 +64,251 @@ function useAnalyticsData() {
     }
 
     fetchAnalytics();
-  }, []);
+  }, [supabase]);
+
+  return { data, loading };
+}
+
+// Hook to fetch manager-level analytics (all users)
+function useManagerAnalyticsData() {
+  const [data, setData] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
+  const supabase = createClientComponentClient();
+
+  React.useEffect(() => {
+    async function fetchManagerAnalytics() {
+      try {
+        console.log('📊 Fetching manager analytics data from Supabase...');
+        
+        // Try to get current user first
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+          console.warn('📊 User not authenticated, using mock data');
+          setData(getManagerMockData());
+          return;
+        }
+        
+        console.log('📊 Manager fetching data for all users');
+        
+        // Fetch analytics events for ALL users (manager view)
+        const { data: events, error } = await supabase
+          .from('analytics_events')
+          .select('*')
+          .order('timestamp', { ascending: false });
+        
+        if (error) {
+          console.error('📊 Manager Supabase query error:', error);
+          setData(getManagerMockData());
+          return;
+        }
+        
+        console.log('📊 Manager analytics events from Supabase:', events?.length || 0, 'events');
+        
+        setData(processManagerAnalyticsData(events || []));
+        
+      } catch (error) {
+        console.warn('📊 Manager analytics fetch error:', error);
+        setData(getManagerMockData());
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchManagerAnalytics();
+  }, [supabase]);
 
   return { data, loading };
 }
 
 function processAnalyticsData(events: any[]) {
-  const quizEvents = events.filter((e: any) => e.component_type === 'quiz');
-  const emailEvents = events.filter((e: any) => e.component_type === 'email_comparison');
+  console.log('📊 Processing analytics events:', events.length, 'events');
   
-  const completed = quizEvents.filter((e: any) => e.event_type === 'quiz_completed').length;
-  const started = quizEvents.filter((e: any) => e.event_type === 'quiz_started').length;
-  const quiz_completion_rate = started > 0 ? Math.round((completed / started) * 100) : 0;
+  // Calculate overall progress across all lesson types
+  const totalLessonsStarted = events.filter((e: any) => 
+    e.event_type === 'lesson_started' || 
+    e.event_type === 'quiz_started' ||
+    e.event_type === 'email_comparison_started'
+  ).length;
   
-  const completedEmails = emailEvents.filter((e: any) => e.event_type === 'email_comparison_completed');
-  const email_accuracy = completedEmails.length > 0 
-    ? Math.round(completedEmails.reduce((sum: number, event: any) => sum + (event.data.completion_rate || 0), 0) / completedEmails.length)
+  const totalLessonsCompleted = events.filter((e: any) => 
+    e.event_type === 'lesson_completed' || 
+    e.event_type === 'email_comparison_completed' ||
+    e.event_type === 'quiz_completed'
+  ).length;
+  
+  const overall_progress = totalLessonsStarted > 0 ? Math.round((totalLessonsCompleted / totalLessonsStarted) * 100) : 0;
+  
+  // Calculate learning streak (days with learning activity)
+  const eventDates = events.map(e => new Date(e.timestamp || e.created_at).toDateString());
+  const uniqueDays = [...new Set(eventDates)];
+  const learning_streak = uniqueDays.length;
+  
+  // Total study time across all activities (in minutes)
+  const timeEvents = events.filter((e: any) => e.data?.time_spent && e.data.time_spent > 0);
+  const total_study_time = timeEvents.length > 0 
+    ? Math.round(timeEvents.reduce((sum: number, event: any) => 
+        sum + (event.data.time_spent || 0), 0) / 1000 / 60) // Convert to minutes
     : 0;
   
-  const timeEvents = events.filter((e: any) => e.data.time_spent);
-  const avg_time = timeEvents.length > 0 
-    ? Math.round(timeEvents.reduce((sum: number, event: any) => sum + event.data.time_spent, 0) / timeEvents.length / 1000 / 60)
-    : 0;
+  // Module mastery - unique modules where user has completed lessons
+  const completedModules = new Set(
+    events.filter((e: any) => 
+      e.event_type === 'lesson_completed' || 
+      e.event_type === 'email_comparison_completed' ||
+      e.event_type === 'quiz_completed'
+    ).map(e => e.module_id)
+  );
+  const modules_completed = completedModules.size;
+  const available_modules = 24; // Based on your API logs showing 24 modules
+  const module_mastery = Math.round((modules_completed / available_modules) * 100);
 
-  const hintEvents = emailEvents.filter((e: any) => e.event_type === 'hint_used');
-  const hint_usage = completedEmails.length > 0 ? Math.round((hintEvents.length / completedEmails.length) * 100) : 0;
+  console.log('📊 Processed global analytics:', {
+    overall_progress,
+    learning_streak,
+    total_study_time,
+    modules_completed,
+    module_mastery,
+    totalLessonsStarted,
+    totalLessonsCompleted,
+    timeEvents: timeEvents.length
+  });
 
   return {
-    quiz_completion_rate,
-    email_accuracy,
-    avg_time,
-    hint_usage,
+    overall_progress,
+    learning_streak,
+    total_study_time,
+    module_mastery,
+    modules_completed,
     total_events: events.length,
-    // Add trend data for charts
-    quiz_trend_data: generateTrendData(quiz_completion_rate),
-    email_trend_data: generateTrendData(email_accuracy),
-    time_trend_data: generateTrendData(avg_time, 'time'),
-    hint_trend_data: generateTrendData(hint_usage)
+    // Add trend data for charts based on actual events
+    progress_trend_data: generateTrendData(overall_progress, events, 'percentage'),
+    streak_trend_data: generateTrendData(learning_streak, events, 'count'),
+    time_trend_data: generateTrendData(total_study_time, events, 'time'),
+    mastery_trend_data: generateTrendData(module_mastery, events, 'percentage')
   };
 }
 
-function generateTrendData(baseValue: number, type: string = 'percentage'): number[] {
-  // Generate realistic trend data based on the current value
-  const variation = type === 'time' ? 3 : 10; // Less variation for time data
-  return Array.from({ length: 30 }, (_, i) => {
-    const randomVariation = (Math.random() - 0.5) * variation;
-    const trend = Math.sin(i / 5) * (variation / 2); // Add some wave pattern
-    return Math.max(0, baseValue + randomVariation + trend);
+function generateTrendData(baseValue: number, events: any[] = [], type: string = 'percentage'): number[] {
+  // Create trend data based on actual events, not fake historical data
+  const now = new Date();
+  const last30Days = Array.from({ length: 30 }, (_, i) => {
+    const date = new Date(now);
+    date.setDate(date.getDate() - (29 - i));
+    return date;
+  });
+  
+  // Group events by day
+  const eventsByDay = new Map<string, any[]>();
+  events.forEach((event: any) => {
+    const eventDate = new Date(event.timestamp || event.created_at);
+    const dayKey = eventDate.toDateString();
+    if (!eventsByDay.has(dayKey)) {
+      eventsByDay.set(dayKey, []);
+    }
+    eventsByDay.get(dayKey)!.push(event);
+  });
+  
+  // Generate data points only for days with actual events
+  return last30Days.map(date => {
+    const dayKey = date.toDateString();
+    const dayEvents = eventsByDay.get(dayKey) || [];
+    
+    if (dayEvents.length === 0) {
+      return 0; // No activity = 0
+    }
+    
+    // For days with events, calculate appropriate value
+    if (type === 'percentage') {
+      return baseValue; // Use the calculated base value for days with activity
+    } else if (type === 'time') {
+      // Calculate average time for this day
+      const timeEvents = dayEvents.filter(e => e.data?.time_spent);
+      if (timeEvents.length === 0) return 0;
+      return Math.round(timeEvents.reduce((sum, e) => sum + (e.data.time_spent / 1000 / 60), 0) / timeEvents.length);
+    } else if (type === 'count') {
+      // For count-based metrics, return the count of events for this day
+      return dayEvents.length;
+    }
+    
+    return baseValue;
   });
 }
 
-function getMockAnalyticsData() {
+function processManagerAnalyticsData(events: any[]) {
+  console.log('📊 Processing manager analytics events:', events.length, 'events');
+  
+  // Get unique users count
+  const uniqueUsers = new Set(events.map(e => e.user_id)).size;
+  
+  // Total lessons completed across all users
+  const totalLessonsCompleted = events.filter((e: any) => 
+    e.event_type === 'lesson_completed' || 
+    e.event_type === 'email_comparison_completed' ||
+    e.event_type === 'quiz_completed'
+  ).length;
+  
+  // Total quiz attempts and completions across all users
+  const totalQuizStarted = events.filter((e: any) => e.event_type === 'quiz_started').length;
+  const totalQuizCompleted = events.filter((e: any) => e.event_type === 'quiz_completed').length;
+  
+  // Total training time across all users (in hours)
+  const totalTimeEvents = events.filter((e: any) => e.data?.time_spent && e.data.time_spent > 0);
+  const totalTrainingHours = totalTimeEvents.reduce((sum: number, event: any) => 
+    sum + (event.data.time_spent || 0), 0) / 1000 / 60 / 60; // Convert to hours
+  
+  console.log('📊 Manager analytics:', {
+    uniqueUsers,
+    totalLessonsCompleted, 
+    totalQuizStarted,
+    totalQuizCompleted,
+    totalTrainingHours: Math.round(totalTrainingHours * 10) / 10
+  });
+
   return {
-    quiz_completion_rate: 87,
-    email_accuracy: 73,
-    avg_time: 8,
-    hint_usage: 45,
-    total_events: 156,
-    quiz_trend_data: generateTrendData(87),
-    email_trend_data: generateTrendData(73),
-    time_trend_data: generateTrendData(8, 'time'),
-    hint_trend_data: generateTrendData(45)
+    total_users: uniqueUsers,
+    total_lessons_completed: totalLessonsCompleted,
+    total_quiz_attempts: totalQuizStarted,
+    total_training_hours: Math.round(totalTrainingHours * 10) / 10,
+    total_events: events.length,
+    // Add trend data for manager charts
+    users_trend_data: generateTrendData(uniqueUsers, events, 'count'),
+    lessons_trend_data: generateTrendData(totalLessonsCompleted, events, 'count'),
+    quiz_trend_data: generateTrendData(totalQuizCompleted, events, 'count'),
+    time_trend_data: generateTrendData(totalTrainingHours, events, 'time')
+  };
+}
+
+function getManagerMockData() {
+  console.log('📊 Using mock manager analytics data - API fetch failed');
+  const emptyEvents: any[] = [];
+  return {
+    total_users: 0,
+    total_lessons_completed: 0,
+    total_quiz_attempts: 0,
+    total_training_hours: 0,
+    total_events: 0,
+    users_trend_data: generateTrendData(0, emptyEvents, 'count'),
+    lessons_trend_data: generateTrendData(0, emptyEvents, 'count'),
+    quiz_trend_data: generateTrendData(0, emptyEvents, 'count'),
+    time_trend_data: generateTrendData(0, emptyEvents, 'time')
+  };
+}
+
+function getMockAnalyticsData() {
+  console.log('📊 Using mock analytics data - API fetch failed');
+  const emptyEvents: any[] = [];
+  return {
+    overall_progress: 0,
+    learning_streak: 0,
+    total_study_time: 0,
+    module_mastery: 0,
+    modules_completed: 0,
+    total_events: 0,
+    progress_trend_data: generateTrendData(0, emptyEvents, 'percentage'),
+    streak_trend_data: generateTrendData(0, emptyEvents, 'count'),
+    time_trend_data: generateTrendData(0, emptyEvents, 'time'),
+    mastery_trend_data: generateTrendData(0, emptyEvents, 'percentage')
   };
 }
 
@@ -159,67 +371,98 @@ function AnalyticsCardSkeleton({ title }: { title: string }) {
 }
 
 // Individual Analytics Stat Cards
-export function QuizCompletionCard() {
+export function OverallProgressCard() {
   const { data, loading } = useAnalyticsData();
   
   if (loading || !data) {
-    return <AnalyticsCardSkeleton title="Quiz Completion" />;
+    return <AnalyticsCardSkeleton title="Overall Progress" />;
   }
   
   return <AnalyticsStatCard 
-    title="Quiz Completion" 
-    value={`${data.quiz_completion_rate}%`}
-    interval="Success rate"
-    trend={data.quiz_completion_rate > 80 ? 'up' : 'down'}
-    data={data.quiz_trend_data}
+    title="Overall Progress" 
+    value={`${data.overall_progress}%`}
+    interval="Completion rate"
+    trend={data.overall_progress > 80 ? 'up' : 'down'}
+    data={data.progress_trend_data}
   />;
 }
 
-export function EmailAccuracyCard() {
+export function LearningStreakCard() {
   const { data, loading } = useAnalyticsData();
   
   if (loading || !data) {
-    return <AnalyticsCardSkeleton title="Email Exercise Accuracy" />;
+    return <AnalyticsCardSkeleton title="Learning Streak" />;
   }
   
   return <AnalyticsStatCard 
-    title="Email Exercise Accuracy" 
-    value={`${data.email_accuracy}%`}
-    interval="Average score"
-    trend={data.email_accuracy > 70 ? 'up' : 'down'}
-    data={data.email_trend_data}
+    title="Learning Streak" 
+    value={`${data.learning_streak}`}
+    interval="Active days"
+    trend={data.learning_streak > 3 ? 'up' : 'neutral'}
+    data={data.streak_trend_data}
   />;
 }
 
-export function SessionTimeCard() {
+export function TotalStudyTimeCard() {
   const { data, loading } = useAnalyticsData();
   
   if (loading || !data) {
-    return <AnalyticsCardSkeleton title="Avg. Session Time" />;
+    return <AnalyticsCardSkeleton title="Study Time" />;
   }
   
   return <AnalyticsStatCard 
-    title="Avg. Session Time" 
-    value={`${data.avg_time}m`}
-    interval="Per exercise"
-    trend="neutral"
+    title="Study Time" 
+    value={`${data.total_study_time}m`}
+    interval="Total minutes"
+    trend="up"
     data={data.time_trend_data}
   />;
 }
 
-export function HintUsageCard() {
+// Manager analytics overview component
+export function ManagerAnalyticsCards() {
+  const { role } = useRoleAccess();
+  
+  if (role !== 'manager' && role !== 'admin') {
+    return null; // Only show for managers and admins
+  }
+
+  return (
+    <>
+      <Typography variant="h6" sx={{ mb: 2, mt: 3, color: 'white' }}>
+        Organization Overview
+      </Typography>
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} lg={3}>
+          <TotalUsersCard />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3}>
+          <TotalLessonsCard />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3}>
+          <TotalQuizAttemptsCard />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3}>
+          <TotalTrainingHoursCard />
+        </Grid>
+      </Grid>
+    </>
+  );
+} 
+
+export function ModuleMasteryCard() {
   const { data, loading } = useAnalyticsData();
   
   if (loading || !data) {
-    return <AnalyticsCardSkeleton title="Help Requests" />;
+    return <AnalyticsCardSkeleton title="Module Mastery" />;
   }
   
   return <AnalyticsStatCard 
-    title="Help Requests" 
-    value={`${data.hint_usage}%`}
-    interval="Hint usage rate"
-    trend={data.hint_usage < 50 ? 'up' : 'down'}
-    data={data.hint_trend_data}
+    title="Module Mastery" 
+    value={`${data.modules_completed}/24`}
+    interval="Modules completed"
+    trend={data.modules_completed > 5 ? 'up' : 'neutral'}
+    data={data.mastery_trend_data}
   />;
 }
 
@@ -237,6 +480,12 @@ function getDaysInMonth(month: number, year: number) {
     i += 1;
   }
   return days;
+}
+
+// Get current month days
+function getCurrentMonthDays() {
+  const now = new Date();
+  return getDaysInMonth(now.getMonth() + 1, now.getFullYear());
 }
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
@@ -265,7 +514,7 @@ function AnalyticsStatCard({
   data: number[];
 }) {
   const theme = useTheme();
-  const daysInWeek = getDaysInMonth(4, 2024);
+  const daysInWeek = getCurrentMonthDays();
 
   const trendColors = {
     up:
@@ -393,4 +642,69 @@ export function LearningActivitySummary() {
       </Box>
     </Box>
   );
+}
+
+// Manager-specific analytics cards
+export function TotalUsersCard() {
+  const { data, loading } = useManagerAnalyticsData();
+  
+  if (loading || !data) {
+    return <AnalyticsCardSkeleton title="Active Users" />;
+  }
+  
+  return <AnalyticsStatCard 
+    title="Active Users" 
+    value={`${data.total_users}`}
+    interval="Total enrolled"
+    trend="up"
+    data={data.users_trend_data}
+  />;
+}
+
+export function TotalLessonsCard() {
+  const { data, loading } = useManagerAnalyticsData();
+  
+  if (loading || !data) {
+    return <AnalyticsCardSkeleton title="Lessons Completed" />;
+  }
+  
+  return <AnalyticsStatCard 
+    title="Lessons Completed" 
+    value={`${data.total_lessons_completed}`}
+    interval="All users"
+    trend="up"
+    data={data.lessons_trend_data}
+  />;
+}
+
+export function TotalQuizAttemptsCard() {
+  const { data, loading } = useManagerAnalyticsData();
+  
+  if (loading || !data) {
+    return <AnalyticsCardSkeleton title="Quiz Attempts" />;
+  }
+  
+  return <AnalyticsStatCard 
+    title="Quiz Attempts" 
+    value={`${data.total_quiz_attempts}`}
+    interval="All users"
+    trend="up"
+    data={data.quiz_trend_data}
+  />;
+}
+
+export function TotalTrainingHoursCard() {
+  const { data, loading } = useManagerAnalyticsData();
+  
+  if (loading || !data) {
+    return <AnalyticsCardSkeleton title="Training Hours" />;
+  }
+  
+  return <AnalyticsStatCard 
+    title="Training Hours" 
+    value={`${data.total_training_hours}h`}
+    interval="All users"
+    trend="up"
+    data={data.time_trend_data}
+  />;
 } 

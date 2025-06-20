@@ -16,7 +16,7 @@ interface QuizProps {
 
 export const Quiz = ({ questions, answers, moduleId, onComplete }: QuizProps) => {
   const router = useRouter()
-  const analytics = useAnalytics()
+  const { trackQuizStart, trackQuizComplete } = useAnalytics('quiz')
   const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0)
   const [selectedAnswers, setSelectedAnswers] = React.useState<{[key: number]: number[]}>({})
   const [isComplete, setIsComplete] = React.useState(false)
@@ -25,12 +25,12 @@ export const Quiz = ({ questions, answers, moduleId, onComplete }: QuizProps) =>
 
   const currentQuestion = questions[currentQuestionIndex];
 
-  // Track quiz start
+  // Track quiz start - only once when component mounts
   React.useEffect(() => {
     if (questions.length > 0) {
-      analytics.trackQuizStart(moduleId, `quiz_${moduleId}`)
+      trackQuizStart(moduleId, `quiz_${moduleId}`)
     }
-  }, [questions.length, moduleId, analytics])
+  }, [questions.length, moduleId, trackQuizStart])
 
   React.useEffect(() => {
     if (currentQuestion) {
@@ -53,13 +53,7 @@ export const Quiz = ({ questions, answers, moduleId, onComplete }: QuizProps) =>
         ? currentSelection.filter(id => id !== answerId)
         : [...currentSelection, answerId];
       
-      // Track answer selection
-      const correctAnswers = answers
-        .filter(a => a.question_id === currentQuestionId && a.is_correct)
-        .map(a => a.id);
-      const isCorrect = correctAnswers.includes(answerId);
-      
-      analytics.trackQuizAnswer(currentQuestionId.toString(), [answerId], isCorrect);
+      // No longer track individual answers - too much spam!
       
       return {
         ...prev,
@@ -119,7 +113,7 @@ export const Quiz = ({ questions, answers, moduleId, onComplete }: QuizProps) =>
         };
       });
       
-      analytics.trackQuizComplete(moduleId, finalScore.correct, finalScore.total, quizAnswers);
+      trackQuizComplete(moduleId, finalScore.correct, finalScore.total, quizAnswers);
       
       setScore(finalScore)
       setIsComplete(true)

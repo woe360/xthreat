@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   // Create a client authenticated as the user making the request
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
 
