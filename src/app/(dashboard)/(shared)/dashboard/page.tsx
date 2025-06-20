@@ -11,6 +11,7 @@ import Stack from '@mui/material/Stack';
 import MainGrid from './components/MainGrid';
 import AppTheme from './shared-theme/AppTheme';
 
+
 import {
   chartsCustomizations,
   dataGridCustomizations,
@@ -54,6 +55,7 @@ export default function Page() {
               mt: { xs: 8, md: 0 },
             }}
           >
+
             <MainGrid />
           </Stack>
         </Box>

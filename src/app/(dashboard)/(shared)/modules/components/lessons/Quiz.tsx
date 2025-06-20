@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useAnalytics } from '@/hooks/useAnalytics'
 
 interface QuizProps {
   questions: any[]
@@ -15,6 +16,7 @@ interface QuizProps {
 
 export const Quiz = ({ questions, answers, moduleId, onComplete }: QuizProps) => {
   const router = useRouter()
+  const analytics = useAnalytics()
   const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0)
   const [selectedAnswers, setSelectedAnswers] = React.useState<{[key: number]: number[]}>({})
   const [isComplete, setIsComplete] = React.useState(false)
@@ -23,10 +25,19 @@ export const Quiz = ({ questions, answers, moduleId, onComplete }: QuizProps) =>
 
   const currentQuestion = questions[currentQuestionIndex];
 
+  // Track quiz start
+  React.useEffect(() => {
+    if (questions.length > 0) {
+      analytics.trackQuizStart(moduleId, `quiz_${moduleId}`)
+    }
+  }, [questions.length, moduleId, analytics])
+
   React.useEffect(() => {
     if (currentQuestion) {
       const currentAns = answers.filter(a => a.question_id === currentQuestion.id);
-      setShuffledOptions(currentAns.sort(() => Math.random() - 0.5));
+      // Only take the first 4 answers and shuffle them
+      const limitedAnswers = currentAns.slice(0, 4);
+      setShuffledOptions(limitedAnswers.sort(() => Math.random() - 0.5));
     }
   }, [currentQuestion, answers]);
 
@@ -41,6 +52,14 @@ export const Quiz = ({ questions, answers, moduleId, onComplete }: QuizProps) =>
       const newSelection = currentSelection.includes(answerId)
         ? currentSelection.filter(id => id !== answerId)
         : [...currentSelection, answerId];
+      
+      // Track answer selection
+      const correctAnswers = answers
+        .filter(a => a.question_id === currentQuestionId && a.is_correct)
+        .map(a => a.id);
+      const isCorrect = correctAnswers.includes(answerId);
+      
+      analytics.trackQuizAnswer(currentQuestionId.toString(), [answerId], isCorrect);
       
       return {
         ...prev,
@@ -81,6 +100,27 @@ export const Quiz = ({ questions, answers, moduleId, onComplete }: QuizProps) =>
       setCurrentQuestionIndex(prev => prev + 1)
     } else {
       const finalScore = calculateScore()
+      
+      // Track quiz completion
+      const quizAnswers = questions.map(question => {
+        const selectedIds = selectedAnswers[question.id] || [];
+        const correctAnswers = answers
+          .filter(a => a.question_id === question.id && a.is_correct)
+          .map(a => a.id);
+        
+        const isCorrect = 
+          selectedIds.length === correctAnswers.length &&
+          selectedIds.every(id => correctAnswers.includes(id));
+          
+        return {
+          question_id: question.id.toString(),
+          selected_answers: selectedIds,
+          is_correct: isCorrect
+        };
+      });
+      
+      analytics.trackQuizComplete(moduleId, finalScore.correct, finalScore.total, quizAnswers);
+      
       setScore(finalScore)
       setIsComplete(true)
     }

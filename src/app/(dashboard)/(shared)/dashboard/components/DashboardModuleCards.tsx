@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Clock, BookOpen, Shuffle, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface Module {
   id: number;
@@ -29,7 +29,7 @@ const tagColors: Record<string, TagColors> = {
 
 interface DashboardModuleCardProps {
   title: string;
-  icon: React.ReactNode;
+  icon: React.ReactNode | null;
   module: Module | null;
   loading?: boolean;
 }
@@ -38,8 +38,7 @@ const DashboardModuleCard: React.FC<DashboardModuleCardProps> = ({ title, icon, 
   if (loading) {
     return (
       <div className="p-8 h-full min-h-[240px] bg-[#121212] border border-white/10 rounded">
-        <div className="flex items-center gap-3 mb-6">
-          {icon}
+        <div className="mb-6">
           <h3 className="text-xl font-medium text-white">{title}</h3>
         </div>
         <div className="animate-pulse">
@@ -58,8 +57,7 @@ const DashboardModuleCard: React.FC<DashboardModuleCardProps> = ({ title, icon, 
   if (!module) {
     return (
       <div className="p-8 h-full min-h-[240px] bg-[#121212] border border-white/10 rounded flex flex-col items-center justify-center text-center">
-        <div className="flex items-center gap-3 mb-6">
-          {icon}
+        <div className="mb-6">
           <h3 className="text-xl font-medium text-white">{title}</h3>
         </div>
         <p className="text-neutral-400 text-base mb-6">No modules available</p>
@@ -72,8 +70,7 @@ const DashboardModuleCard: React.FC<DashboardModuleCardProps> = ({ title, icon, 
 
   return (
     <div className="p-8 h-full min-h-[240px] bg-[#121212] border border-white/10 rounded">
-      <div className="flex items-center gap-3 mb-6">
-        {icon}
+      <div className="mb-6">
         <h3 className="text-xl font-medium text-white">{title}</h3>
       </div>
       
@@ -135,7 +132,7 @@ export const LastModuleCard: React.FC = () => {
   return (
     <DashboardModuleCard
       title="Continue Learning"
-      icon={<Clock className="w-5 h-5 text-blue-400" />}
+      icon={null}
       module={module}
       loading={loading}
     />
@@ -171,7 +168,7 @@ export const UpcomingModuleCard: React.FC = () => {
   return (
     <DashboardModuleCard
       title="Recommended Next"
-      icon={<BookOpen className="w-5 h-5 text-green-400" />}
+      icon={null}
       module={module}
       loading={loading}
     />
@@ -202,39 +199,12 @@ export const RandomModuleCard: React.FC = () => {
     fetchRandomModule();
   }, []);
 
-  const refreshRandomModule = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/modules');
-      if (response.ok) {
-        const modules: Module[] = await response.json();
-        const randomIndex = Math.floor(Math.random() * modules.length);
-        setModule(modules[randomIndex] || null);
-      }
-    } catch (error) {
-      console.error('Error fetching random module:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="relative">
-      <DashboardModuleCard
-        title="Explore Something New"
-        icon={<Shuffle className="w-5 h-5 text-purple-400" />}
-        module={module}
-        loading={loading}
-      />
-      {!loading && (
-        <button
-          onClick={refreshRandomModule}
-          className="absolute top-6 right-6 p-2 rounded bg-neutral-800 hover:bg-neutral-700 transition-colors"
-          title="Get another random module"
-        >
-          <Shuffle className="w-5 h-5 text-neutral-400 hover:text-neutral-200" />
-        </button>
-      )}
-    </div>
+    <DashboardModuleCard
+      title="Explore Something New"
+      icon={null}
+      module={module}
+      loading={loading}
+    />
   );
 }; 

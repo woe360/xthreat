@@ -13,6 +13,7 @@ import SessionsChart from './SessionsChart';
 import StatCard, { StatCardProps } from './StatCard';
 import SecuritySkillsRadar from './SecuritySkillsRadar';
 import { LastModuleCard, UpcomingModuleCard, RandomModuleCard } from './DashboardModuleCards';
+import { QuizCompletionCard, EmailAccuracyCard, SessionTimeCard, HintUsageCard } from './AnalyticsCards';
 
 const data: StatCardProps[] = [
   {
@@ -57,7 +58,7 @@ export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
         backgroundColor: '#0b0b0b',
       }}
     >
-      <Typography 
+      {/* <Typography 
         variant="h5" 
         sx={{ 
           mb: 3,
@@ -65,10 +66,10 @@ export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
           color: 'white'
        }}>
         Dashboard
-      </Typography>
+      </Typography> */}
 
       {/* Top row - 4 equal columns */}
-      <Grid container spacing={2} sx={{ mb: 2 }}>
+      {/* <Grid container spacing={2} sx={{ mb: 2 }}>
         <Grid item xs={12} sm={6} lg={3}>
           <Box sx={{ backgroundColor: '#121212', border: '1px solid white/10', borderRadius: 1 }}>
             <HighlightedCard />
@@ -81,6 +82,25 @@ export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
             </Box>
           </Grid>
         ))}
+      </Grid> */}
+
+      {/* Dashboard - 4 equal columns */}
+      <Typography variant="h6" sx={{ mb: 2, mt: 3, color: 'white' }}>
+        Dashboard
+      </Typography>
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} lg={3}>
+          <QuizCompletionCard />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3}>
+          <EmailAccuracyCard />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3}>
+          <SessionTimeCard />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3}>
+          <HintUsageCard />
+        </Grid>
       </Grid>
 
       {/* Middle row - 3 equal columns for modules */}

@@ -24,7 +24,7 @@ const defaultOptions = [
   // { name: 'Dashboard', Component: Dashboard, href: '/dashboard' },
   { name: 'Dashboard', Component: Dashboard, href: '/dashboard' },
   { name: 'Modules', Component: Modules, href: '/modules' },
-  { name: 'Role Based', Component: RoleTraining, href: '/role-based' },
+  // { name: 'Role Based', Component: RoleTraining, href: '/role-based' },
   { name: 'Account', Component: Account, href: '/account' },
 ]
 
@@ -36,7 +36,7 @@ const developmentOptions = [
 
 // Manager-specific options
 const managerOptions = [
-  { name: 'Billing', Component: Billing, href: '/billing' },
+  // { name: 'Billing', Component: Billing, href: '/billing' },
   { name: 'Accounts', Component: Accounts, href: '/accounts' },
   { name: 'Progress', Component: Progress, href: '/progress' },
 ]

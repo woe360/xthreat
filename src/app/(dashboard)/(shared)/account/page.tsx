@@ -363,10 +363,10 @@ const AccountPage = () => {
                         {/* {requestManagerButton} */}
                       </div>
                     </div>
-                    <div>
+                    {/* <div>
                       <Label className="text-gray-400">Member Since</Label>
                       <p className="text-white mt-1">{user.joinDate}</p>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -490,8 +490,8 @@ const AccountPage = () => {
           <div className="w-full md:w-64 flex-shrink-0">
             <div className="space-y-1 sticky top-4">
               <SettingsTabButton id="profile" label="Profile" icon={User} />
-              <SettingsTabButton id="notifications" label="Notifications" icon={Bell} />
-              <SettingsTabButton id="preferences" label="Preferences" icon={Settings} />
+              {/* <SettingsTabButton id="notifications" label="Notifications" icon={Bell} />
+              <SettingsTabButton id="preferences" label="Preferences" icon={Settings} /> */}
             </div>
           </div>
           

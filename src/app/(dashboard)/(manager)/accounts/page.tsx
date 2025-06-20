@@ -1,20 +1,76 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, UserPlus, UserMinus, BarChart2, FolderOpen } from 'lucide-react';
 import { CardContent } from "@/components/card";
 import { Label } from "@/components/label";
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
+import { getTabSpecificSupabaseClient } from '@/lib/supabase/client';
 
 const AccountsPage = () => {
-  const [employees, setEmployees] = useState([
-    { id: 1, name: 'John Doe', email: 'john@example.com', phone: '(555) 123-4567', department: 'IT', joinDate: '2023-01-15', completedCourses: 15, activeCourses: 2 },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '(555) 987-6543', department: 'HR', joinDate: '2023-03-01', completedCourses: 10, activeCourses: 3 },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', phone: '(555) 246-8135', department: 'Sales', joinDate: '2023-02-14', completedCourses: 8, activeCourses: 1 },
-  ]);
-
+  const [employees, setEmployees] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newEmployee, setNewEmployee] = useState({ name: '', email: '', phone: '', department: '' });
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [newEmployee, setNewEmployee] = useState({ 
+    first_name: '', 
+    last_name: '', 
+    email: '', 
+    job_title: '',
+    company_name: '',
+    company_size: '',
+    selected_plan: ''
+  });
+
+  // Fetch current user info and employees
+  useEffect(() => {
+    fetchCurrentUserAndEmployees();
+  }, []);
+
+  const fetchCurrentUserAndEmployees = async () => {
+    try {
+      const supabase = getTabSpecificSupabaseClient();
+      
+      // Get current user info
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: userData } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        setCurrentUser(userData);
+        
+        // Pre-fill company info from current user
+        if (userData) {
+          setNewEmployee(prev => ({
+            ...prev,
+            company_name: userData.company_name || '',
+            company_size: userData.company_size || '',
+            selected_plan: userData.selected_plan || ''
+          }));
+        }
+      }
+      
+      // Fetch all employees from the same company
+      const { data: employeesData, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('role', 'user')
+        .order('first_name');
+      
+      if (error) {
+        console.error('Error fetching employees:', error);
+      } else {
+        setEmployees(employeesData || []);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Sample data for charts
   const activeUsersTrend = [
@@ -33,17 +89,19 @@ const AccountsPage = () => {
     { value: 33 },
   ];
 
-  const handleSearch = (event) => {
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredEmployees = employees.filter(employee =>
-    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.department.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEmployees = employees.filter(employee => {
+    const fullName = `${employee.first_name || ''} ${employee.last_name || ''}`.toLowerCase();
+    const searchLower = searchTerm.toLowerCase();
+    return fullName.includes(searchLower) ||
+           (employee.email || '').toLowerCase().includes(searchLower) ||
+           (employee.job_title || '').toLowerCase().includes(searchLower);
+  });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewEmployee(prev => ({
       ...prev,
@@ -51,25 +109,86 @@ const AccountsPage = () => {
     }));
   };
 
-  const handleAddEmployee = () => {
-    if (newEmployee.name && newEmployee.email && newEmployee.phone && newEmployee.department) {
-      setEmployees([...employees, { 
-        ...newEmployee, 
-        id: employees.length + 1, 
-        joinDate: new Date().toISOString().split('T')[0], 
-        completedCourses: 0, 
-        activeCourses: 0 
-      }]);
-      setNewEmployee({ name: '', email: '', phone: '', department: '' });
-      setShowAddModal(false);
+  const handleAddEmployee = async () => {
+    if (newEmployee.first_name && newEmployee.last_name && newEmployee.email && newEmployee.job_title) {
+      try {
+        const supabase = getTabSpecificSupabaseClient();
+        
+        const { data, error } = await supabase
+          .from('users')
+          .insert([{
+            first_name: newEmployee.first_name,
+            last_name: newEmployee.last_name,
+            email: newEmployee.email,
+            job_title: newEmployee.job_title,
+            company_name: newEmployee.company_name,
+            company_size: newEmployee.company_size,
+            selected_plan: newEmployee.selected_plan,
+            role: 'user',
+            is_active: true
+          }])
+          .select();
+
+        if (error) {
+          console.error('Error adding employee:', error);
+          alert('Error adding employee. Please try again.');
+        } else {
+          // Refresh the employees list
+          await fetchCurrentUserAndEmployees();
+          setNewEmployee({ 
+            first_name: '', 
+            last_name: '', 
+            email: '', 
+            job_title: '',
+            company_name: currentUser?.company_name || '',
+            company_size: currentUser?.company_size || '',
+            selected_plan: currentUser?.selected_plan || ''
+          });
+          setShowAddModal(false);
+          alert('Employee added successfully!');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error adding employee. Please try again.');
+      }
+    } else {
+      alert('Please fill in all required fields.');
     }
   };
 
-  const handleRemoveEmployee = (id) => {
-    setEmployees(employees.filter(employee => employee.id !== id));
+  const handleRemoveEmployee = async (id: string) => {
+    if (confirm('Are you sure you want to remove this employee?')) {
+      try {
+        const supabase = getTabSpecificSupabaseClient();
+        
+        const { error } = await supabase
+          .from('users')
+          .delete()
+          .eq('id', id);
+
+        if (error) {
+          console.error('Error removing employee:', error);
+          alert('Error removing employee. Please try again.');
+        } else {
+          // Refresh the employees list
+          await fetchCurrentUserAndEmployees();
+          alert('Employee removed successfully!');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error removing employee. Please try again.');
+      }
+    }
   };
 
-  const StatCard = ({ title, value, trend, data, color, percentageChange }) => (
+  const StatCard = ({ title, value, trend, data, color, percentageChange }: {
+    title: string;
+    value: number;
+    trend: string;
+    data: any[];
+    color: string;
+    percentageChange: number;
+  }) => (
     <div className="bg-[#181b24] border border-gray-800 rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-gray-400 text-sm">{title}</h3>
@@ -98,6 +217,14 @@ const AccountsPage = () => {
       </div>
     </div>
   );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-4 px-10 flex items-center justify-center">
+        <div className="text-white">Loading employees...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-4 px-10">
@@ -175,9 +302,7 @@ const AccountsPage = () => {
             <thead>
               <tr className="border-b border-gray-800">
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Employee</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Department</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Join Date</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Courses</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Job Title</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -187,29 +312,21 @@ const AccountsPage = () => {
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       <div>
-                        <div className="text-sm font-medium text-white">{employee.name}</div>
+                        <div className="text-sm font-medium text-white">
+                          {employee.first_name} {employee.last_name}
+                        </div>
                         <div className="text-sm text-gray-400">{employee.email}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-300">{employee.department}</td>
-                  <td className="px-6 py-4 text-sm text-gray-300">{employee.joinDate}</td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-300">Completed: {employee.completedCourses}</div>
-                    <div className="text-sm text-gray-300">Active: {employee.activeCourses}</div>
-                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-300">{employee.job_title}</td>
                   <td className="px-6 py-4 text-sm">
-                    <div className="flex space-x-3">
-                      <button
-                        className="text-gray-400 hover:text-red-400 transition-colors"
-                        onClick={() => handleRemoveEmployee(employee.id)}
-                      >
-                        <UserMinus size={20} />
-                      </button>
-                      <button className="text-gray-400 hover:text-blue-400 transition-colors">
-                        <BarChart2 size={20} />
-                      </button>
-                    </div>
+                    <button
+                      className="text-gray-400 hover:text-red-400 transition-colors"
+                      onClick={() => handleRemoveEmployee(employee.id)}
+                    >
+                      <UserMinus size={20} />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -224,10 +341,18 @@ const AccountsPage = () => {
               <h2 className="text-lg font-base mb-6">Add New Employee</h2>
               <input
                 type="text"
-                name="name"
-                placeholder="Name"
+                name="first_name"
+                placeholder="First Name"
                 className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-3 focus:outline-none focus:border-gray-700"
-                value={newEmployee.name}
+                value={newEmployee.first_name}
+                onChange={handleInputChange}
+              />
+              <input
+                type="text"
+                name="last_name"
+                placeholder="Last Name"
+                className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-3 focus:outline-none focus:border-gray-700"
+                value={newEmployee.last_name}
                 onChange={handleInputChange}
               />
               <input
@@ -239,20 +364,21 @@ const AccountsPage = () => {
                 onChange={handleInputChange}
               />
               <input
-                type="tel"
-                name="phone"
-                placeholder="Phone"
+                type="text"
+                name="job_title"
+                placeholder="Job Title"
                 className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-3 focus:outline-none focus:border-gray-700"
-                value={newEmployee.phone}
+                value={newEmployee.job_title}
                 onChange={handleInputChange}
               />
               <input
                 type="text"
-                name="department"
-                placeholder="Department"
-                className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-4 focus:outline-none focus:border-gray-700"
-                value={newEmployee.department}
+                name="company_name"
+                placeholder="Company Name"
+                className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-3 focus:outline-none focus:border-gray-700"
+                value={newEmployee.company_name}
                 onChange={handleInputChange}
+                disabled
               />
               <div className="flex justify-end space-x-3">
                 <button

@@ -1,75 +1,140 @@
-import { getTabSpecificSupabaseClient } from '@/lib/supabase/client'
+import { useEffect, useRef } from 'react'
+import { analytics, type QuizAnalytics, type EmailComparisonAnalytics, type LessonAnalytics } from '@/lib/analytics'
 
-export const useAnalytics = () => {
-  const supabase = getTabSpecificSupabaseClient()
+export function useAnalytics() {
+  const startTimeRef = useRef<number>(Date.now())
+  const interactionCountRef = useRef<number>(0)
 
-  const trackInteraction = async ({
-    interactionType,
-    moduleId,
-    lessonId,
-    componentType,
-    details,
-    isCorrect = null,
-  }: {
-    interactionType: string
-    moduleId: string
-    lessonId: string
-    componentType: string
-    details?: any
-    isCorrect?: boolean | null
-  }) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      await supabase.from('user_interactions').insert({
-        user_id: user.id,
-        module_id: moduleId,
-        lesson_id: lessonId,
-        component_type: componentType,
-        interaction_type: interactionType,
-        is_correct: isCorrect,
-        details,
-        timestamp: new Date().toISOString()
-      })
-    } catch (error) {
-      console.error('Failed to track interaction:', error)
+  // Track component mount/unmount
+  useEffect(() => {
+    startTimeRef.current = Date.now()
+    return () => {
+      // Track component unmount time
+      const timeSpent = Date.now() - startTimeRef.current
+      analytics.trackUserInteraction('component', 'unmount', { time_spent: timeSpent })
     }
+  }, [])
+
+  // Helper function to track interactions
+  const trackInteraction = (action: string, data?: Record<string, any>) => {
+    interactionCountRef.current += 1
+    analytics.trackUserInteraction('component', action, {
+      ...data,
+      interaction_count: interactionCountRef.current
+    })
   }
 
-  const trackCompletion = async ({
-    moduleId,
-    lessonId,
-    componentType,
-    score = null,
-    details = null
-  }: {
-    moduleId: string
-    lessonId: string
-    componentType: string
-    score?: number | null
-    details?: any
-  }) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+  // Quiz analytics
+  const trackQuizStart = (moduleId: string, quizId: string) => {
+    analytics.trackQuizStart(moduleId, quizId)
+    startTimeRef.current = Date.now()
+  }
 
-      await supabase.from('user_completions').insert({
-        user_id: user.id,
-        module_id: moduleId,
-        lesson_id: lessonId,
-        component_type: componentType,
-        score,
-        details,
-        completion_time: new Date().toISOString()
-      })
-    } catch (error) {
-      console.error('Failed to track completion:', error)
+  const trackQuizAnswer = (questionId: string, selectedAnswers: number[], isCorrect: boolean) => {
+    analytics.trackQuizAnswer(questionId, selectedAnswers, isCorrect)
+    trackInteraction('quiz_answer', { question_id: questionId, is_correct: isCorrect })
+  }
+
+  const trackQuizComplete = (moduleId: string, score: number, totalQuestions: number, answers: any[]) => {
+    const timeSpent = Date.now() - startTimeRef.current
+    const quizAnalytics: QuizAnalytics = {
+      quiz_id: `${moduleId}_quiz`,
+      score,
+      total_questions: totalQuestions,
+      time_spent: timeSpent,
+      answers
     }
+    analytics.trackQuizComplete(moduleId, quizAnalytics)
+  }
+
+  // Email Comparison analytics
+  const trackEmailComparisonStart = (moduleId: string, exerciseId: string = 'email_comparison') => {
+    analytics.trackEmailComparisonStart(moduleId, exerciseId)
+    startTimeRef.current = Date.now()
+  }
+
+  const trackDifferenceFound = (differenceId: string, moduleId: string) => {
+    analytics.trackEmailComparisonDifference(differenceId, moduleId)
+    trackInteraction('difference_found', { difference_id: differenceId })
+  }
+
+  const trackHintUsed = (moduleId: string, hintIndex: number) => {
+    analytics.trackEmailComparisonHint(moduleId, hintIndex)
+    trackInteraction('hint_used', { hint_index: hintIndex })
+  }
+
+  const trackEmailComparisonComplete = (
+    moduleId: string, 
+    differencesFound: string[], 
+    totalDifferences: number, 
+    hintsUsed: number
+  ) => {
+    const timeSpent = Date.now() - startTimeRef.current
+    const completionRate = (differencesFound.length / totalDifferences) * 100
+    
+    const emailAnalytics: EmailComparisonAnalytics = {
+      exercise_id: 'email_comparison',
+      differences_found: differencesFound,
+      total_differences: totalDifferences,
+      hints_used: hintsUsed,
+      time_spent: timeSpent,
+      completion_rate: completionRate
+    }
+    analytics.trackEmailComparisonComplete(moduleId, emailAnalytics)
+  }
+
+  // Lesson analytics
+  const trackLessonStart = (moduleId: string, lessonId: string) => {
+    analytics.trackLessonStart(moduleId, lessonId)
+    startTimeRef.current = Date.now()
+  }
+
+  const trackLessonComplete = (moduleId: string, lessonId: string, status: 'completed' | 'abandoned' = 'completed') => {
+    const timeSpent = Date.now() - startTimeRef.current
+    const lessonAnalytics: LessonAnalytics = {
+      lesson_id: lessonId,
+      module_id: moduleId,
+      time_spent: timeSpent,
+      completion_status: status,
+      interactions: interactionCountRef.current
+    }
+    analytics.trackLessonComplete(lessonAnalytics)
+  }
+
+  // Session analytics
+  const trackSessionStart = () => {
+    analytics.trackSessionStart()
+  }
+
+  const trackSessionEnd = () => {
+    analytics.trackSessionEnd()
   }
 
   return {
+    // Generic
     trackInteraction,
-    trackCompletion
+    
+    // Quiz
+    trackQuizStart,
+    trackQuizAnswer,
+    trackQuizComplete,
+    
+    // Email Comparison
+    trackEmailComparisonStart,
+    trackDifferenceFound,
+    trackHintUsed,
+    trackEmailComparisonComplete,
+    
+    // Lessons
+    trackLessonStart,
+    trackLessonComplete,
+    
+    // Session
+    trackSessionStart,
+    trackSessionEnd,
+    
+    // Utilities
+    getTimeSpent: () => Date.now() - startTimeRef.current,
+    getInteractionCount: () => interactionCountRef.current
   }
 } 

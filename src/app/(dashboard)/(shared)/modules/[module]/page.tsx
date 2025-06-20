@@ -239,36 +239,7 @@ const ModulePage = () => {
               
             </div>
             
-            <div className="flex flex-col items-center">
-                  <div className="relative w-24 h-24 flex items-center justify-center">
-                    <svg className="w-full h-full" viewBox="0 0 100 100">
-                      {/* Background circle */}
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        fill="none"
-                        stroke="#1f2937"
-                        strokeWidth="8"
-                      />
-                      {/* Progress circle - only show if there's progress */}
-                      {/* moduleCompletionPercent > 0 && (
-                        <circle
-                          cx="50"
-                          cy="50"
-                          r="40"
-                          fill="none"
-                          stroke={moduleCompletionPercent === 100 ? "#10b981" : "#3b82f6"}
-                          strokeWidth="8"
-                          strokeDasharray={`${2 * Math.PI * 40 * moduleCompletionPercent / 100} ${2 * Math.PI * 40 * (1 - moduleCompletionPercent / 100)}`}
-                          strokeDashoffset={2 * Math.PI * 40 * 0.25}
-                          strokeLinecap="round"
-                        />
-                      ) */}
-                    </svg>
-                    <span className="absolute text-xl font-semibold">{/* moduleCompletionPercent */}%</span>
-                  </div>
-                </div>
+
           </div>
         </div>
 

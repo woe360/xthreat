@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Alert, AlertDescription } from '@/components/alert'
 import { useRouter } from 'next/navigation'
+import { useAnalytics } from '@/hooks/useAnalytics'
 import { 
   Mail, 
   AlertTriangle, 
@@ -99,12 +100,6 @@ const differences: Difference[] = [
     explanation: 'Legitimate PayPal emails always come from @paypal.com. The phishing email uses a similar-looking domain with the number "1" instead of the letter "l".'
   },
   {
-    id: 'subject',
-    legitimateElement: 'Action required for your account',
-    phishingElement: 'Your account requires immediate verification',
-    explanation: 'The phishing email creates artificial urgency with words like "immediate" and threats of account restriction.'
-  },
-  {
     id: 'content',
     legitimateElement: 'Clear instructions to visit PayPal directly',
     phishingElement: 'Pressure tactics and urgent threats',
@@ -131,6 +126,7 @@ interface EmailComparisonProps {
 
 export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) {
   const router = useRouter()
+  const analytics = useAnalytics()
   const [foundDifferences, setFoundDifferences] = useState<string[]>([])
   const [showHeaders, setShowHeaders] = useState(false)
   const [hoveredLink, setHoveredLink] = useState<EmailLink | null>(null)
@@ -140,17 +136,33 @@ export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) 
   const [showHintConfirm, setShowHintConfirm] = useState(false)
   const [currentHint, setCurrentHint] = useState<string | null>(null)
 
+  // Track exercise start
+  React.useEffect(() => {
+    analytics.trackEmailComparisonStart(moduleId)
+  }, [moduleId, analytics])
+
   const totalDifferences = differences.length
   const progress = (foundDifferences.length / totalDifferences) * 100
 
   const handleElementClick = (element: string) => {
     if (!foundDifferences.includes(element)) {
       setFoundDifferences([...foundDifferences, element])
+      // Track difference found
+      analytics.trackDifferenceFound(element, moduleId)
     }
   }
 
   const handleComplete = () => {
     console.log('handleComplete called!');
+    
+    // Track completion
+    analytics.trackEmailComparisonComplete(
+      moduleId,
+      foundDifferences,
+      totalDifferences,
+      currentHintIndex + 1
+    );
+    
     setIsComplete(true)
     if (onComplete) {
       onComplete()
@@ -184,13 +196,19 @@ export function EmailComparison({ moduleId, onComplete }: EmailComparisonProps) 
     setShowHintWarning(false);
     const remainingHints = getRemainingHints();
     if (remainingHints.length > 0) {
+      // Track first hint usage
+      analytics.trackHintUsed(moduleId, 0);
       setCurrentHint(remainingHints[0].hint);
       setShowHintConfirm(true);
     }
   };
 
   const handleConfirmHint = () => {
-    setCurrentHintIndex(prev => prev + 1);
+    const newHintIndex = currentHintIndex + 1;
+    // Track hint usage
+    analytics.trackHintUsed(moduleId, newHintIndex);
+    
+    setCurrentHintIndex(newHintIndex);
     setShowHintConfirm(false);
     setCurrentHint(null);
   };
