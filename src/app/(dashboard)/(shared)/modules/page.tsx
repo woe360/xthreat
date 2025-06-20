@@ -5,6 +5,7 @@ import { ModuleSkeleton } from '@/app/(dashboard)/(shared)/modules/moduleSkeleto
 import { Search } from 'lucide-react';
 import TimeTrackingDashboard from '@/components/streakTracker/StreakTracker';
 import { subMonths, startOfDay, format } from 'date-fns';
+import { safeFetch } from '@/lib/utils';
 
 interface TagColors {
   border: string;
@@ -54,14 +55,14 @@ const Modules: React.FC = () => {
     const fetchModules = async (): Promise<void> => {
       try {
         setLoading(true)
-        const response = await fetch('/api/modules');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const { data, error } = await safeFetch('/api/modules');
+        if (data && Array.isArray(data)) {
+          setModules(data);
+        } else if (error) {
+          console.warn('Error fetching modules:', error);
         }
-        const data: Module[] = await response.json();
-        setModules(data);
       } catch (error) {
-        console.error('Error fetching modules:', error);
+        console.warn('Error fetching modules:', error);
       } finally {
         setLoading(false)
       }

@@ -38,20 +38,20 @@ const developmentOptions = [
 const managerOptions = [
   // { name: 'Billing', Component: Billing, href: '/billing' },
   { name: 'Accounts', Component: Accounts, href: '/accounts' },
-  { name: 'Progress', Component: Progress, href: '/progress' },
+  // { name: 'Progress', Component: Progress, href: '/progress' },
 ]
 
 // Admin-specific options
 const adminOptions = [
   { name: 'Overview', Component: Dashboard, href: '/overview' },
-  { name: 'Clients', Component: Business, href: '/clients' },
+  // { name: 'Clients', Component: Business, href: '/clients' },
   { name: 'Users', Component: Accounts, href: '/users' },
-  { name: 'Financials', Component: Financial, href: '/financials' },
-  { name: 'Analytics', Component: Statistics, href: '/analytics' },
-  { name: 'Trainings', Component: Trainings, href: '/trainings' },
+  // { name: 'Financials', Component: Financial, href: '/financials' },
+  // { name: 'Analytics', Component: Statistics, href: '/analytics' },
+  // { name: 'Trainings', Component: Trainings, href: '/trainings' },
   { name: 'Sessions', Component: Sessions, href: '/sessions' },
   { name: 'Account', Component: Account, href: '/account' },
-  { name: 'Settings', Component: Settings, href: '/settings' },
+  // { name: 'Settings', Component: Settings, href: '/settings' },
 ]
 
 // Export function to get menu options based on role

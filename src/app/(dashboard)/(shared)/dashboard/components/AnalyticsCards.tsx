@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { areaElementClasses } from '@mui/x-charts/LineChart';
 import { SxProps, Theme } from '@mui/material/styles';
+import { safeFetch } from '@/lib/utils';
 
 // Hook to fetch analytics data
 function useAnalyticsData() {
@@ -19,13 +20,15 @@ function useAnalyticsData() {
   React.useEffect(() => {
     async function fetchAnalytics() {
       try {
-        const response = await fetch('/api/analytics');
-        if (response.ok) {
-          const analyticsEvents = await response.json();
-          setData(processAnalyticsData(analyticsEvents.data || []));
+        const { data: analyticsResponse, error } = await safeFetch('/api/analytics');
+        if (analyticsResponse) {
+          setData(processAnalyticsData(analyticsResponse.data || []));
+        } else {
+          console.warn('Failed to fetch analytics:', error);
+          setData(getMockAnalyticsData());
         }
       } catch (error) {
-        console.error('Failed to fetch analytics:', error);
+        console.warn('Failed to fetch analytics:', error);
         setData(getMockAnalyticsData());
       } finally {
         setLoading(false);
@@ -97,14 +100,70 @@ function getMockAnalyticsData() {
   };
 }
 
+// Analytics card skeleton that matches the final card dimensions
+function AnalyticsCardSkeleton({ title }: { title: string }) {
+  return (
+    <Card variant="outlined" sx={{ height: '100%', flexGrow: 1, backgroundColor: 'transparent' }}>
+      <CardContent>
+        <Typography component="h2" variant="subtitle2" gutterBottom>
+          {title}
+        </Typography>
+        <Stack direction="column" sx={{ justifyContent: 'space-between', flexGrow: '1', gap: 1 }}>
+          <Stack sx={{ justifyContent: 'space-between' }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box
+                  sx={{
+                    width: '60px',
+                    height: '32px',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    borderRadius: 1,
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                  }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  width: '50px',
+                  height: '24px',
+                  backgroundColor: 'rgba(255,255,255,0.08)',
+                  borderRadius: '12px',
+                  animation: 'pulse 1.5s ease-in-out infinite',
+                }}
+              />
+            </Stack>
+            <Box
+              sx={{
+                width: '80px',
+                height: '16px',
+                backgroundColor: 'rgba(255,255,255,0.08)',
+                borderRadius: 1,
+                mt: 0.5,
+                animation: 'pulse 1.5s ease-in-out infinite',
+              }}
+            />
+          </Stack>
+          <Box
+            sx={{
+              width: '100%',
+              height: 50,
+              backgroundColor: 'rgba(255,255,255,0.05)',
+              borderRadius: 1,
+              animation: 'pulse 1.5s ease-in-out infinite',
+            }}
+          />
+        </Stack>
+      </CardContent>
+    </Card>
+  );
+}
+
 // Individual Analytics Stat Cards
 export function QuizCompletionCard() {
   const { data, loading } = useAnalyticsData();
   
   if (loading || !data) {
-    return <Box sx={{ p: 3, backgroundColor: '#121212', borderRadius: 1, border: '1px solid white/10' }}>
-      <Typography sx={{ color: 'white/60' }}>Loading...</Typography>
-    </Box>;
+    return <AnalyticsCardSkeleton title="Quiz Completion" />;
   }
   
   return <AnalyticsStatCard 
@@ -120,9 +179,7 @@ export function EmailAccuracyCard() {
   const { data, loading } = useAnalyticsData();
   
   if (loading || !data) {
-    return <Box sx={{ p: 3, backgroundColor: '#121212', borderRadius: 1, border: '1px solid white/10' }}>
-      <Typography sx={{ color: 'white/60' }}>Loading...</Typography>
-    </Box>;
+    return <AnalyticsCardSkeleton title="Email Exercise Accuracy" />;
   }
   
   return <AnalyticsStatCard 
@@ -138,9 +195,7 @@ export function SessionTimeCard() {
   const { data, loading } = useAnalyticsData();
   
   if (loading || !data) {
-    return <Box sx={{ p: 3, backgroundColor: '#121212', borderRadius: 1, border: '1px solid white/10' }}>
-      <Typography sx={{ color: 'white/60' }}>Loading...</Typography>
-    </Box>;
+    return <AnalyticsCardSkeleton title="Avg. Session Time" />;
   }
   
   return <AnalyticsStatCard 
@@ -156,9 +211,7 @@ export function HintUsageCard() {
   const { data, loading } = useAnalyticsData();
   
   if (loading || !data) {
-    return <Box sx={{ p: 3, backgroundColor: '#121212', borderRadius: 1, border: '1px solid white/10' }}>
-      <Typography sx={{ color: 'white/60' }}>Loading...</Typography>
-    </Box>;
+    return <AnalyticsCardSkeleton title="Help Requests" />;
   }
   
   return <AnalyticsStatCard 

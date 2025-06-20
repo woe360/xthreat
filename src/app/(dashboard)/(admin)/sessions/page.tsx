@@ -321,126 +321,126 @@ const SessionLogsPage = () => {
     return `${minutes}m ${seconds}s`
   }
 
-  function SessionsOverTime({ sessions }: { sessions: SessionLog[] }) {
-    const last30Days = [...Array(30)].map((_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (29 - i));
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    });
+  // function SessionsOverTime({ sessions }: { sessions: SessionLog[] }) {
+  //   const last30Days = [...Array(30)].map((_, i) => {
+  //     const date = new Date();
+  //     date.setDate(date.getDate() - (29 - i));
+  //     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  //   });
 
-    const sessionsByDay = last30Days.map(day => ({
-      day,
-      active: sessions.filter(s => 
-        new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) === day &&
-        s.session_status === 'active'
-      ).length,
-      terminated: sessions.filter(s => 
-        new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) === day &&
-        s.session_status === 'terminated'
-      ).length,
-      total: sessions.filter(s => 
-        new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) === day
-      ).length,
-    }));
+  //   const sessionsByDay = last30Days.map(day => ({
+  //     day,
+  //     active: sessions.filter(s => 
+  //       new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) === day &&
+  //       s.session_status === 'active'
+  //     ).length,
+  //     terminated: sessions.filter(s => 
+  //       new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) === day &&
+  //       s.session_status === 'terminated'
+  //     ).length,
+  //     total: sessions.filter(s => 
+  //       new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) === day
+  //     ).length,
+  //   }));
 
-    return (
-      <Card className="p-6">
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Sessions Over Time</h3>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">{sessions.length}</span>
-              <span className="text-xs font-medium text-green-500 bg-green-500/20 px-2 py-1 rounded-full">+12%</span>
-            </div>
-            <span className="text-sm text-muted-foreground">Total sessions in the last 30 days</span>
-          </div>
-          <ResponsiveContainer width="100%" height={250}>
-            <AreaChart data={sessionsByDay}>
-              <defs>
-                <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
-                </linearGradient>
-                <linearGradient id="colorTerminated" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <XAxis 
-                dataKey="day" 
-                interval={4}
-                tick={{ fontSize: 12 }}
-              />
-              <YAxis 
-                tick={{ fontSize: 12 }}
-              />
-              <Tooltip />
-              <Area 
-                type="monotone" 
-                dataKey="active" 
-                stackId="1"
-                stroke="#2563eb" 
-                fillOpacity={1}
-                fill="url(#colorActive)"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="terminated" 
-                stackId="1"
-                stroke="#ef4444" 
-                fillOpacity={1}
-                fill="url(#colorTerminated)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
-    );
-  }
+  //   return (
+  //     <Card className="p-6">
+  //       <div className="space-y-4">
+  //         <h3 className="text-lg font-semibold">Sessions Over Time</h3>
+  //         <div className="flex items-center justify-between">
+  //           <div className="flex items-center gap-2">
+  //             <span className="text-2xl font-bold">{sessions.length}</span>
+  //             <span className="text-xs font-medium text-green-500 bg-green-500/20 px-2 py-1 rounded-full">+12%</span>
+  //           </div>
+  //           <span className="text-sm text-muted-foreground">Total sessions in the last 30 days</span>
+  //         </div>
+  //         <ResponsiveContainer width="100%" height={250}>
+  //           <AreaChart data={sessionsByDay}>
+  //             <defs>
+  //               <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">
+  //                 <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
+  //                 <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+  //               </linearGradient>
+  //               <linearGradient id="colorTerminated" x1="0" y1="0" x2="0" y2="1">
+  //                 <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
+  //                 <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+  //               </linearGradient>
+  //             </defs>
+  //             <XAxis 
+  //               dataKey="day" 
+  //               interval={4}
+  //               tick={{ fontSize: 12 }}
+  //             />
+  //             <YAxis 
+  //               tick={{ fontSize: 12 }}
+  //             />
+  //             <Tooltip />
+  //             <Area 
+  //               type="monotone" 
+  //               dataKey="active" 
+  //               stackId="1"
+  //               stroke="#2563eb" 
+  //               fillOpacity={1}
+  //               fill="url(#colorActive)"
+  //             />
+  //             <Area 
+  //               type="monotone" 
+  //               dataKey="terminated" 
+  //               stackId="1"
+  //               stroke="#ef4444" 
+  //               fillOpacity={1}
+  //               fill="url(#colorTerminated)"
+  //             />
+  //           </AreaChart>
+  //         </ResponsiveContainer>
+  //       </div>
+  //     </Card>
+  //   );
+  // }
 
-  function SessionsByDevice({ sessions }: { sessions: SessionLog[] }) {
-    const deviceCounts = sessions.reduce((acc, session) => {
-      const browser = session.device_info?.browser || 'Unknown';
-      acc[browser] = (acc[browser] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+  // function SessionsByDevice({ sessions }: { sessions: SessionLog[] }) {
+  //   const deviceCounts = sessions.reduce((acc, session) => {
+  //     const browser = session.device_info?.browser || 'Unknown';
+  //     acc[browser] = (acc[browser] || 0) + 1;
+  //     return acc;
+  //   }, {} as Record<string, number>);
 
-    const data = Object.entries(deviceCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([name, value]) => ({ name, value }));
+  //   const data = Object.entries(deviceCounts)
+  //     .sort((a, b) => b[1] - a[1])
+  //     .slice(0, 5)
+  //     .map(([name, value]) => ({ name, value }));
 
-    return (
-      <Card className="p-6">
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Sessions by Browser</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={data}>
-              <defs>
-                <linearGradient id="colorBar" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#2563eb" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#2563eb" stopOpacity={0.4}/>
-                </linearGradient>
-              </defs>
-              <XAxis 
-                dataKey="name"
-                tick={{ fontSize: 12 }}
-              />
-              <YAxis 
-                tick={{ fontSize: 12 }}
-              />
-              <Tooltip />
-              <Bar 
-                dataKey="value" 
-                fill="url(#colorBar)"
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
-    );
-  }
+  //   return (
+  //     <Card className="p-6">
+  //       <div className="space-y-4">
+  //         <h3 className="text-lg font-semibold">Sessions by Browser</h3>
+  //         <ResponsiveContainer width="100%" height={250}>
+  //           <BarChart data={data}>
+  //             <defs>
+  //               <linearGradient id="colorBar" x1="0" y1="0" x2="0" y2="1">
+  //                 <stop offset="5%" stopColor="#2563eb" stopOpacity={0.8}/>
+  //                 <stop offset="95%" stopColor="#2563eb" stopOpacity={0.4}/>
+  //               </linearGradient>
+  //             </defs>
+  //             <XAxis 
+  //               dataKey="name"
+  //               tick={{ fontSize: 12 }}
+  //             />
+  //             <YAxis 
+  //               tick={{ fontSize: 12 }}
+  //             />
+  //             <Tooltip />
+  //             <Bar 
+  //               dataKey="value" 
+  //               fill="url(#colorBar)"
+  //               radius={[4, 4, 0, 0]}
+  //             />
+  //           </BarChart>
+  //         </ResponsiveContainer>
+  //       </div>
+  //     </Card>
+  //   );
+  // }
 
   return (
     <div className="h-screen overflow-hidden bg-[#050607]">
@@ -452,31 +452,27 @@ const SessionLogsPage = () => {
               mb: 3,
               mt: 0.1
            }}>
-            Sessions
+            Session Logs
           </Typography>
 
           {/* Top row - 4 equal columns */}
-          <Grid container spacing={3} sx={{ mb: 3 }}>
+          {/* <Grid container spacing={3} sx={{ mb: 3 }}>
             {sessionStats.map((stat, index) => (
               <Grid item xs={12} sm={6} lg={3} key={index}>
                 <StatCard {...stat} />
               </Grid>
             ))}
-          </Grid>
+          </Grid> */}
 
           {/* Middle row - 2 equal columns */}
-          <Grid container spacing={3} sx={{ mb: 3 }}>
+          {/* <Grid container spacing={3} sx={{ mb: 3 }}>
             <Grid item xs={12} md={6}>
               <SessionsChart />
             </Grid>
             <Grid item xs={12} md={6}>
               <PageViewsBarChart />
             </Grid>
-          </Grid>
-
-          <Typography variant="h6" sx={{ mb: 3 }}>
-            Logs
-          </Typography>
+          </Grid> */}
 
           {/* Session logs table */}
           <div className="rounded-md">

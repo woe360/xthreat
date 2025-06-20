@@ -1206,7 +1206,7 @@ const MenuOptions = () => {
             </TooltipContent>
           </Tooltip>
 
-          <Separator className="my-1" />
+          <Separator className="my-1 bg-gray-600/40 border-gray-600/40" />
           
           <Tooltip>
             <TooltipTrigger asChild>

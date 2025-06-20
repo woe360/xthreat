@@ -1,52 +1,3 @@
-// import { NextResponse } from 'next/server';
-// import type { NextRequest } from 'next/server';
-
-// // Define public routes that don't require authentication
-// const publicRoutes = [
-//   '/',
-//   '/pricing',
-//   '/about',
-//   '/contact',
-//   '/cookies',
-//   '/privacy',
-//   '/terms',
-//   '/login',
-//   '/api/auth',
-//   '/free-trial',
-// ];
-
-// export async function middleware(req: NextRequest) {
-//   try {
-//     // Skip for API routes, public routes and static assets
-//     const { pathname } = req.nextUrl;
-    
-//     // Skip processing for static and public routes
-//     if (
-//       pathname.startsWith('/_next') ||
-//       pathname.startsWith('/api/public') ||
-//       pathname === '/favicon.ico' ||
-//       pathname.startsWith('/public/') ||
-//       publicRoutes.includes(pathname)
-//     ) {
-//       return NextResponse.next();
-//     }
-
-//     // With our tab-specific client-side auth approach, we don't need server-side auth
-//     // So we just pass through all requests and let the client handle authentication
-//     return NextResponse.next();
-
-//   } catch (error) {
-//     console.error('Middleware error:', error);
-//     // If there's an error, continue (don't redirect to login)
-//     return NextResponse.next();
-//   }
-// }
-
-// export const config = {
-//   matcher: [
-//     '/((?!api/public|_next/static|_next/image|favicon.ico|public/).*)',
-//   ],
-// };
 
 
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
@@ -78,9 +29,10 @@ const roleBasedRoutes: RoleBasedRoutes = {
       '/trainings/modules',
       '/trainings/modules/(.*)',
       '/api/trainings',
+      '/api/analytics',  // Allow access to analytics API
       '/sessions',
       '/modules',
-      '/modules/(.*)'  // This will allow all paths under modules
+      '/modules/(.*)' 
     ]
   },
   manager: {
@@ -95,7 +47,8 @@ const roleBasedRoutes: RoleBasedRoutes = {
       '/accounts',
       '/progress',
       '/api/modules',  // Allow access to module APIs
-      '/api/role-based'  // Allow access to role-based APIs
+      '/api/role-based',  // Allow access to role-based APIs
+      '/api/analytics'  // Allow access to analytics API
     ]
   },
   user: {
@@ -107,7 +60,8 @@ const roleBasedRoutes: RoleBasedRoutes = {
       '/account',
       '/settings',
       '/api/modules',  // Allow access to module APIs
-      '/api/role-based'  // Allow access to role-based APIs
+      '/api/role-based',  // Allow access to role-based APIs
+      '/api/analytics'  // Allow access to analytics API
     ]
   }
 };
@@ -221,6 +175,7 @@ function checkRoleAccess(pathname: string, role: keyof RoleBasedRoutes): boolean
     // Special handling for API routes related to modules and role-based content
     if (allowedPath === '/modules' && pathname.startsWith('/api/modules/')) return true;
     if (allowedPath === '/role-based' && pathname.startsWith('/api/role-based/')) return true;
+    if (allowedPath === '/api/analytics' && pathname.startsWith('/api/analytics')) return true;
     
     return false;
   });

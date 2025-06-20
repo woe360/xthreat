@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ArrowRight, ChevronDown, ChevronUp, Check } from 'lucide-react'
 import ModuleSkeleton from './skeleton'
+import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 interface SubLesson {
   id: string | number;
@@ -37,11 +39,31 @@ interface Module {
 
 const ModulePage = () => {
   const params = useParams()
+  const supabaseClient = createClientComponentClient()
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [moduleData, setModuleData] = useState<Module | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expandedLesson, setExpandedLesson] = useState<number | null>(null)
+  const [completedSubLessons, setCompletedSubLessons] = useState<Set<string>>(new Set())
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data: { user }, error } = await supabaseClient.auth.getUser()
+        if (error) {
+          console.error('Error fetching user:', error)
+          return
+        }
+        setUser(user)
+      } catch (error) {
+        console.error('Error getting user:', error)
+      }
+    }
+
+    fetchUser()
+  }, [supabaseClient])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,6 +149,7 @@ const ModulePage = () => {
           }));
           setLessons(lessonsWithEnsuredSubLessons)
         }
+
       } catch (err) {
         console.error('Error fetching data:', err)
         setError('An error occurred while loading the module')
@@ -137,6 +160,116 @@ const ModulePage = () => {
 
     fetchData()
   }, [params.module])
+
+  // Separate effect for fetching completion status and auto-expanding
+  useEffect(() => {
+    if (user && lessons.length > 0) {
+      fetchCompletionStatusAndExpand()
+    }
+  }, [user, lessons])
+
+  // Listen for page visibility changes to refresh completion status
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && user && lessons.length > 0) {
+        // Page became visible again, refresh completion status
+        console.log('🔄 Page visible again, refreshing completion status...');
+        fetchCompletionStatusAndExpand();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Also listen for focus events as a backup
+    const handleFocus = () => {
+      if (user && lessons.length > 0) {
+        console.log('🔄 Page focused, refreshing completion status...');
+        fetchCompletionStatusAndExpand();
+      }
+    };
+    
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [user, lessons]);
+
+  const fetchCompletionStatusAndExpand = async () => {
+    if (!user) return;
+    
+    try {
+      console.log('🔍 Fetching completion status for user:', user.id);
+      console.log('🔍 Module ID:', params.module);
+      
+      // Fetch completed lessons from analytics_events
+      const url = `/api/analytics?event_type=lesson_completed&user_id=${user.id}&module_id=${params.module}`;
+      console.log('🔍 Fetching from URL:', url);
+      
+      const response = await fetch(url);
+      console.log('🔍 Response status:', response.status);
+      
+      if (response.ok) {
+        const result = await response.json();
+        console.log('🔍 Full response:', result);
+        const analyticsData = result.data;
+        
+        if (analyticsData && Array.isArray(analyticsData)) {
+          console.log('🔍 Analytics events found:', analyticsData.length);
+          
+          const completed = new Set<string>();
+          let lastCompletedLessonId: number | null = null;
+          let lastCompletionTime = 0;
+          
+          analyticsData.forEach((event: any, index: number) => {
+            console.log(`🔍 Processing event ${index}:`, event);
+            
+            if (event.data?.sub_lesson_id) {
+              const subLessonId = event.data.sub_lesson_id.toString();
+              completed.add(subLessonId);
+              console.log('✅ Added completed sub-lesson:', subLessonId);
+              
+              // Find the most recent completion to auto-expand that lesson
+              const eventTime = new Date(event.timestamp || event.created_at).getTime();
+              if (eventTime > lastCompletionTime) {
+                lastCompletionTime = eventTime;
+                // Find which lesson this sub-lesson belongs to
+                const parentLesson = lessons.find(lesson => 
+                  lesson.subLessons?.some(subLesson => 
+                    subLesson.id.toString() === subLessonId
+                  )
+                );
+                if (parentLesson) {
+                  lastCompletedLessonId = parentLesson.id;
+                  console.log('🎯 Found parent lesson for auto-expand:', parentLesson.id, parentLesson.title);
+                }
+              }
+            }
+          });
+          
+          console.log('✅ Final completed sub-lessons:', Array.from(completed));
+          console.log('🎯 Last completed lesson ID:', lastCompletedLessonId);
+          
+          // Force re-render by creating a new Set
+          setCompletedSubLessons(new Set(completed));
+          
+          // Auto-expand the lesson that was most recently worked on
+          if (lastCompletedLessonId && expandedLesson !== lastCompletedLessonId) {
+            setExpandedLesson(lastCompletedLessonId);
+            console.log('📂 Auto-expanding lesson:', lastCompletedLessonId);
+          }
+        } else {
+          console.log('⚠️ No analytics data found or data is not an array');
+        }
+      } else {
+        const errorText = await response.text();
+        console.warn('⚠️ Failed to fetch completion status:', response.status, errorText);
+      }
+    } catch (error) {
+      console.error('❌ Error fetching completion status:', error);
+    }
+  };
 
   const getLevelColor = (level: string) => {
     switch (level) {
@@ -166,6 +299,18 @@ const ModulePage = () => {
   
   const toggleExpand = (lessonId: number) => {
     setExpandedLesson(prev => prev === lessonId ? null : lessonId);
+  };
+
+  // Check if a sub-lesson is completed
+  const isSubLessonCompleted = (subLessonId: string | number) => {
+    return completedSubLessons.has(subLessonId.toString());
+  };
+
+  // Check if all sub-lessons in a lesson are completed
+  const isLessonCompleted = (lesson: Lesson) => {
+    const subLessons = lesson.subLessons || [];
+    if (subLessons.length === 0) return false;
+    return subLessons.every(subLesson => isSubLessonCompleted(subLesson.id));
   };
 
   if (loading) {
@@ -227,10 +372,13 @@ const ModulePage = () => {
                 <span className="bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full text-sm">
                   {totalPoints} Total Points
                 </span>
-                <span className="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-sm">
-                  {sortedLessons.length} Topics
+                <span className="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                  <Check className="w-3 h-3" />
+                  {sortedLessons.filter(lesson => isLessonCompleted(lesson)).length}/{sortedLessons.length} Topics
                 </span>
                 <span className="bg-purple-500/10 text-purple-500 px-3 py-1 rounded-full text-sm">
+                  {sortedLessons.reduce((acc, lesson) => 
+                    acc + (lesson.subLessons?.filter(subLesson => isSubLessonCompleted(subLesson.id)).length || 0), 0)}/
                   {sortedLessons.reduce((acc, lesson) => 
                     acc + (lesson.subLessons?.length || 0), 0)} Lessons
                 </span>
@@ -284,6 +432,12 @@ const ModulePage = () => {
                             <span className={`${getLevelColor(lesson.level)} px-3 py-1 rounded-full text-xs`}>
                               {getLevelText(lesson.level)}
                             </span>
+                            {isLessonCompleted(lesson) && (
+                              <div className="flex items-center gap-1 bg-green-500/20 border border-green-500/40 text-green-400 px-3 py-1 rounded-full text-xs">
+                                <Check className="w-3 h-3" />
+                                <span>Completed</span>
+                              </div>
+                            )}
                           </div>
                         </div>
                         {isExpanded ? <ChevronUp className="h-5 w-5 text-gray-400" /> : <ChevronDown className="h-5 w-5 text-gray-400" />}
@@ -314,10 +468,20 @@ const ModulePage = () => {
                           className="group flex items-center ml-2 justify-between p-4 border-b border-neutral-800/20 last:border-0 hover:bg-neutral-900/10 transition-colors"
                         >
                           <div className="flex items-center gap-3">
-                            <div className={`w-8 h-8 flex items-center justify-center text-sm rounded-full border border-gray-600 text-gray-400`}>
-                              {/* Display index or icon if needed */}
+                            <div className={`w-8 h-8 flex items-center justify-center text-sm rounded-full border transition-all ${
+                              isSubLessonCompleted(subLesson.id)
+                                ? 'bg-green-500/20 border-green-500/40 text-green-400'
+                                : 'border-gray-600 text-gray-400'
+                            }`}>
+                              {isSubLessonCompleted(subLesson.id) ? (
+                                <Check className="w-4 h-4" />
+                              ) : (
+                                i + 1
+                              )}
                             </div>
-                            <span className={`text-base md:text-lg font-light group-hover:text-white text-gray-200`}>
+                            <span className={`text-base md:text-lg font-light group-hover:text-white ${
+                              isSubLessonCompleted(subLesson.id) ? 'text-green-200' : 'text-gray-200'
+                            }`}>
                               {subLesson.title}
                             </span>
                           </div>

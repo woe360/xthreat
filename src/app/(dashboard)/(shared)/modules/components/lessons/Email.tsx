@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Alert, AlertDescription } from '@/components/alert'
 import { useRouter } from 'next/navigation'
+import { useAnalytics } from '@/hooks/useAnalytics'
 import { 
   Mail, 
   AlertTriangle, 
@@ -96,6 +97,7 @@ interface EmailInspectorProps {
 
 export function EmailInspector({ moduleId, onComplete }: EmailInspectorProps) {
   const router = useRouter()
+  const analytics = useAnalytics()
   const [selectedElement, setSelectedElement] = useState<string | null>(null)
   const [activePopup, setActivePopup] = useState<string | null>(null)
   const [score, setScore] = useState(0)
@@ -106,6 +108,11 @@ export function EmailInspector({ moduleId, onComplete }: EmailInspectorProps) {
   const [showHintConfirm, setShowHintConfirm] = useState(false)
   const [showHintWarning, setShowHintWarning] = useState(false)
   const [currentHint, setCurrentHint] = useState<string | null>(null)
+
+  // Track lesson start when component mounts
+  React.useEffect(() => {
+    analytics.trackLessonStart(moduleId, 'email_inspector');
+  }, [moduleId, analytics]);
 
   const totalThreats = Object.keys(sampleEmail.suspiciousElements).length
   
@@ -127,11 +134,27 @@ export function EmailInspector({ moduleId, onComplete }: EmailInspectorProps) {
       const newFound = [...foundElements, element];
       setFoundElements(newFound);
       setScore(newFound.length); // Simple score: 1 point per element found
+      
+      // Track element found
+      analytics.trackInteraction('element_found', { 
+        element, 
+        score: newFound.length, 
+        total_elements: totalThreats 
+      });
     }
     setActivePopup(activePopup === element ? null : element);
   };
 
   const handleReport = () => {
+    // Track completion analytics
+    analytics.trackLessonComplete({
+      lesson_id: 'email_inspector',
+      module_id: moduleId,
+      time_spent: analytics.getTimeSpent(),
+      completion_status: 'completed',
+      interactions: analytics.getInteractionCount()
+    });
+    
     // Completion is triggered when all elements are found
     setIsComplete(true);
     // onComplete is called from the completion screen button

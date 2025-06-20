@@ -14,6 +14,7 @@ import StatCard, { StatCardProps } from './StatCard';
 import SecuritySkillsRadar from './SecuritySkillsRadar';
 import { LastModuleCard, UpcomingModuleCard, RandomModuleCard } from './DashboardModuleCards';
 import { QuizCompletionCard, EmailAccuracyCard, SessionTimeCard, HintUsageCard } from './AnalyticsCards';
+import DashboardSkeleton from './DashboardSkeleton';
 
 const data: StatCardProps[] = [
   {
@@ -49,6 +50,7 @@ const data: StatCardProps[] = [
 ];
 
 export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
+
   return (
     <Box
       sx={{

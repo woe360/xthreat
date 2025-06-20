@@ -57,7 +57,7 @@ const AccountsPage = () => {
       const { data: employeesData, error } = await supabase
         .from('users')
         .select('*')
-        .eq('role', 'user')
+        .in('role', ['user', 'manager'])
         .order('first_name');
       
       if (error) {
@@ -227,67 +227,23 @@ const AccountsPage = () => {
   }
 
   return (
-    <div className="min-h-screen font-sans bg-[#050607] text-gray-100 p-4 px-10">
-      <div>
+    <div className="min-h-screen font-sans bg-[#0b0b0b] text-neutral-100 px-10 py-6">
+      <div className="max-w-[1400px] mx-auto">
         <div className="flex justify-between items-center mb-8 mt-1">
-          <h1 className="text-xl font-base text-white">Accounts</h1>
-          <button className="px-4 py-2 bg-green-500/20 text-green-400 hover:bg-green-500/30 hover:text-green-200 rounded-lg transition-colors">
-            Save
-          </button>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <StatCard
-            title="Total Employees"
-            value={employees.length}
-            trend="Active accounts"
-            data={activeUsersTrend}
-            color="green"
-            percentageChange={12}
-          />
-          
-          <StatCard
-            title="Active Courses"
-            value={employees.reduce((sum, emp) => sum + emp.activeCourses, 0)}
-            trend="Currently in progress"
-            data={activeUsersTrend}
-            color="blue"
-            percentageChange={5}
-          />
-          
-          <StatCard
-            title="Completed Courses"
-            value={employees.reduce((sum, emp) => sum + emp.completedCourses, 0)}
-            trend="15 completed this month"
-            data={completedCourseTrend}
-            color="purple"
-            percentageChange={18}
-          />
-        </div>
-
-        {/* Search and Add Employee */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search employees..."
-              className="bg-[#050607] border border-gray-800 text-white px-4 py-2 pl-10 rounded-lg focus:outline-none focus:border-gray-700 w-64"
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-            <Search className="absolute left-3 top-2.5 text-gray-500" size={20} />
-          </div>
-          <div className="flex space-x-3">
+          <h1 className="text-xl md:text-3xl font-light text-white">Accounts</h1>
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search employees..."
+                className="bg-[#121212] border border-white/10 focus:border-white/30 rounded-full px-4 py-2 pl-10 text-neutral-100 text-sm outline-none w-64"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+              <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
+            </div>
             <button
-              className="bg-blue-500/30 text-blue-400 hover:bg-blue-500/50 hover:text-blue-200 font-medium py-2 px-4 rounded-lg flex items-center transition-colors"
-              onClick={() => console.log('Import clicked')}
-            >
-              <FolderOpen size={20} className="mr-2" />
-              Import
-            </button>
-            <button
-              className="bg-blue-500/30 text-blue-400 hover:bg-blue-500/50 hover:text-blue-200 font-medium py-2 px-4 rounded-lg flex items-center transition-colors"
+              className="bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 hover:text-blue-300 font-medium py-2 px-4 rounded-lg flex items-center transition-colors"
               onClick={() => setShowAddModal(true)}
             >
               <UserPlus size={20} className="mr-2" />
@@ -297,36 +253,40 @@ const AccountsPage = () => {
         </div>
 
         {/* Employee List */}
-        <div className="bg-[#181b24] border border-gray-800 rounded-lg overflow-hidden">
+        <div className="bg-[#121212] border border-white/10 rounded-lg overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-800">
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Employee</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Job Title</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+              <tr className="border-b border-white/15">
+                <th className="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Employee</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Job Title</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-white/15">
               {filteredEmployees.map((employee) => (
-                <tr key={employee.id} className="hover:bg-gray-900/50 transition-colors">
+                <tr key={employee.id} className="hover:bg-neutral-900/30 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       <div>
-                        <div className="text-sm font-medium text-white">
+                        <div className="text-sm font-light text-white">
                           {employee.first_name} {employee.last_name}
                         </div>
-                        <div className="text-sm text-gray-400">{employee.email}</div>
+                        <div className="text-sm text-neutral-400">{employee.email}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-300">{employee.job_title}</td>
+                  <td className="px-6 py-4 text-sm text-neutral-300">{employee.job_title}</td>
                   <td className="px-6 py-4 text-sm">
-                    <button
-                      className="text-gray-400 hover:text-red-400 transition-colors"
-                      onClick={() => handleRemoveEmployee(employee.id)}
-                    >
-                      <UserMinus size={20} />
-                    </button>
+                    {employee.role !== 'manager' ? (
+                      <button
+                        className="text-neutral-400 hover:text-red-400 transition-colors"
+                        onClick={() => handleRemoveEmployee(employee.id)}
+                      >
+                        <UserMinus size={20} />
+                      </button>
+                    ) : (
+                      <span className="text-neutral-500 text-xs">Manager</span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -337,13 +297,13 @@ const AccountsPage = () => {
         {/* Add Employee Modal */}
         {showAddModal && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
-            <div className="bg-[#181b24] border border-gray-800 p-6 rounded-lg w-96">
-              <h2 className="text-lg font-base mb-6">Add New Employee</h2>
+            <div className="bg-[#121212] border border-white/15 p-6 rounded-lg w-96">
+              <h2 className="text-lg font-light text-white mb-6">Add New Employee</h2>
               <input
                 type="text"
                 name="first_name"
                 placeholder="First Name"
-                className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-3 focus:outline-none focus:border-gray-700"
+                className="w-full bg-[#0b0b0b] border border-white/10 focus:border-white/30 text-neutral-100 px-4 py-2 rounded-lg mb-3 outline-none"
                 value={newEmployee.first_name}
                 onChange={handleInputChange}
               />
@@ -351,7 +311,7 @@ const AccountsPage = () => {
                 type="text"
                 name="last_name"
                 placeholder="Last Name"
-                className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-3 focus:outline-none focus:border-gray-700"
+                className="w-full bg-[#0b0b0b] border border-white/10 focus:border-white/30 text-neutral-100 px-4 py-2 rounded-lg mb-3 outline-none"
                 value={newEmployee.last_name}
                 onChange={handleInputChange}
               />
@@ -359,7 +319,7 @@ const AccountsPage = () => {
                 type="email"
                 name="email"
                 placeholder="Email"
-                className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-3 focus:outline-none focus:border-gray-700"
+                className="w-full bg-[#0b0b0b] border border-white/10 focus:border-white/30 text-neutral-100 px-4 py-2 rounded-lg mb-3 outline-none"
                 value={newEmployee.email}
                 onChange={handleInputChange}
               />
@@ -367,7 +327,7 @@ const AccountsPage = () => {
                 type="text"
                 name="job_title"
                 placeholder="Job Title"
-                className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-3 focus:outline-none focus:border-gray-700"
+                className="w-full bg-[#0b0b0b] border border-white/10 focus:border-white/30 text-neutral-100 px-4 py-2 rounded-lg mb-3 outline-none"
                 value={newEmployee.job_title}
                 onChange={handleInputChange}
               />
@@ -375,20 +335,20 @@ const AccountsPage = () => {
                 type="text"
                 name="company_name"
                 placeholder="Company Name"
-                className="w-full bg-[#050607] border border-gray-800 text-white px-4 py-2 rounded-lg mb-3 focus:outline-none focus:border-gray-700"
+                className="w-full bg-[#0b0b0b] border border-white/10 text-neutral-400 px-4 py-2 rounded-lg mb-3 outline-none"
                 value={newEmployee.company_name}
                 onChange={handleInputChange}
                 disabled
               />
               <div className="flex justify-end space-x-3">
                 <button
-                  className="px-4 py-2 rounded-lg border border-gray-800 text-gray-300 hover:bg-gray-800 transition-colors"
+                  className="px-4 py-2 rounded-lg border border-white/15 text-neutral-300 hover:bg-neutral-900/30 transition-colors"
                   onClick={() => setShowAddModal(false)}
                 >
                   Cancel
                 </button>
                 <button
-                  className="px-4 py-2 rounded-lg bg-blue-500/30 text-blue-400 hover:bg-blue-500/50 transition-colors"
+                  className="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors"
                   onClick={handleAddEmployee}
                 >
                   Add Employee

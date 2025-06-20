@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronRight, BookOpen, CheckCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface ConceptOverviewProps {
   // Props to define the content - could be passed as structured data or individual strings
@@ -23,17 +24,18 @@ interface Lesson {
 }
 
 const ConceptOverview: React.FC<ConceptOverviewProps> = ({
-  title = "Introduction to Phishing", 
+  title = "Understanding Phishing Techniques",
   paragraphs = [
-    "Phishing is a common cyber attack where scammers attempt to trick you into revealing sensitive information, such as login credentials or financial details.",
-    "These attacks often masquerade as legitimate communications from trusted sources. Understanding how phishing works is the first step towards protecting yourself and your organization."
-  ], 
+    "Phishing is a form of social engineering where attackers deceive individuals into revealing sensitive information such as passwords, credit card numbers, or other personal data.",
+    "These attacks typically involve impersonating trusted entities through email, text messages, or fake websites that appear legitimate.",
+    "Understanding the common tactics used by cybercriminals can help you recognize and avoid these threats in your daily digital interactions."
+  ],
   keyConcepts = [
-    "Definition: Phishing uses deceptive emails, messages, or websites to steal personal data.",
-    "Common Tactics: Urgency, threats, requests for sensitive info, suspicious links/attachments.",
-    "Impact: Can lead to identity theft, financial loss, and unauthorized access to systems.",
-    "Prevention: Verify sender identity, scrutinize links/attachments, report suspicious messages."
-  ], 
+    "Phishing attacks often use urgent language to create a sense of panic, pushing victims to act quickly without thinking.",
+    "Legitimate companies will never ask for sensitive information like passwords or Social Security numbers via email.",
+    "Always verify the sender's identity through a separate communication channel before responding to suspicious requests.",
+    "Look for telltale signs like misspellings, generic greetings, and suspicious URLs that don't match the supposed sender."
+  ],
   onComplete,
   moduleSlug,
   currentLessonSlug
@@ -48,6 +50,14 @@ const ConceptOverview: React.FC<ConceptOverviewProps> = ({
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const analytics = useAnalytics();
+
+  // Track lesson start when component mounts
+  useEffect(() => {
+    if (moduleSlug) {
+      analytics.trackLessonStart(moduleSlug, 'concept_overview');
+    }
+  }, [moduleSlug, analytics]);
 
   // Fetch next lesson when component mounts
   useEffect(() => {
@@ -98,6 +108,18 @@ const ConceptOverview: React.FC<ConceptOverviewProps> = ({
       } else {
         // Last concept finished, move to completed state
         setViewState('completed');
+        
+        // Track completion analytics
+        if (moduleSlug) {
+          analytics.trackLessonComplete({
+            lesson_id: 'concept_overview',
+            module_id: moduleSlug,
+            time_spent: analytics.getTimeSpent(),
+            completion_status: 'completed',
+            interactions: analytics.getInteractionCount()
+          });
+        }
+        
         if (onComplete) {
           onComplete();
         }

@@ -19,6 +19,7 @@ import ConceptOverview from '../../components/lessons/ConceptOverview'
 const LessonPage = () => {
   const router = useRouter()
   const params = useParams()
+  const supabase = createClientComponentClient()
   
   console.log('Component initialized with params:', params)
   
@@ -30,10 +31,27 @@ const LessonPage = () => {
   const [currentSubLessonIndex, setCurrentSubLessonIndex] = React.useState(0)
   const [nextLesson, setNextLesson] = React.useState<any>(null)
   const [previousLesson, setPreviousLesson] = React.useState<any>(null)
+  const [user, setUser] = React.useState<any>(null)
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (error) {
+          console.error('Error fetching user:', error)
+          return
+        }
+        setUser(user)
+      } catch (error) {
+        console.error('Error getting user:', error)
+      }
+    }
+
+    fetchUser()
+  }, [supabase])
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const supabase = createClientComponentClient()
       try {
         setLoading(true)
         
@@ -138,8 +156,73 @@ const LessonPage = () => {
     fetchData()
   }, [params.lesson])
 
-  const handleSubLessonComplete = () => {
+  const handleSubLessonComplete = async () => {
     console.log('Sub-lesson complete. Current index:', currentSubLessonIndex, 'Total:', subLessons.length)
+    
+    // Track lesson completion in analytics
+    if (user && subLessons[currentSubLessonIndex]) {
+      const currentSubLesson = subLessons[currentSubLessonIndex];
+      const isLastSubLesson = currentSubLessonIndex >= subLessons.length - 1;
+      
+      try {
+        console.log('🚀 Tracking lesson completion analytics...');
+        console.log('🔍 User ID:', user.id);
+        console.log('🔍 Current sub-lesson:', currentSubLesson);
+        
+        const analyticsEvent = {
+          event_type: 'lesson_completed',
+          user_id: user.id,
+          module_id: params.module,
+          lesson_id: params.lesson,
+          component_type: currentSubLesson.content_type || 'lesson',
+          data: {
+            sub_lesson_id: currentSubLesson.id,
+            sub_lesson_title: currentSubLesson.title,
+            lesson_completed: isLastSubLesson,
+            completion_time: new Date().toISOString(),
+            lesson_order: currentSubLessonIndex + 1,
+            total_sub_lessons: subLessons.length
+          }
+        };
+
+        console.log('📤 Sending analytics event:', analyticsEvent);
+
+        const response = await fetch('/api/analytics', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(analyticsEvent),
+        });
+
+        console.log('📥 Response status:', response.status);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('❌ Analytics API error response:', errorText);
+          throw new Error(`Analytics API failed: ${response.status} - ${errorText}`);
+        }
+
+        const result = await response.json();
+        console.log('✅ Analytics tracking successful:', result);
+        
+        // Immediately update parent about completion if we're going back to module
+        if (isLastSubLesson || currentSubLessonIndex >= subLessons.length - 1) {
+          console.log('🔄 This was the last sub-lesson, will refresh module page...');
+        }
+        
+      } catch (error) {
+        console.error('❌ Failed to track lesson completion:', error);
+        // Don't block progression if analytics fails
+      }
+    } else {
+      console.warn('⚠️ Cannot track completion: user or sub-lesson missing', {
+        hasUser: !!user,
+        hasSubLesson: !!subLessons[currentSubLessonIndex],
+        currentIndex: currentSubLessonIndex,
+        totalSubLessons: subLessons.length
+      });
+    }
     
     // Advancement Logic:
     if (currentSubLessonIndex < subLessons.length - 1) {

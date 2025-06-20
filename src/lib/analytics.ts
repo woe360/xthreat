@@ -5,7 +5,7 @@ interface AnalyticsEvent {
   lesson_id?: string
   component_type: string
   data: Record<string, any>
-  timestamp: string
+  timestamp?: string
 }
 
 interface QuizAnalytics {
@@ -42,16 +42,20 @@ class AnalyticsService {
   private sessionStart: number = Date.now()
 
   // Generic event tracking
-  async trackEvent(eventType: string, componentType: string, data: Record<string, any>) {
+  async trackEvent(eventType: string, componentType: string, data: Record<string, any>, moduleId?: string, lessonId?: string) {
     const event: AnalyticsEvent = {
       event_type: eventType,
       user_id: await this.getCurrentUserId(),
+      module_id: moduleId,
+      lesson_id: lessonId,
       component_type: componentType,
       data,
       timestamp: new Date().toISOString()
     }
 
     this.events.push(event)
+    
+    console.log('📊 Analytics Service: Tracking event', event)
     
     // Send to your backend/database
     try {
@@ -64,85 +68,88 @@ class AnalyticsService {
   // Quiz-specific tracking
   async trackQuizStart(moduleId: string, quizId: string) {
     await this.trackEvent('quiz_started', 'quiz', {
-      module_id: moduleId,
       quiz_id: quizId,
       start_time: Date.now()
-    })
+    }, moduleId, quizId)
   }
 
   async trackQuizComplete(moduleId: string, analytics: QuizAnalytics) {
     await this.trackEvent('quiz_completed', 'quiz', {
-      module_id: moduleId,
-      ...analytics,
+      quiz_id: analytics.quiz_id,
+      score: analytics.score,
+      total_questions: analytics.total_questions,
+      time_spent: analytics.time_spent,
+      answers: analytics.answers,
       session_duration: Date.now() - this.sessionStart
-    })
+    }, moduleId, analytics.quiz_id)
   }
 
-  async trackQuizAnswer(questionId: string, selectedAnswers: number[], isCorrect: boolean) {
+  async trackQuizAnswer(questionId: string, selectedAnswers: number[], isCorrect: boolean, moduleId?: string) {
     await this.trackEvent('quiz_answer', 'quiz', {
       question_id: questionId,
       selected_answers: selectedAnswers,
       is_correct: isCorrect,
       timestamp: Date.now()
-    })
+    }, moduleId, questionId)
   }
 
   // Email Comparison tracking
-  async trackEmailComparisonStart(moduleId: string, exerciseId: string) {
+  async trackEmailComparisonStart(moduleId: string, exerciseId: string = 'email_comparison') {
     await this.trackEvent('email_comparison_started', 'email_comparison', {
-      module_id: moduleId,
       exercise_id: exerciseId,
       start_time: Date.now()
-    })
+    }, moduleId, exerciseId)
   }
 
   async trackEmailComparisonDifference(differenceId: string, moduleId: string) {
     await this.trackEvent('difference_found', 'email_comparison', {
-      module_id: moduleId,
       difference_id: differenceId,
       timestamp: Date.now()
-    })
+    }, moduleId)
   }
 
   async trackEmailComparisonHint(moduleId: string, hintIndex: number) {
     await this.trackEvent('hint_used', 'email_comparison', {
-      module_id: moduleId,
       hint_index: hintIndex,
       timestamp: Date.now()
-    })
+    }, moduleId)
   }
 
   async trackEmailComparisonComplete(moduleId: string, analytics: EmailComparisonAnalytics) {
     await this.trackEvent('email_comparison_completed', 'email_comparison', {
-      module_id: moduleId,
-      ...analytics,
+      exercise_id: analytics.exercise_id,
+      differences_found: analytics.differences_found,
+      total_differences: analytics.total_differences,
+      hints_used: analytics.hints_used,
+      time_spent: analytics.time_spent,
+      completion_rate: analytics.completion_rate,
       session_duration: Date.now() - this.sessionStart
-    })
+    }, moduleId, analytics.exercise_id)
   }
 
   // Lesson/Module tracking
   async trackLessonStart(moduleId: string, lessonId: string) {
     await this.trackEvent('lesson_started', 'lesson', {
-      module_id: moduleId,
-      lesson_id: lessonId,
       start_time: Date.now()
-    })
+    }, moduleId, lessonId)
   }
 
   async trackLessonComplete(analytics: LessonAnalytics) {
     await this.trackEvent('lesson_completed', 'lesson', {
-      ...analytics,
+      time_spent: analytics.time_spent,
+      completion_status: analytics.completion_status,
+      interactions: analytics.interactions,
       session_duration: Date.now() - this.sessionStart
-    })
+    }, analytics.module_id, analytics.lesson_id)
   }
 
   // User engagement tracking
-  async trackUserInteraction(componentType: string, action: string, data?: Record<string, any>) {
+  async trackUserInteraction(componentType: string, action: string, data?: Record<string, any>, moduleId?: string) {
     await this.trackEvent('user_interaction', componentType, {
       action,
       ...data,
       timestamp: Date.now()
-    })
+    }, moduleId)
   }
 
   // Session tracking
