@@ -517,9 +517,9 @@ const SessionLogsPage = () => {
 
           {/* Session logs table */}
           <div className="rounded-md">
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex gap-3">
-                <div className="w-[290px]">
+            <div className="mb-8">
+              <div className="grid grid-cols-6 gap-4">
+                <div>
                   <Select
                     value={userFilter}
                     onValueChange={(value) => setUserFilter(value)}
@@ -538,13 +538,13 @@ const SessionLogsPage = () => {
                   </Select>
                 </div>
 
-                <div className="w-[290px]">
+                <div>
                   <Select
                     value={eventTypeFilter}
                     onValueChange={(value) => setEventTypeFilter(value)}
                   >
                     <SelectTrigger className="bg-[#181b24] hover:bg-[#232734] transition-colors border-gray-800">
-                      <SelectValue placeholder="Filter by event type" />
+                      <SelectValue placeholder="Filter by event" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Events</SelectItem>
@@ -556,13 +556,13 @@ const SessionLogsPage = () => {
                   </Select>
                 </div>
 
-                <div className="grid gap-2">
+                <div>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-[240px] justify-start text-left font-normal bg-[#181b24] hover:bg-[#232734] transition-colors border-gray-800",
+                          "w-full justify-start text-left font-normal bg-[#181b24] hover:bg-[#232734] transition-colors border-gray-800",
                           !startDate && "text-muted-foreground"
                         )}
                       >
@@ -570,7 +570,7 @@ const SessionLogsPage = () => {
                         {startDate ? format(startDate, "PPP") : <span>Start date</span>}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 " align="start">
+                    <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
                         selected={startDate}
@@ -581,13 +581,13 @@ const SessionLogsPage = () => {
                   </Popover>
                 </div>
 
-                <div className="grid gap-2">
+                <div>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-[240px] justify-start text-left font-normal bg-[#181b24] hover:bg-[#232734] transition-colors border-gray-800",
+                          "w-full justify-start text-left font-normal bg-[#181b24] hover:bg-[#232734] transition-colors border-gray-800",
                           !endDate && "text-muted-foreground"
                         )}
                       >
@@ -606,19 +606,23 @@ const SessionLogsPage = () => {
                   </Popover>
                 </div>
 
-                <Input
-                  placeholder="Search sessions..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-[#181b24] hover:bg-[#232734] transition-colors border-gray-800"
-                />
+                <div>
+                  <Input
+                    placeholder="Search sessions..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="bg-[#181b24] hover:bg-[#232734] transition-colors border-gray-800"
+                  />
+                </div>
                 
-                <Button 
-                  onClick={fetchSessions}
-                  className="bg-green-500/20 text-green-400 hover:bg-green-500/30 hover:text-green-200"
-                >
-                  Refresh
-                </Button>
+                <div>
+                  <Button 
+                    onClick={fetchSessions}
+                    className="w-full bg-green-500/20 text-green-400 hover:bg-green-500/30 hover:text-green-200"
+                  >
+                    Refresh
+                  </Button>
+                </div>
               </div>
             </div>
 

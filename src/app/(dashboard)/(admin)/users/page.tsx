@@ -168,8 +168,8 @@ const UserManagementDashboard = () => {
     return matchesSearch && matchesRole && matchesCompany;
   });
 
-  // Get unique companies for the filter dropdown
-  const uniqueCompanies = Array.from(new Set(users.map(user => user.company)));
+  // Get unique companies for the filter dropdown (filter out empty companies)
+  const uniqueCompanies = Array.from(new Set(users.map(user => user.company).filter(company => company && company.trim() !== '')));
 
   const totalUsers = users.length;
   const activeUsers = users.filter(user => user.status === 'active').length;

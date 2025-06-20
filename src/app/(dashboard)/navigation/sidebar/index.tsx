@@ -965,7 +965,7 @@ import { getMenuOptions } from '@/lib/constant'
 import { LogOut, Bug } from 'lucide-react'
 import { Separator } from '@/components/separator'
 import { cn } from "@/lib/utils"
-import { getDeviceInfo } from '@/lib/utils/session'
+import { getDeviceInfo, getClientIP } from '@/lib/utils/session'
 import XLogo from '../../../../app/(marketing)/assets/XThreat_icon_primary_white_to_gradient.svg'
 import { BugReportModal } from './BugReport'
 
@@ -1102,7 +1102,7 @@ const MenuOptions = () => {
               user_id: user.id,
               event_type: 'logout',
               timestamp: new Date().toISOString(),
-              ip_address: window.location.hostname,
+              ip_address: await getClientIP() || window.location.hostname,
               user_agent: navigator.userAgent,
               device_info: getDeviceInfo(),
               session_id: lastLoginSession?.session_id || null,

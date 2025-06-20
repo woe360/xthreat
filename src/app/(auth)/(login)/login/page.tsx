@@ -237,22 +237,35 @@ export default function SignIn() {
         // Just trigger a navigation to dashboard
         
         // Track successful login
-        const sessionId = Math.random().toString(36).substring(2);
-        await supabaseClient.current
-          .from('user_sessions')
-          .insert([
-            { 
-              user_id: data.user.id,
-              event_type: 'login',
-              timestamp: new Date().toISOString(),
-              ip_address: await getClientIP(),
-              user_agent: navigator.userAgent,
-              device_info: getDeviceInfo(),
-              session_id: sessionId,
-              session_status: 'active',
-              last_active_at: new Date().toISOString()
-            }
-          ]);
+        try {
+          const sessionId = Math.random().toString(36).substring(2);
+          const sessionData = { 
+            user_id: data.user.id,
+            event_type: 'login' as const,
+            timestamp: new Date().toISOString(),
+            ip_address: await getClientIP() || '127.0.0.1',
+            user_agent: navigator.userAgent,
+            device_info: getDeviceInfo(),
+            session_id: sessionId,
+            session_status: 'active' as const,
+            last_active_at: new Date().toISOString()
+          };
+          
+          console.log('Tracking login session:', sessionData);
+          const { data: insertData, error: insertError } = await supabaseClient.current
+            .from('user_sessions')
+            .insert([sessionData])
+            .select();
+            
+          if (insertError) {
+            console.error('Failed to track login session:', insertError);
+          } else {
+            console.log('Login session tracked successfully:', insertData);
+          }
+        } catch (trackingError) {
+          console.error('Error tracking login session:', trackingError);
+          // Don't block login if session tracking fails
+        }
 
         // Redirect to dashboard - using router.push instead of location.href
         // to prevent a full page reload
