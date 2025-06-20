@@ -378,11 +378,17 @@ export function OverallProgressCard() {
     return <AnalyticsCardSkeleton title="Overall Progress" />;
   }
   
+  // Green if any progress (>0%), red if no progress (0%), gray only if exactly 0
+  const getTrend = (progress: number) => {
+    if (progress > 0) return 'up';
+    return 'down';
+  };
+  
   return <AnalyticsStatCard 
     title="Overall Progress" 
     value={`${data.overall_progress}%`}
     interval="Completion rate"
-    trend={data.overall_progress > 80 ? 'up' : 'down'}
+    trend={getTrend(data.overall_progress)}
     data={data.progress_trend_data}
   />;
 }
@@ -394,11 +400,17 @@ export function LearningStreakCard() {
     return <AnalyticsCardSkeleton title="Learning Streak" />;
   }
   
+  // Green if any streak (>0 days), red if no streak (0)
+  const getTrend = (streak: number) => {
+    if (streak > 0) return 'up';
+    return 'down';
+  };
+  
   return <AnalyticsStatCard 
     title="Learning Streak" 
     value={`${data.learning_streak}`}
     interval="Active days"
-    trend={data.learning_streak > 3 ? 'up' : 'neutral'}
+    trend={getTrend(data.learning_streak)}
     data={data.streak_trend_data}
   />;
 }
@@ -410,11 +422,17 @@ export function TotalStudyTimeCard() {
     return <AnalyticsCardSkeleton title="Study Time" />;
   }
   
+  // Green if any study time (>0 min), red if no time (0)
+  const getTrend = (time: number) => {
+    if (time > 0) return 'up';
+    return 'down';
+  };
+  
   return <AnalyticsStatCard 
     title="Study Time" 
     value={`${data.total_study_time}m`}
     interval="Total minutes"
-    trend="up"
+    trend={getTrend(data.total_study_time)}
     data={data.time_trend_data}
   />;
 }
@@ -457,11 +475,17 @@ export function ModuleMasteryCard() {
     return <AnalyticsCardSkeleton title="Module Mastery" />;
   }
   
+  // Green if any modules completed (>0), red if no modules (0)
+  const getTrend = (completed: number) => {
+    if (completed > 0) return 'up';
+    return 'down';
+  };
+  
   return <AnalyticsStatCard 
     title="Module Mastery" 
     value={`${data.modules_completed}/24`}
     interval="Modules completed"
-    trend={data.modules_completed > 5 ? 'up' : 'neutral'}
+    trend={getTrend(data.modules_completed)}
     data={data.mastery_trend_data}
   />;
 }
@@ -652,11 +676,18 @@ export function TotalUsersCard() {
     return <AnalyticsCardSkeleton title="Active Users" />;
   }
   
+  // Green if growing user base (>10), red if no users (0), gray otherwise
+  const getTrend = (users: number) => {
+    if (users >= 10) return 'up';
+    if (users === 0) return 'down';
+    return 'neutral';
+  };
+  
   return <AnalyticsStatCard 
     title="Active Users" 
     value={`${data.total_users}`}
     interval="Total enrolled"
-    trend="up"
+    trend={getTrend(data.total_users)}
     data={data.users_trend_data}
   />;
 }
@@ -668,11 +699,18 @@ export function TotalLessonsCard() {
     return <AnalyticsCardSkeleton title="Lessons Completed" />;
   }
   
+  // Green if good activity (>50 lessons), red if no activity (0), gray otherwise
+  const getTrend = (lessons: number) => {
+    if (lessons >= 50) return 'up';
+    if (lessons === 0) return 'down';
+    return 'neutral';
+  };
+  
   return <AnalyticsStatCard 
     title="Lessons Completed" 
     value={`${data.total_lessons_completed}`}
     interval="All users"
-    trend="up"
+    trend={getTrend(data.total_lessons_completed)}
     data={data.lessons_trend_data}
   />;
 }
@@ -684,11 +722,18 @@ export function TotalQuizAttemptsCard() {
     return <AnalyticsCardSkeleton title="Quiz Attempts" />;
   }
   
+  // Green if high engagement (>20 attempts), red if no attempts (0), gray otherwise
+  const getTrend = (attempts: number) => {
+    if (attempts >= 20) return 'up';
+    if (attempts === 0) return 'down';
+    return 'neutral';
+  };
+  
   return <AnalyticsStatCard 
     title="Quiz Attempts" 
     value={`${data.total_quiz_attempts}`}
     interval="All users"
-    trend="up"
+    trend={getTrend(data.total_quiz_attempts)}
     data={data.quiz_trend_data}
   />;
 }
@@ -700,11 +745,18 @@ export function TotalTrainingHoursCard() {
     return <AnalyticsCardSkeleton title="Training Hours" />;
   }
   
+  // Green if substantial training (>10 hours), red if no training (0), gray otherwise
+  const getTrend = (hours: number) => {
+    if (hours >= 10) return 'up';
+    if (hours === 0) return 'down';
+    return 'neutral';
+  };
+  
   return <AnalyticsStatCard 
     title="Training Hours" 
     value={`${data.total_training_hours}h`}
     interval="All users"
-    trend="up"
+    trend={getTrend(data.total_training_hours)}
     data={data.time_trend_data}
   />;
 } 

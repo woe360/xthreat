@@ -130,7 +130,6 @@ const UserManagementDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState<string>('all');
   const [filterCompany, setFilterCompany] = useState<string>('all');
-  const [filterActivity, setFilterActivity] = useState<string>('all');
   const [showFilters, setShowFilters] = useState(false);
   const [showRoleDialog, setShowRoleDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -166,16 +165,7 @@ const UserManagementDashboard = () => {
     const matchesRole = filterRole === 'all' || (user.role?.toLowerCase() || '') === filterRole.toLowerCase();
     const matchesCompany = filterCompany === 'all' || user.company === filterCompany;
     
-    let matchesActivity = true;
-    if (filterActivity === 'high') {
-      matchesActivity = (user.activity_level || 0) >= 75;
-    } else if (filterActivity === 'medium') {
-      matchesActivity = (user.activity_level || 0) >= 40 && (user.activity_level || 0) < 75;
-    } else if (filterActivity === 'low') {
-      matchesActivity = (user.activity_level || 0) < 40;
-    }
-    
-    return matchesSearch && matchesRole && matchesCompany && matchesActivity;
+    return matchesSearch && matchesRole && matchesCompany;
   });
 
   // Get unique companies for the filter dropdown
@@ -215,22 +205,7 @@ const UserManagementDashboard = () => {
     </div>
   );
 
-  type StatusType = 'active' | 'inactive' | 'pending';
 
-  const getActivityLevelColor = (level: number) => {
-    if (level >= 75) return 'text-green-400';
-    if (level >= 40) return 'text-yellow-400';
-    return 'text-red-400';
-  };
-
-  const getStatusBadge = (status: StatusType) => {
-    const styles: Record<StatusType, string> = {
-      active: 'bg-green-500/20 text-green-400',
-      inactive: 'bg-red-500/20 text-red-400',
-      pending: 'bg-yellow-500/20 text-yellow-400'
-    };
-    return <span className={`${styles[status]} text-xs px-2 py-1 rounded`}>{status}</span>;
-  };
 
   // Role change handler
   const handleRoleChange = (user: User) => {
@@ -240,38 +215,56 @@ const UserManagementDashboard = () => {
   };
 
   // Confirm role change
-  const confirmRoleChange = () => {
+  const confirmRoleChange = async () => {
     if (!selectedUser || !newRole || !changeReason) {
       console.log('Missing required fields:', { selectedUser, newRole, changeReason });
       return;
     }
 
-    const updatedUsers = users.map(user => {
-      if (user.id === selectedUser.id) {
-        console.log('Updating user:', user.full_name, 'from', user.role, 'to', newRole);
-        return {
-          ...user,
-          role: newRole as 'admin' | 'manager' | 'user',
-          roleChangeHistory: [
-            ...(user.roleChangeHistory || []),
-            {
-              date: new Date().toISOString(),
-              from: user.role,
-              to: newRole,
-              reason: changeReason,
-              changedBy: 'Current Admin'
-            }
-          ]
-        };
-      }
-      return user;
-    });
+    try {
+      // Update role in database
+      const { error } = await supabase
+        .from('users')
+        .update({ role: newRole.toLowerCase() })
+        .eq('id', selectedUser.id);
 
-    setUsers(updatedUsers);
-    setShowRoleDialog(false);
-    setSelectedUser(null);
-    setNewRole('');
-    setChangeReason('');
+      if (error) {
+        console.error('Error updating role in database:', error);
+        setFormError('Failed to update role in database');
+        return;
+      }
+
+      // Update local state
+      const updatedUsers = users.map(user => {
+        if (user.id === selectedUser.id) {
+          console.log('Updating user:', user.full_name, 'from', user.role, 'to', newRole);
+          return {
+            ...user,
+            role: newRole.toLowerCase() as 'admin' | 'manager' | 'user',
+            roleChangeHistory: [
+              ...(user.roleChangeHistory || []),
+              {
+                date: new Date().toISOString(),
+                from: user.role,
+                to: newRole.toLowerCase(),
+                reason: changeReason,
+                changedBy: 'Current Admin'
+              }
+            ]
+          };
+        }
+        return user;
+      });
+
+      setUsers(updatedUsers);
+      setShowRoleDialog(false);
+      setSelectedUser(null);
+      setNewRole('');
+      setChangeReason('');
+    } catch (error) {
+      console.error('Error updating role:', error);
+      setFormError('An unexpected error occurred while updating the role');
+    }
   };
 
   // Add this to debug state changes
@@ -377,9 +370,9 @@ const UserManagementDashboard = () => {
               value={newRole}
               onChange={(e) => setNewRole(e.target.value)}
             >
-              <option value="User">User</option>
-              <option value="Manager">Manager</option>
-              <option value="Admin">Admin</option>
+              <option value="user">User</option>
+              <option value="manager">Manager</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
           <div>
@@ -720,23 +713,6 @@ const UserManagementDashboard = () => {
                 </Select>
               </div>
 
-              <div className="w-[200px]">
-                <Select
-                  value={filterActivity}
-                  onValueChange={setFilterActivity}
-                >
-                  <SelectTrigger className="bg-[#181b24] hover:bg-[#232734] transition-colors border-gray-800">
-                    <SelectValue placeholder="Filter by activity" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Activity Levels</SelectItem>
-                    <SelectItem value="high">High (75%+)</SelectItem>
-                    <SelectItem value="medium">Medium (40-74%)</SelectItem>
-                    <SelectItem value="low">Low (0-39%)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
               <div className="relative">
                 <Search className="absolute left-3 top-2.5 text-gray-500" size={20} />
                 <input
@@ -765,9 +741,6 @@ const UserManagementDashboard = () => {
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">User</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Company</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Role</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Sign-up Date</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Activity</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
@@ -793,60 +766,26 @@ const UserManagementDashboard = () => {
                       <div className="text-sm text-gray-300">{user.company}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-300">{user.role}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-300">{new Date(user.created_at).toLocaleDateString()}</div>
-                      <div className="text-xs text-gray-400">
-                        Last active: {user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleDateString() : 'Never'}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <span className={`text-lg font-semibold ${getActivityLevelColor(user.activity_level)}`}>
-                          {user.activity_level}%
-                        </span>
-                        <div className="ml-2 w-24 h-2 bg-gray-800 rounded-full">
-                          <div 
-                            className={`h-full rounded-full ${
-                              user.activity_level >= 75 ? 'bg-green-500' : 
-                              user.activity_level >= 40 ? 'bg-yellow-500' : 'bg-red-500'
-                            }`}
-                            style={{ width: `${user.activity_level}%` }}
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      {getStatusBadge(user.status)}
+                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                        user.role === 'admin' ? 'bg-purple-500/20 text-purple-400' :
+                        user.role === 'manager' ? 'bg-blue-500/20 text-blue-400' :
+                        'bg-green-500/20 text-green-400'
+                      }`}>
+                        {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-sm">
-                      <div className="flex space-x-3">
-                        <button 
-                          className="text-gray-400 hover:text-blue-400 transition-colors" 
-                          title="Change Role"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRoleChange(user);
-                          }}
-                        >
-                          <Users size={20} />
-                        </button>
-                        {user.status === 'pending' ? (
-                          <>
-                            <button className="text-gray-400 hover:text-green-400 transition-colors" title="Approve">
-                              <Check size={20} />
-                            </button>
-                            <button className="text-gray-400 hover:text-red-400 transition-colors" title="Reject">
-                              <X size={20} />
-                            </button>
-                          </>
-                        ) : (
-                          <button className="text-gray-400 hover:text-yellow-400 transition-colors" title="Flag User">
-                            <AlertTriangle size={20} />
-                          </button>
-                        )}
-                      </div>
+                      <button 
+                        className="text-gray-400 hover:text-blue-400 transition-colors inline-flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-blue-500/10" 
+                        title="Change Role"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRoleChange(user);
+                        }}
+                      >
+                        <Users size={16} />
+                        Change Role
+                      </button>
                     </td>
                   </tr>
                 ))}

@@ -17,41 +17,13 @@ interface LeaderboardItem {
   email: string;
   role: string;
   department: string;
-  points: number;
-  streak: string; // e.g., "60 days"
-  level: string;
 }
 
-type SortKey = 'rank' | 'name' | 'role' | 'points' | 'streak';
+type SortKey = 'rank' | 'name' | 'role';
 type SortDirection = 'asc' | 'desc';
 interface SortConfig {
   key: SortKey;
   direction: SortDirection;
-}
-
-// Function to generate mock points and level based on user data
-function generateUserStats(userId: string) {
-  // Simple hash-based pseudo-random number generation for consistent results
-  let hash = 0;
-  for (let i = 0; i < userId.length; i++) {
-    const char = userId.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-  
-  const points = Math.abs(hash % 900) + 100; // Points between 100-1000
-  const streakDays = Math.abs(hash % 60) + 1; // Streak between 1-60 days
-  
-  let level = "Cyber Novice";
-  if (points > 800) level = "Cyber Sentinel";
-  else if (points > 600) level = "Security Expert";
-  else if (points > 400) level = "Awareness Advocate";
-  
-  return {
-    points,
-    streak: `${streakDays} days`,
-    level
-  };
 }
 
 const DEFAULT_SORT_CONFIG: SortConfig = { key: 'rank', direction: 'asc' };
@@ -81,7 +53,6 @@ function UserTableLeaderboard() {
 
         if (data) {
           const leaderboardItems: LeaderboardItem[] = data.map((user, index) => {
-            const stats = generateUserStats(user.id);
             const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ') || 'Unknown User';
             return {
               id: user.id,
@@ -90,12 +61,11 @@ function UserTableLeaderboard() {
               email: user.email,
               role: user.job_title || 'General',
               department: user.job_title || 'General', // Keep for interface compatibility
-              ...stats
             };
           });
 
           // Sort by points (highest first) and assign ranks
-          leaderboardItems.sort((a, b) => b.points - a.points);
+          leaderboardItems.sort((a, b) => b.rank - a.rank);
           leaderboardItems.forEach((item, index) => {
             item.rank = index + 1;
           });
@@ -137,12 +107,7 @@ function UserTableLeaderboard() {
         const valA = a[key];
         const valB = b[key];
 
-        if (key === 'streak') {
-          const numA = parseInt((valA as string).split(' ')[0]);
-          const numB = parseInt((valB as string).split(' ')[0]);
-          if (numA < numB) comparison = -1;
-          if (numA > numB) comparison = 1;
-        } else if (typeof valA === 'number' && typeof valB === 'number') {
+        if (typeof valA === 'number' && typeof valB === 'number') {
           if (valA < valB) comparison = -1;
           if (valA > valB) comparison = 1;
         } else {
@@ -184,11 +149,11 @@ function UserTableLeaderboard() {
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent border-b-white/10">
-            {(['rank', 'name', 'role', 'points', 'streak'] as SortKey[]).map((key) => (
+            {(['rank', 'name', 'role'] as SortKey[]).map((key) => (
               <TableHead 
                 key={key} 
                 onClick={() => requestSort(key)} 
-                className={`cursor-pointer ${key === 'role' || key === 'points' || key === 'streak' ? 'w-1/6' : ''}`}>
+                className={`cursor-pointer ${key === 'role' ? 'w-1/6' : ''}`}>
                 <div className={`flex items-center ${sortConfig.key === key ? 'text-white' : ''}`}>
                   {key.charAt(0).toUpperCase() + key.slice(1)} {/* Capitalize for display */}
                   <SortIndicator columnKey={key} />
@@ -225,16 +190,6 @@ function UserTableLeaderboard() {
                 <TableCell className={`${!isVisible ? 'p-0' : ''}`}>
                   <div className={`transition-all ease-in-out duration-500 overflow-hidden ${isVisible ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
                     <span className="capitalize">{item.role}</span>
-                  </div>
-                </TableCell>
-                <TableCell className={`${!isVisible ? 'p-0' : ''}`}>
-                  <div className={`transition-all ease-in-out duration-500 overflow-hidden ${isVisible ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    {item.points}
-                  </div>
-                </TableCell>
-                <TableCell className={`${!isVisible ? 'p-0' : ''}`}>
-                  <div className={`transition-all ease-in-out duration-500 overflow-hidden ${isVisible ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    {item.streak}
                   </div>
                 </TableCell>
               </TableRow>

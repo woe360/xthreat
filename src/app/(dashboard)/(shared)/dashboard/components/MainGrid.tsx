@@ -122,7 +122,7 @@ export default function MainGrid({ sidebarOpen }: { sidebarOpen?: boolean }) {
       </Grid>
 
       <Typography variant="h6" sx={{ mb: 3, color: 'white' }}>
-        Leaderboard
+        Employees
       </Typography>
 
       {/* Bottom row */}

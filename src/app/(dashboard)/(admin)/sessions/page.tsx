@@ -53,19 +53,25 @@ import { StatCard } from '@/components/ui/stat-card'
 interface SessionLog {
   id: string
   user_id: string
-  event_type: 'login' | 'logout'
+  event_type: 'login' | 'logout' | 'login_failed' | 'session_expired'
   timestamp: string
   ip_address: string | null
   user_agent: string | null
+  error_message: string | null
   device_info: {
     browser?: string
     os?: string
     [key: string]: any
   } | null
+  location_info: {
+    country?: string
+    city?: string
+    [key: string]: any
+  } | null
   session_id: string | null
-  session_status: string | null
   session_duration: number | null
   last_active_at: string | null
+  session_status: 'active' | 'expired' | 'terminated' | null
   created_at: string
   userEmail?: string
 }
@@ -307,7 +313,11 @@ const SessionLogsPage = () => {
     const matchesSearch = searchTerm === "" ||
       session.ip_address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       session.user_agent?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      session.session_id?.toLowerCase().includes(searchTerm.toLowerCase())
+      session.session_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      session.error_message?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      session.userEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (session.location_info?.city && session.location_info.city.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (session.location_info?.country && session.location_info.country.toLowerCase().includes(searchTerm.toLowerCase()))
     const matchesDateRange = (!startDate || new Date(session.timestamp) >= startDate) &&
       (!endDate || new Date(session.timestamp) <= endDate)
 
@@ -455,14 +465,45 @@ const SessionLogsPage = () => {
             Session Logs
           </Typography>
 
-          {/* Top row - 4 equal columns */}
-          {/* <Grid container spacing={3} sx={{ mb: 3 }}>
-            {sessionStats.map((stat, index) => (
-              <Grid item xs={12} sm={6} lg={3} key={index}>
-                <StatCard {...stat} />
-              </Grid>
-            ))}
-          </Grid> */}
+          {/* Top row - Real session analytics */}
+          <Grid container spacing={3} sx={{ mb: 3 }}>
+            <Grid item xs={12} sm={6} lg={3}>
+              <div className="bg-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg p-4">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-neutral-400 uppercase tracking-wide">Total Sessions</p>
+                  <p className="text-2xl font-bold text-white">{analytics.totalSessions}</p>
+                  <p className="text-xs text-neutral-500">All time</p>
+                </div>
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={6} lg={3}>
+              <div className="bg-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg p-4">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-neutral-400 uppercase tracking-wide">Avg Duration</p>
+                  <p className="text-2xl font-bold text-white">{formatDuration(Math.round(analytics.averageDuration))}</p>
+                  <p className="text-xs text-neutral-500">Average session length</p>
+                </div>
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={6} lg={3}>
+              <div className="bg-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg p-4">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-neutral-400 uppercase tracking-wide">Failed Logins</p>
+                  <p className="text-2xl font-bold text-white">{sessions.filter(s => s.event_type === 'login_failed').length}</p>
+                  <p className="text-xs text-neutral-500">Security events</p>
+                </div>
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={6} lg={3}>
+              <div className="bg-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg p-4">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-neutral-400 uppercase tracking-wide">Active Sessions</p>
+                  <p className="text-2xl font-bold text-white">{sessions.filter(s => s.session_status === 'active').length}</p>
+                  <p className="text-xs text-neutral-500">Currently active</p>
+                </div>
+              </div>
+            </Grid>
+          </Grid>
 
           {/* Middle row - 2 equal columns */}
           {/* <Grid container spacing={3} sx={{ mb: 3 }}>
@@ -509,6 +550,8 @@ const SessionLogsPage = () => {
                       <SelectItem value="all">All Events</SelectItem>
                       <SelectItem value="login">Login</SelectItem>
                       <SelectItem value="logout">Logout</SelectItem>
+                      <SelectItem value="login_failed">Login Failed</SelectItem>
+                      <SelectItem value="session_expired">Session Expired</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -587,22 +630,24 @@ const SessionLogsPage = () => {
                     <TableHead>User</TableHead>
                     <TableHead>Timestamp</TableHead>
                     <TableHead>IP Address</TableHead>
+                    <TableHead>Location</TableHead>
                     <TableHead>Device Info</TableHead>
                     <TableHead>Session ID</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Duration</TableHead>
+                    <TableHead>Error</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {loading ? (
                     <TableRow>
-                      <TableCell colSpan={8} className="text-center">
+                      <TableCell colSpan={10} className="text-center">
                         Loading sessions...
                       </TableCell>
                     </TableRow>
                   ) : filteredSessions.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={8} className="text-center">
+                      <TableCell colSpan={10} className="text-center">
                         No sessions found
                       </TableCell>
                     </TableRow>
@@ -615,7 +660,23 @@ const SessionLogsPage = () => {
                           analytics.suspiciousActivities.some(s => s.id === session.id) && "bg-red-500/10"
                         )}
                       >
-                        <TableCell className="capitalize">{session.event_type}</TableCell>
+                        <TableCell>
+                          <span
+                            className={`px-2 py-1 rounded-md text-xs capitalize ${
+                              session.event_type === "login"
+                                ? "bg-green-500/20 text-green-400"
+                                : session.event_type === "logout"
+                                ? "bg-blue-500/20 text-blue-400"
+                                : session.event_type === "login_failed"
+                                ? "bg-red-500/20 text-red-400"
+                                : session.event_type === "session_expired"
+                                ? "bg-yellow-500/20 text-yellow-400"
+                                : "bg-gray-500/20 text-gray-400"
+                            }`}
+                          >
+                            {session.event_type.replace('_', ' ')}
+                          </span>
+                        </TableCell>
                         <TableCell>{session.userEmail}</TableCell>
                         <TableCell>
                           {formatDistanceToNow(new Date(session.timestamp), {
@@ -623,6 +684,18 @@ const SessionLogsPage = () => {
                           })}
                         </TableCell>
                         <TableCell>{session.ip_address || "N/A"}</TableCell>
+                        <TableCell>
+                          {session.location_info ? (
+                            <span title={JSON.stringify(session.location_info, null, 2)}>
+                              {session.location_info.city && session.location_info.country 
+                                ? `${session.location_info.city}, ${session.location_info.country}`
+                                : session.location_info.country || session.location_info.city || "Unknown"
+                              }
+                            </span>
+                          ) : (
+                            "N/A"
+                          )}
+                        </TableCell>
                         <TableCell>
                           {session.device_info ? (
                             <span title={JSON.stringify(session.device_info, null, 2)}>
@@ -643,13 +716,29 @@ const SessionLogsPage = () => {
                             className={`px-2 py-1 rounded-md text-xs ${
                               session.session_status === "active"
                                 ? "bg-green-500/20 text-green-400"
-                                : "bg-red-500/20 text-red-400"
+                                : session.session_status === "expired"
+                                ? "bg-yellow-500/20 text-yellow-400"
+                                : session.session_status === "terminated"
+                                ? "bg-red-500/20 text-red-400"
+                                : "bg-gray-500/20 text-gray-400"
                             }`}
                           >
                             {session.session_status || "N/A"}
                           </span>
                         </TableCell>
                         <TableCell>{formatDuration(session.session_duration)}</TableCell>
+                        <TableCell>
+                          {session.error_message ? (
+                            <span 
+                              className="text-red-400 text-sm cursor-help truncate max-w-[200px] block"
+                              title={session.error_message}
+                            >
+                              {session.error_message}
+                            </span>
+                          ) : (
+                            "N/A"
+                          )}
+                        </TableCell>
                       </TableRow>
                     ))
                   )}

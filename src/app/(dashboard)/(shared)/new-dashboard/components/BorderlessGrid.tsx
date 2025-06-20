@@ -63,8 +63,8 @@ export default function BorderlessGrid() {
         </div>
       </div>
 
-      {/* Bottom row: Leaderboard */}
-      <h2 className="text-xl font-semibold mb-4 mt-6">Leaderboard</h2>
+      {/* Bottom row: Employees */}
+      <h2 className="text-xl font-semibold mb-4 mt-6">Employees</h2>
       <div className={`border-t border-b border-l border-r ${borderColor}`}>
         <div className={`p-4`}>
            {/* We'll need to adjust CustomizedDataGrid internal styles */}
